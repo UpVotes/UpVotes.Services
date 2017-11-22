@@ -21,7 +21,6 @@ namespace UpVotes.DataModel
             this.CompanyReviewThankNotes = new HashSet<CompanyReviewThankNote>();
             this.UserRegistrations = new HashSet<UserRegistration>();
             this.UserTokens = new HashSet<UserToken>();
-            this.CompanyVotes = new HashSet<CompanyVote>();
         }
     
         public int UserID { get; set; }
@@ -50,7 +49,5 @@ namespace UpVotes.DataModel
         public virtual ICollection<UserRegistration> UserRegistrations { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserToken> UserTokens { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CompanyVote> CompanyVotes { get; set; }
     }
 }

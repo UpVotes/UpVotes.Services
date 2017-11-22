@@ -27,7 +27,6 @@ namespace UpVotes.DataModel
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Company> Companies { get; set; }
         public virtual DbSet<CompanyBranch> CompanyBranches { get; set; }
         public virtual DbSet<CompanyFocus> CompanyFocus1 { get; set; }
         public virtual DbSet<CompanyPortFolio> CompanyPortFolios { get; set; }
@@ -41,6 +40,7 @@ namespace UpVotes.DataModel
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserToken> UserTokens { get; set; }
         public virtual DbSet<UserType> UserTypes { get; set; }
+        public virtual DbSet<Company> Companies { get; set; }
         public virtual DbSet<CompanyVote> CompanyVotes { get; set; }
     
         public virtual ObjectResult<Sp_GetCompany_Result> Sp_GetCompany(string companyName, Nullable<decimal> minRate, Nullable<decimal> maxRate, Nullable<int> minEmployee, Nullable<int> maxEmployee, string sortByVotes, Nullable<int> focusAreaID, Nullable<int> userID)
@@ -107,15 +107,6 @@ namespace UpVotes.DataModel
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetCompanyPortFolio_Result>("Sp_GetCompanyPortFolio", companyIDParameter);
         }
     
-        public virtual ObjectResult<Sp_GetCompanyReviews_Result> Sp_GetCompanyReviews(Nullable<int> companyID)
-        {
-            var companyIDParameter = companyID.HasValue ?
-                new ObjectParameter("CompanyID", companyID) :
-                new ObjectParameter("CompanyID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetCompanyReviews_Result>("Sp_GetCompanyReviews", companyIDParameter);
-        }
-    
         public virtual ObjectResult<Sp_GetCompanyReviewThankNotedUsers_Result> Sp_GetCompanyReviewThankNotedUsers(Nullable<int> companyID, Nullable<int> companyReviewID)
         {
             var companyIDParameter = companyID.HasValue ?
@@ -132,6 +123,15 @@ namespace UpVotes.DataModel
         public virtual ObjectResult<Sp_GetFocusArea_Result> Sp_GetFocusArea()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetFocusArea_Result>("Sp_GetFocusArea");
+        }
+    
+        public virtual ObjectResult<Sp_GetCompanyReviews_Result> Sp_GetCompanyReviews(Nullable<int> companyID)
+        {
+            var companyIDParameter = companyID.HasValue ?
+                new ObjectParameter("CompanyID", companyID) :
+                new ObjectParameter("CompanyID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetCompanyReviews_Result>("Sp_GetCompanyReviews", companyIDParameter);
         }
     }
 }

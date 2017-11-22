@@ -29,7 +29,11 @@ namespace UpVotes.BusinessEntities.Entities
         public DateTime ReviewDate { get; set; }
 
         public int NoOfThankNotes { get; set; }
+
         public string Email { get; set; }
+
         public string Phone { get; set; }
+
+        public string UserProfilePicture { get; set; }
     }
 }

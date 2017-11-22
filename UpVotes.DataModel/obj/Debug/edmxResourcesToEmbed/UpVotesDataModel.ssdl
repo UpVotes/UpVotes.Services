@@ -309,18 +309,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_CompanyVote_Users">
-    <End Role="Users" Type="Self.Users" Multiplicity="1" />
-    <End Role="CompanyVote" Type="Self.CompanyVote" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Users">
-        <PropertyRef Name="UserID" />
-      </Principal>
-      <Dependent Role="CompanyVote">
-        <PropertyRef Name="UserID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_Country_Currency_CurrencyID">
     <End Role="Currency" Type="Self.Currency" Multiplicity="0..1" />
     <End Role="Country" Type="Self.Country" Multiplicity="*" />
@@ -482,10 +470,6 @@
     </AssociationSet>
     <AssociationSet Name="FK_CompanyVote_Company" Association="Self.FK_CompanyVote_Company">
       <End Role="Company" EntitySet="Company" />
-      <End Role="CompanyVote" EntitySet="CompanyVote" />
-    </AssociationSet>
-    <AssociationSet Name="FK_CompanyVote_Users" Association="Self.FK_CompanyVote_Users">
-      <End Role="Users" EntitySet="Users" />
       <End Role="CompanyVote" EntitySet="CompanyVote" />
     </AssociationSet>
     <AssociationSet Name="FK_Country_Currency_CurrencyID" Association="Self.FK_Country_Currency_CurrencyID">

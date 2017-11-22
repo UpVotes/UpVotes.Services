@@ -23,5 +23,6 @@ namespace UpVotes.DataModel
         public string FeedBack { get; set; }
         public short Rating { get; set; }
         public System.DateTime ReviewDate { get; set; }
+        public string UserProfilePicture { get; set; }
     }
 }

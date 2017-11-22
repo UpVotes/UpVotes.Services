@@ -39,5 +39,6 @@ namespace UpVotes.DataModel
         public string Summary2 { get; set; }
         public string Summary3 { get; set; }
         public string KeyClients { get; set; }
+        public int Ranks { get; set; }
     }
 }

@@ -1,0 +1,520 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="UpVotesModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Company">
+    <Key>
+      <PropertyRef Name="CompanyID" />
+    </Key>
+    <Property Name="CompanyID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CompanyName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="LogoName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="TagLine" Type="nvarchar" MaxLength="50" />
+    <Property Name="FoundedYear" Type="int" Nullable="false" />
+    <Property Name="MinEmployeeCount" Type="int" Nullable="false" />
+    <Property Name="MaxEmployeeCount" Type="int" Nullable="false" />
+    <Property Name="MinHourleyRate" Type="decimal" Precision="10" Scale="2" />
+    <Property Name="MaxHourleyRate" Type="decimal" Precision="10" Scale="2" />
+    <Property Name="URL" Type="nvarchar" MaxLength="250" Nullable="false" />
+    <Property Name="LinkedInProfileURL" Type="nvarchar" MaxLength="250" Nullable="false" />
+    <Property Name="TwitterProfileURL" Type="nvarchar" MaxLength="250" Nullable="false" />
+    <Property Name="FacebookProfileURL" Type="nvarchar" MaxLength="250" Nullable="false" />
+    <Property Name="GooglePlusProfileURL" Type="nvarchar" MaxLength="250" Nullable="false" />
+    <Property Name="Summary" Type="nvarchar(max)" />
+    <Property Name="KeyClients" Type="nvarchar(max)" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="CreatedBy" Type="int" />
+    <Property Name="CreatedDate" Type="datetime" />
+    <Property Name="ModifiedBy" Type="int" />
+    <Property Name="ModifiedDate" Type="datetime" />
+    <Property Name="Summary2" Type="nvarchar(max)" />
+    <Property Name="Summary3" Type="nvarchar(max)" />
+    <Property Name="Summary1" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="CompanyBranch">
+    <Key>
+      <PropertyRef Name="BranchID" />
+    </Key>
+    <Property Name="BranchID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="BranchName" Type="nvarchar" MaxLength="100" />
+    <Property Name="CompanyID" Type="int" Nullable="false" />
+    <Property Name="CountryID" Type="int" Nullable="false" />
+    <Property Name="StateID" Type="int" Nullable="false" />
+    <Property Name="Address" Type="nvarchar" MaxLength="300" />
+    <Property Name="City" Type="nvarchar" MaxLength="50" />
+    <Property Name="PostalCode" Type="nvarchar" MaxLength="30" />
+    <Property Name="PhoneNumber" Type="nvarchar" MaxLength="30" />
+    <Property Name="Email" Type="nvarchar" MaxLength="100" />
+    <Property Name="IsHeadQuarters" Type="bit" Nullable="false" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="CreatedBy" Type="int" />
+    <Property Name="CreatedDate" Type="datetime" />
+    <Property Name="ModifiedBy" Type="int" />
+    <Property Name="ModifiedDate" Type="datetime" />
+  </EntityType>
+  <EntityType Name="CompanyFocus">
+    <Key>
+      <PropertyRef Name="CompanyFocusID" />
+    </Key>
+    <Property Name="CompanyFocusID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CompanyID" Type="int" Nullable="false" />
+    <Property Name="FocusAreaID" Type="int" Nullable="false" />
+    <Property Name="FocusAreaPercentage" Type="float" Nullable="false" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="CreatedBy" Type="int" />
+    <Property Name="CreatedDate" Type="datetime" />
+    <Property Name="ModifiedBy" Type="int" />
+    <Property Name="ModifiedDate" Type="datetime" />
+  </EntityType>
+  <EntityType Name="CompanyPortFolio">
+    <Key>
+      <PropertyRef Name="CompanyPortFolioID" />
+    </Key>
+    <Property Name="CompanyPortFolioID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CompanyID" Type="int" Nullable="false" />
+    <Property Name="Title" Type="nvarchar" MaxLength="50" />
+    <Property Name="ImageURL" Type="nvarchar" MaxLength="50" />
+    <Property Name="VideoURL" Type="nvarchar" MaxLength="50" />
+    <Property Name="Description" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="CompanyReviews">
+    <Key>
+      <PropertyRef Name="CompanyReviewID" />
+    </Key>
+    <Property Name="CompanyReviewID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CompanyID" Type="int" Nullable="false" />
+    <Property Name="FocusAreaID" Type="int" Nullable="false" />
+    <Property Name="UserID" Type="int" Nullable="false" />
+    <Property Name="ReviewerCompanyName" Type="nvarchar" MaxLength="100" />
+    <Property Name="Designation" Type="nvarchar" MaxLength="100" />
+    <Property Name="ProjectName" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="FeedBack" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Rating" Type="smallint" Nullable="false" />
+    <Property Name="ReviewDate" Type="datetime" Nullable="false" />
+    <Property Name="Email" Type="nvarchar" MaxLength="100" />
+    <Property Name="Phone" Type="nvarchar" MaxLength="20" />
+  </EntityType>
+  <EntityType Name="CompanyReviewThankNote">
+    <Key>
+      <PropertyRef Name="CompanyReviewThankNoteID" />
+    </Key>
+    <Property Name="CompanyReviewThankNoteID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CompanyReviewID" Type="int" Nullable="false" />
+    <Property Name="UserID" Type="int" Nullable="false" />
+    <Property Name="ThankNoteDate" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CompanyVote">
+    <Key>
+      <PropertyRef Name="CompanyVoteID" />
+    </Key>
+    <Property Name="CompanyVoteID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CompanyID" Type="int" Nullable="false" />
+    <Property Name="UserID" Type="int" Nullable="false" />
+    <Property Name="VotedDate" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Country">
+    <Key>
+      <PropertyRef Name="CountryID" />
+    </Key>
+    <Property Name="CountryID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CountryName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="CountryCode" Type="nvarchar" MaxLength="5" Nullable="false" />
+    <Property Name="CurrencyID" Type="int" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Currency">
+    <Key>
+      <PropertyRef Name="CurrencyID" />
+    </Key>
+    <Property Name="CurrencyID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CurrencyName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="CurrencySymbol" Type="nvarchar" MaxLength="5" Nullable="false" />
+    <Property Name="CurrencyCode" Type="nvarchar" MaxLength="5" Nullable="false" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="FocusArea">
+    <Key>
+      <PropertyRef Name="FocusAreaID" />
+    </Key>
+    <Property Name="FocusAreaID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FocusAreaName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="State">
+    <Key>
+      <PropertyRef Name="StateID" />
+    </Key>
+    <Property Name="StateID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="StateName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="CountryID" Type="int" Nullable="false" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="UserRegistration">
+    <Key>
+      <PropertyRef Name="UserRegistrationID" />
+    </Key>
+    <Property Name="UserRegistrationID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserID" Type="int" Nullable="false" />
+    <Property Name="UserTypeID" Type="int" Nullable="false" />
+    <Property Name="UserRegistrationDate" Type="datetime" Nullable="false" />
+    <Property Name="UserValidFrom" Type="datetime" Nullable="false" />
+    <Property Name="UserValidTo" Type="datetime" />
+    <Property Name="IsSilver" Type="bit" Nullable="false" />
+    <Property Name="IsGold" Type="bit" Nullable="false" />
+    <Property Name="IsPlatinum" Type="bit" Nullable="false" />
+    <Property Name="Remarks" Type="nvarchar" MaxLength="200" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="UserID" />
+    </Key>
+    <Property Name="UserID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserName" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="UserPassword" Type="nvarchar" MaxLength="200" Nullable="false" />
+    <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="UserEmail" Type="nvarchar" MaxLength="50" />
+    <Property Name="UserMobile" Type="nvarchar" MaxLength="17" />
+    <Property Name="UserType" Type="int" Nullable="false" />
+    <Property Name="ProfileURL" Type="nvarchar(max)" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="IsBlocked" Type="bit" Nullable="false" />
+    <Property Name="UserActivatedDateTime" Type="datetime" Nullable="false" />
+    <Property Name="UserLastLoginDateTime" Type="datetime" />
+    <Property Name="Remarks" Type="nvarchar" MaxLength="200" />
+    <Property Name="DateOfBirth" Type="datetime" />
+    <Property Name="ProfilePictureURL" Type="nvarchar(max)" />
+    <Property Name="ProfileID" Type="nvarchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="UserTokens">
+    <Key>
+      <PropertyRef Name="UserTokenID" />
+    </Key>
+    <Property Name="UserTokenID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserID" Type="int" Nullable="false" />
+    <Property Name="AuthToken" Type="nvarchar" MaxLength="250" Nullable="false" />
+    <Property Name="IssuedOn" Type="datetime" Nullable="false" />
+    <Property Name="ExpiresOn" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="UserType">
+    <Key>
+      <PropertyRef Name="UserTypeID" />
+    </Key>
+    <Property Name="UserTypeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserTypeDescription" Type="varchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_CompanyBranch_Company">
+    <End Role="Company" Type="Self.Company" Multiplicity="1" />
+    <End Role="CompanyBranch" Type="Self.CompanyBranch" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Company">
+        <PropertyRef Name="CompanyID" />
+      </Principal>
+      <Dependent Role="CompanyBranch">
+        <PropertyRef Name="CompanyID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CompanyBranch_Country">
+    <End Role="Country" Type="Self.Country" Multiplicity="1" />
+    <End Role="CompanyBranch" Type="Self.CompanyBranch" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Country">
+        <PropertyRef Name="CountryID" />
+      </Principal>
+      <Dependent Role="CompanyBranch">
+        <PropertyRef Name="CountryID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CompanyBranch_State">
+    <End Role="State" Type="Self.State" Multiplicity="1" />
+    <End Role="CompanyBranch" Type="Self.CompanyBranch" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="State">
+        <PropertyRef Name="StateID" />
+      </Principal>
+      <Dependent Role="CompanyBranch">
+        <PropertyRef Name="StateID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CompanyFocus_Company">
+    <End Role="Company" Type="Self.Company" Multiplicity="1" />
+    <End Role="CompanyFocus" Type="Self.CompanyFocus" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Company">
+        <PropertyRef Name="CompanyID" />
+      </Principal>
+      <Dependent Role="CompanyFocus">
+        <PropertyRef Name="CompanyID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CompanyPortFolio_Company_CompanyID">
+    <End Role="Company" Type="Self.Company" Multiplicity="1" />
+    <End Role="CompanyPortFolio" Type="Self.CompanyPortFolio" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Company">
+        <PropertyRef Name="CompanyID" />
+      </Principal>
+      <Dependent Role="CompanyPortFolio">
+        <PropertyRef Name="CompanyID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CompanyReviews_Company_CompanyID">
+    <End Role="Company" Type="Self.Company" Multiplicity="1" />
+    <End Role="CompanyReviews" Type="Self.CompanyReviews" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Company">
+        <PropertyRef Name="CompanyID" />
+      </Principal>
+      <Dependent Role="CompanyReviews">
+        <PropertyRef Name="CompanyID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CompanyReviewThankNote_CompanyReviews">
+    <End Role="CompanyReviews" Type="Self.CompanyReviews" Multiplicity="1" />
+    <End Role="CompanyReviewThankNote" Type="Self.CompanyReviewThankNote" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CompanyReviews">
+        <PropertyRef Name="CompanyReviewID" />
+      </Principal>
+      <Dependent Role="CompanyReviewThankNote">
+        <PropertyRef Name="CompanyReviewID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CompanyReviewThankNote_Users">
+    <End Role="Users" Type="Self.Users" Multiplicity="1" />
+    <End Role="CompanyReviewThankNote" Type="Self.CompanyReviewThankNote" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="CompanyReviewThankNote">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CompanyVote_Company">
+    <End Role="Company" Type="Self.Company" Multiplicity="1" />
+    <End Role="CompanyVote" Type="Self.CompanyVote" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Company">
+        <PropertyRef Name="CompanyID" />
+      </Principal>
+      <Dependent Role="CompanyVote">
+        <PropertyRef Name="CompanyID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CompanyVote_Users">
+    <End Role="Users" Type="Self.Users" Multiplicity="1" />
+    <End Role="CompanyVote" Type="Self.CompanyVote" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="CompanyVote">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Country_Currency_CurrencyID">
+    <End Role="Currency" Type="Self.Currency" Multiplicity="0..1" />
+    <End Role="Country" Type="Self.Country" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Currency">
+        <PropertyRef Name="CurrencyID" />
+      </Principal>
+      <Dependent Role="Country">
+        <PropertyRef Name="CurrencyID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_FocusArea_CompanyReviews_FocusAreaID">
+    <End Role="FocusArea" Type="Self.FocusArea" Multiplicity="1" />
+    <End Role="CompanyReviews" Type="Self.CompanyReviews" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="FocusArea">
+        <PropertyRef Name="FocusAreaID" />
+      </Principal>
+      <Dependent Role="CompanyReviews">
+        <PropertyRef Name="FocusAreaID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_State_Country_CountryID">
+    <End Role="Country" Type="Self.Country" Multiplicity="1" />
+    <End Role="State" Type="Self.State" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Country">
+        <PropertyRef Name="CountryID" />
+      </Principal>
+      <Dependent Role="State">
+        <PropertyRef Name="CountryID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Tokens_Users_UserID">
+    <End Role="Users" Type="Self.Users" Multiplicity="1" />
+    <End Role="UserTokens" Type="Self.UserTokens" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="UserTokens">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserRegistration_Users_UserID">
+    <End Role="Users" Type="Self.Users" Multiplicity="1" />
+    <End Role="UserRegistration" Type="Self.UserRegistration" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="UserRegistration">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserRegistration_UserType_UserTypeID">
+    <End Role="UserType" Type="Self.UserType" Multiplicity="1" />
+    <End Role="UserRegistration" Type="Self.UserRegistration" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserType">
+        <PropertyRef Name="UserTypeID" />
+      </Principal>
+      <Dependent Role="UserRegistration">
+        <PropertyRef Name="UserTypeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Users_CompanyReviews_UserID">
+    <End Role="Users" Type="Self.Users" Multiplicity="1" />
+    <End Role="CompanyReviews" Type="Self.CompanyReviews" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="CompanyReviews">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="Sp_GetCompany" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="companyName" Type="nvarchar" Mode="In" />
+    <Parameter Name="minRate" Type="decimal" Mode="In" />
+    <Parameter Name="maxRate" Type="decimal" Mode="In" />
+    <Parameter Name="minEmployee" Type="int" Mode="In" />
+    <Parameter Name="maxEmployee" Type="int" Mode="In" />
+    <Parameter Name="sortByVotes" Type="nvarchar" Mode="In" />
+    <Parameter Name="focusAreaID" Type="int" Mode="In" />
+    <Parameter Name="userID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Sp_GetCompanyBranches" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="CompanyID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Sp_GetCompanyFocus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="CompanyID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Sp_GetCompanyPortFolio" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="CompanyID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Sp_GetCompanyReviews" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="CompanyID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Sp_GetCompanyReviewThankNotedUsers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="CompanyID" Type="int" Mode="In" />
+    <Parameter Name="CompanyReviewID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Sp_GetFocusArea" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <EntityContainer Name="UpVotesModelStoreContainer">
+    <EntitySet Name="Company" EntityType="Self.Company" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CompanyBranch" EntityType="Self.CompanyBranch" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CompanyFocus" EntityType="Self.CompanyFocus" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CompanyPortFolio" EntityType="Self.CompanyPortFolio" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CompanyReviews" EntityType="Self.CompanyReviews" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CompanyReviewThankNote" EntityType="Self.CompanyReviewThankNote" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CompanyVote" EntityType="Self.CompanyVote" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Country" EntityType="Self.Country" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Currency" EntityType="Self.Currency" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="FocusArea" EntityType="Self.FocusArea" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="State" EntityType="Self.State" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UserRegistration" EntityType="Self.UserRegistration" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UserTokens" EntityType="Self.UserTokens" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UserType" EntityType="Self.UserType" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_CompanyBranch_Company" Association="Self.FK_CompanyBranch_Company">
+      <End Role="Company" EntitySet="Company" />
+      <End Role="CompanyBranch" EntitySet="CompanyBranch" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CompanyBranch_Country" Association="Self.FK_CompanyBranch_Country">
+      <End Role="Country" EntitySet="Country" />
+      <End Role="CompanyBranch" EntitySet="CompanyBranch" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CompanyBranch_State" Association="Self.FK_CompanyBranch_State">
+      <End Role="State" EntitySet="State" />
+      <End Role="CompanyBranch" EntitySet="CompanyBranch" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CompanyFocus_Company" Association="Self.FK_CompanyFocus_Company">
+      <End Role="Company" EntitySet="Company" />
+      <End Role="CompanyFocus" EntitySet="CompanyFocus" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CompanyPortFolio_Company_CompanyID" Association="Self.FK_CompanyPortFolio_Company_CompanyID">
+      <End Role="Company" EntitySet="Company" />
+      <End Role="CompanyPortFolio" EntitySet="CompanyPortFolio" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CompanyReviews_Company_CompanyID" Association="Self.FK_CompanyReviews_Company_CompanyID">
+      <End Role="Company" EntitySet="Company" />
+      <End Role="CompanyReviews" EntitySet="CompanyReviews" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CompanyReviewThankNote_CompanyReviews" Association="Self.FK_CompanyReviewThankNote_CompanyReviews">
+      <End Role="CompanyReviews" EntitySet="CompanyReviews" />
+      <End Role="CompanyReviewThankNote" EntitySet="CompanyReviewThankNote" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CompanyReviewThankNote_Users" Association="Self.FK_CompanyReviewThankNote_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="CompanyReviewThankNote" EntitySet="CompanyReviewThankNote" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CompanyVote_Company" Association="Self.FK_CompanyVote_Company">
+      <End Role="Company" EntitySet="Company" />
+      <End Role="CompanyVote" EntitySet="CompanyVote" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CompanyVote_Users" Association="Self.FK_CompanyVote_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="CompanyVote" EntitySet="CompanyVote" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Country_Currency_CurrencyID" Association="Self.FK_Country_Currency_CurrencyID">
+      <End Role="Currency" EntitySet="Currency" />
+      <End Role="Country" EntitySet="Country" />
+    </AssociationSet>
+    <AssociationSet Name="FK_FocusArea_CompanyReviews_FocusAreaID" Association="Self.FK_FocusArea_CompanyReviews_FocusAreaID">
+      <End Role="FocusArea" EntitySet="FocusArea" />
+      <End Role="CompanyReviews" EntitySet="CompanyReviews" />
+    </AssociationSet>
+    <AssociationSet Name="FK_State_Country_CountryID" Association="Self.FK_State_Country_CountryID">
+      <End Role="Country" EntitySet="Country" />
+      <End Role="State" EntitySet="State" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Tokens_Users_UserID" Association="Self.FK_Tokens_Users_UserID">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="UserTokens" EntitySet="UserTokens" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UserRegistration_Users_UserID" Association="Self.FK_UserRegistration_Users_UserID">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="UserRegistration" EntitySet="UserRegistration" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UserRegistration_UserType_UserTypeID" Association="Self.FK_UserRegistration_UserType_UserTypeID">
+      <End Role="UserType" EntitySet="UserType" />
+      <End Role="UserRegistration" EntitySet="UserRegistration" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Users_CompanyReviews_UserID" Association="Self.FK_Users_CompanyReviews_UserID">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="CompanyReviews" EntitySet="CompanyReviews" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

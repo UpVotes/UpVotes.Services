@@ -247,7 +247,7 @@ namespace UpVotes.BusinessServices.Service
                     bool isSuccess = _unitOfWork.CompanyVoteRepository.Add(companyVoteAdd);
                     _unitOfWork.Save();
 
-                    if(isSuccess)
+                    if (isSuccess)
                     {
                         return "Thanks for voting.";
                     }

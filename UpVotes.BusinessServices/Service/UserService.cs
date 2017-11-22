@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,7 +34,7 @@ namespace UpVotes.BusinessServices.Service
             try
             {
                 User user = _unitOfWork.UsersRepository.Get(u => u.UserName == userName && u.UserPassword == password);
-                if(user != null && user.UserID > 0)
+                if (user != null && user.UserID > 0)
                 {
                     return user.UserID;
                 }
@@ -42,7 +43,7 @@ namespace UpVotes.BusinessServices.Service
                     return 0;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.WriteError(string.Format("Error occured in method Authenticate :- PublishMessage. Error=" + ex.Message + ""), ex);
                 throw ex;
@@ -59,19 +60,85 @@ namespace UpVotes.BusinessServices.Service
             throw new NotImplementedException();
         }
 
-        public int InsertUser(UserEntity userEntity)
-        {
-            throw new NotImplementedException();
-        }
-
         public bool UpdateMemberShip(int userID, int userType)
         {
             throw new NotImplementedException();
         }
 
-        public bool UpdateUser(int userID, UserEntity userEntity)
+        public UserEntity UpdateUser(UserEntity userEntity, User currentUser)
         {
-            throw new NotImplementedException();
+            currentUser.UserName = userEntity.UserName;
+            currentUser.UserPassword = userEntity.UserPassword;
+            currentUser.FirstName = userEntity.FirstName;
+            currentUser.LastName = userEntity.LastName;
+            currentUser.UserEmail = userEntity.UserEmail;
+            currentUser.UserMobile = userEntity.UserMobile;
+            currentUser.UserType = userEntity.UserType;
+            currentUser.ProfileURL = userEntity.ProfileURL;
+            currentUser.UserLastLoginDateTime = DateTime.Now;
+            currentUser.Remarks = userEntity.Remarks;
+            currentUser.DateOfBirth = userEntity.DateOfBirth;
+            currentUser.ProfilePictureURL = userEntity.ProfilePictureURL;
+            currentUser.ProfileID = userEntity.ProfileID;
+
+            _unitOfWork.UsersRepository.Update(currentUser);
+            _unitOfWork.Save();
+
+            currentUser = new User();
+            currentUser = _unitOfWork.UsersRepository.Get(u => u.ProfileID == userEntity.ProfileID && u.UserType == userEntity.UserType);
+            Mapper.Initialize(cfg => { cfg.CreateMap<User, UserEntity>(); });
+            UserEntity userObj = Mapper.Map<User, UserEntity>(currentUser);
+
+            return userObj;
+        }
+
+        public UserEntity InsertUser(UserEntity userEntity)
+        {
+            User newUserObj = new User
+            {
+                UserName = userEntity.UserName,
+                UserPassword = userEntity.UserPassword,
+                FirstName = userEntity.FirstName,
+                LastName = userEntity.LastName,
+                UserEmail = userEntity.UserEmail,
+                UserMobile = userEntity.UserMobile,
+                UserType = userEntity.UserType,
+                ProfileURL = userEntity.ProfileURL,
+                IsActive = true,
+                IsBlocked = false,
+                UserActivatedDateTime = DateTime.Now,
+                UserLastLoginDateTime = DateTime.Now,
+                Remarks = userEntity.Remarks,
+                DateOfBirth = userEntity.DateOfBirth,
+                ProfilePictureURL = userEntity.ProfilePictureURL,
+                ProfileID = userEntity.ProfileID,
+            };
+
+            _unitOfWork.UsersRepository.Add(newUserObj);
+            _unitOfWork.Save();
+
+            User currentUser = new User();
+            currentUser = _unitOfWork.UsersRepository.Get(u => u.ProfileID == userEntity.ProfileID && u.UserType == userEntity.UserType);
+            Mapper.Initialize(cfg => { cfg.CreateMap<User, UserEntity>(); });
+            UserEntity userObj = Mapper.Map<User, UserEntity>(currentUser);
+
+            return userObj;
+        }
+
+        public UserEntity AddOrUpdateUser(UserEntity userObj)
+        {
+            UserEntity userEntityObj = new UserEntity();
+            User currentUser = _unitOfWork.UsersRepository.Get(u => u.ProfileID == userObj.ProfileID && u.UserType == userObj.UserType);
+            if (currentUser != null && currentUser.UserID > 0)
+            {
+                userEntityObj = UpdateUser(userObj, currentUser);
+            }
+            else
+            {
+                userEntityObj = InsertUser(userObj);
+            }
+
+            return userEntityObj;
         }
     }
 }

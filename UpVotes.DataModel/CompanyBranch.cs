@@ -31,8 +31,8 @@ namespace UpVotes.DataModel
         public Nullable<int> ModifiedBy { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
     
-        public virtual Company Company { get; set; }
         public virtual Country Country { get; set; }
         public virtual State State { get; set; }
+        public virtual Company Company { get; set; }
     }
 }

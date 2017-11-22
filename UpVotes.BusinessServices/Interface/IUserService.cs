@@ -1,4 +1,5 @@
 ﻿using UpVotes.BusinessEntities.Entities;
+using UpVotes.DataModel;
 
 namespace UpVotes.BusinessServices.Interface
 {
@@ -6,14 +7,16 @@ namespace UpVotes.BusinessServices.Interface
     {
         int Authenticate(string userName, string password);
 
-        int InsertUser(UserEntity userEntity);
+        UserEntity InsertUser(UserEntity userEntity);
 
-        bool UpdateUser(int userID, UserEntity userEntity);
+        UserEntity UpdateUser(UserEntity userEntity, User currentUse);
 
         bool DeleteUser(int userID);
 
         bool BlockUser(int userID);
 
         bool UpdateMemberShip(int userID, int userType);
+
+        UserEntity AddOrUpdateUser(UserEntity userObj);
     }
 }
