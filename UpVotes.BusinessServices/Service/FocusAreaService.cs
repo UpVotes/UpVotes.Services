@@ -19,27 +19,28 @@ namespace UpVotes.BusinessServices.Service
             }
         }
 
-        private readonly UnitOfWork _unitOfWork;
-
-        public FocusAreaService(UnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
+        private UpVotesEntities _context = null;        
 
         public List<FocusAreaEntity> GetFocusAreaList()
         {
-            FocusAreaDetail focusArea = new FocusAreaDetail();
+            using (_context = new UpVotesEntities())
+            {
+                FocusAreaDetail focusArea = new FocusAreaDetail();
 
-            IEnumerable<Sp_GetFocusArea_Result> focusAreaResult = _unitOfWork.SpGetFocusArea.ExecWithStoreProcedure("EXEC Sp_GetFocusArea");
-            Mapper.Initialize(cfg => { cfg.CreateMap<Sp_GetFocusArea_Result, FocusAreaEntity>(); });
-            IEnumerable<FocusAreaEntity> focusAreaEntity = Mapper.Map<IEnumerable<Sp_GetFocusArea_Result>, IEnumerable<FocusAreaEntity>>(focusAreaResult);
-            return focusAreaEntity.ToList();
+                IEnumerable<Sp_GetFocusArea_Result> focusAreaResult = _context.Database.SqlQuery(typeof(Sp_GetFocusArea_Result), "EXEC Sp_GetFocusArea").Cast<Sp_GetFocusArea_Result>().AsEnumerable();
+                Mapper.Initialize(cfg => { cfg.CreateMap<Sp_GetFocusArea_Result, FocusAreaEntity>(); });
+                IEnumerable<FocusAreaEntity> focusAreaEntity = Mapper.Map<IEnumerable<Sp_GetFocusArea_Result>, IEnumerable<FocusAreaEntity>>(focusAreaResult);
+                return focusAreaEntity.ToList();
+            }            
         }
 
         public int GetFocusAreaID(string focusAreaName)
         {
-            int focusAreaID = _unitOfWork.FocusAreaRepository.GetAll().Where(i => i.FocusAreaName.ToUpper().Contains(focusAreaName.ToUpper())).Select(i => i.FocusAreaID).FirstOrDefault();
-            return focusAreaID;
+            using (_context = new UpVotesEntities())
+            {
+                int focusAreaID = _context.FocusAreas.Where(a => a.FocusAreaName.ToUpper().Contains(focusAreaName.ToUpper())).Select(a => a.FocusAreaID).FirstOrDefault();
+                return focusAreaID;
+            }            
         }
     }
 }

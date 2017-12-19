@@ -23,3 +23,5 @@ C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.BusinessServices\bin\De
 C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.BusinessServices\obj\Debug\UpVotes.BusinessServices.csprojResolveAssemblyReference.cache
 C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.BusinessServices\obj\Debug\UpVotes.BusinessServices.dll
 C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.BusinessServices\obj\Debug\UpVotes.BusinessServices.pdb
+C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.BusinessServices\bin\Debug\UpVotes.DataModel.dll.config
+C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.BusinessServices\obj\Debug\UpVotes.BusinessServices.csproj.CoreCompileInputs.cache

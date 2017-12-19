@@ -30,6 +30,7 @@
           <ScalarProperty Name="Summary2" ColumnName="Summary2" />
           <ScalarProperty Name="Summary3" ColumnName="Summary3" />
           <ScalarProperty Name="KeyClients" ColumnName="KeyClients" />
+          <ScalarProperty Name="Ranks" ColumnName="Ranks" />
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
@@ -94,36 +95,6 @@
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
-    <EntitySetMapping Name="Companies">
-      <EntityTypeMapping TypeName="UpVotesModel.Company">
-        <MappingFragment StoreEntitySet="Company">
-          <ScalarProperty Name="Summary1" ColumnName="Summary1" />
-          <ScalarProperty Name="Summary3" ColumnName="Summary3" />
-          <ScalarProperty Name="Summary2" ColumnName="Summary2" />
-          <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-          <ScalarProperty Name="KeyClients" ColumnName="KeyClients" />
-          <ScalarProperty Name="Summary" ColumnName="Summary" />
-          <ScalarProperty Name="GooglePlusProfileURL" ColumnName="GooglePlusProfileURL" />
-          <ScalarProperty Name="FacebookProfileURL" ColumnName="FacebookProfileURL" />
-          <ScalarProperty Name="TwitterProfileURL" ColumnName="TwitterProfileURL" />
-          <ScalarProperty Name="LinkedInProfileURL" ColumnName="LinkedInProfileURL" />
-          <ScalarProperty Name="URL" ColumnName="URL" />
-          <ScalarProperty Name="MaxHourleyRate" ColumnName="MaxHourleyRate" />
-          <ScalarProperty Name="MinHourleyRate" ColumnName="MinHourleyRate" />
-          <ScalarProperty Name="MaxEmployeeCount" ColumnName="MaxEmployeeCount" />
-          <ScalarProperty Name="MinEmployeeCount" ColumnName="MinEmployeeCount" />
-          <ScalarProperty Name="FoundedYear" ColumnName="FoundedYear" />
-          <ScalarProperty Name="TagLine" ColumnName="TagLine" />
-          <ScalarProperty Name="LogoName" ColumnName="LogoName" />
-          <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
-          <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="CompanyBranches">
       <EntityTypeMapping TypeName="UpVotesModel.CompanyBranch">
         <MappingFragment StoreEntitySet="CompanyBranch">
@@ -297,6 +268,36 @@
         <MappingFragment StoreEntitySet="UserType">
           <ScalarProperty Name="UserTypeDescription" ColumnName="UserTypeDescription" />
           <ScalarProperty Name="UserTypeID" ColumnName="UserTypeID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Companies">
+      <EntityTypeMapping TypeName="UpVotesModel.Company">
+        <MappingFragment StoreEntitySet="Company">
+          <ScalarProperty Name="Summary1" ColumnName="Summary1" />
+          <ScalarProperty Name="Summary3" ColumnName="Summary3" />
+          <ScalarProperty Name="Summary2" ColumnName="Summary2" />
+          <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="KeyClients" ColumnName="KeyClients" />
+          <ScalarProperty Name="Summary" ColumnName="Summary" />
+          <ScalarProperty Name="GooglePlusProfileURL" ColumnName="GooglePlusProfileURL" />
+          <ScalarProperty Name="FacebookProfileURL" ColumnName="FacebookProfileURL" />
+          <ScalarProperty Name="TwitterProfileURL" ColumnName="TwitterProfileURL" />
+          <ScalarProperty Name="LinkedInProfileURL" ColumnName="LinkedInProfileURL" />
+          <ScalarProperty Name="URL" ColumnName="URL" />
+          <ScalarProperty Name="MaxHourleyRate" ColumnName="MaxHourleyRate" />
+          <ScalarProperty Name="MinHourleyRate" ColumnName="MinHourleyRate" />
+          <ScalarProperty Name="MaxEmployeeCount" ColumnName="MaxEmployeeCount" />
+          <ScalarProperty Name="MinEmployeeCount" ColumnName="MinEmployeeCount" />
+          <ScalarProperty Name="FoundedYear" ColumnName="FoundedYear" />
+          <ScalarProperty Name="TagLine" ColumnName="TagLine" />
+          <ScalarProperty Name="LogoName" ColumnName="LogoName" />
+          <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+          <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

@@ -18,4 +18,4 @@ C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.Resolver\bin\Debug\Syst
 C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.Resolver\bin\Debug\System.Web.Http.xml
 C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.Resolver\obj\Debug\UpVotes.Resolver.dll
 C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.Resolver\obj\Debug\UpVotes.Resolver.pdb
-C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.Resolver\obj\Debug\UpVotes.Resolver.csprojResolveAssemblyReference.cache
+C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.Resolver\obj\Debug\UpVotes.Resolver.csproj.CoreCompileInputs.cache

@@ -25,7 +25,6 @@
       <Parameter Name="CompanyReviewID" Mode="In" Type="Int32" />
     </FunctionImport>
     <FunctionImport Name="Sp_GetFocusArea" ReturnType="Collection(UpVotesModel.Sp_GetFocusArea_Result)" />
-    <EntitySet Name="Companies" EntityType="UpVotesModel.Company" />
     <EntitySet Name="CompanyBranches" EntityType="UpVotesModel.CompanyBranch" />
     <EntitySet Name="CompanyFocus1" EntityType="UpVotesModel.CompanyFocus" />
     <EntitySet Name="CompanyPortFolios" EntityType="UpVotesModel.CompanyPortFolio" />
@@ -39,22 +38,6 @@
     <EntitySet Name="Users" EntityType="UpVotesModel.User" />
     <EntitySet Name="UserTokens" EntityType="UpVotesModel.UserToken" />
     <EntitySet Name="UserTypes" EntityType="UpVotesModel.UserType" />
-    <AssociationSet Name="FK_CompanyBranch_Company" Association="UpVotesModel.FK_CompanyBranch_Company">
-      <End Role="Company" EntitySet="Companies" />
-      <End Role="CompanyBranch" EntitySet="CompanyBranches" />
-    </AssociationSet>
-    <AssociationSet Name="FK_CompanyFocus_Company" Association="UpVotesModel.FK_CompanyFocus_Company">
-      <End Role="Company" EntitySet="Companies" />
-      <End Role="CompanyFocu" EntitySet="CompanyFocus1" />
-    </AssociationSet>
-    <AssociationSet Name="FK_CompanyPortFolio_Company_CompanyID" Association="UpVotesModel.FK_CompanyPortFolio_Company_CompanyID">
-      <End Role="Company" EntitySet="Companies" />
-      <End Role="CompanyPortFolio" EntitySet="CompanyPortFolios" />
-    </AssociationSet>
-    <AssociationSet Name="FK_CompanyReviews_Company_CompanyID" Association="UpVotesModel.FK_CompanyReviews_Company_CompanyID">
-      <End Role="Company" EntitySet="Companies" />
-      <End Role="CompanyReview" EntitySet="CompanyReviews" />
-    </AssociationSet>
     <AssociationSet Name="FK_CompanyBranch_Country" Association="UpVotesModel.FK_CompanyBranch_Country">
       <End Role="Country" EntitySet="Countries" />
       <End Role="CompanyBranch" EntitySet="CompanyBranches" />
@@ -99,13 +82,26 @@
       <End Role="User" EntitySet="Users" />
       <End Role="UserToken" EntitySet="UserTokens" />
     </AssociationSet>
+    <EntitySet Name="Companies" EntityType="UpVotesModel.Company" />
+    <AssociationSet Name="FK_CompanyBranch_Company" Association="UpVotesModel.FK_CompanyBranch_Company">
+      <End Role="Company" EntitySet="Companies" />
+      <End Role="CompanyBranch" EntitySet="CompanyBranches" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CompanyFocus_Company" Association="UpVotesModel.FK_CompanyFocus_Company">
+      <End Role="Company" EntitySet="Companies" />
+      <End Role="CompanyFocus" EntitySet="CompanyFocus1" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CompanyPortFolio_Company_CompanyID" Association="UpVotesModel.FK_CompanyPortFolio_Company_CompanyID">
+      <End Role="Company" EntitySet="Companies" />
+      <End Role="CompanyPortFolio" EntitySet="CompanyPortFolios" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CompanyReviews_Company_CompanyID" Association="UpVotesModel.FK_CompanyReviews_Company_CompanyID">
+      <End Role="Company" EntitySet="Companies" />
+      <End Role="CompanyReview" EntitySet="CompanyReviews" />
+    </AssociationSet>
     <EntitySet Name="CompanyVotes" EntityType="UpVotesModel.CompanyVote" />
     <AssociationSet Name="FK_CompanyVote_Company" Association="UpVotesModel.FK_CompanyVote_Company">
       <End Role="Company" EntitySet="Companies" />
-      <End Role="CompanyVote" EntitySet="CompanyVotes" />
-    </AssociationSet>
-    <AssociationSet Name="FK_CompanyVote_Users" Association="UpVotesModel.FK_CompanyVote_Users">
-      <End Role="User" EntitySet="Users" />
       <End Role="CompanyVote" EntitySet="CompanyVotes" />
     </AssociationSet>
     <FunctionImport Name="Sp_GetCompanyReviews" ReturnType="Collection(UpVotesModel.Sp_GetCompanyReviews_Result)">
@@ -180,41 +176,8 @@
     <Property Type="String" Name="Summary2" Nullable="true" />
     <Property Type="String" Name="Summary3" Nullable="true" />
     <Property Type="String" Name="KeyClients" Nullable="true" />
+    <Property Type="Int32" Name="Ranks" Nullable="false" />
   </ComplexType>
-  <EntityType Name="Company">
-    <Key>
-      <PropertyRef Name="CompanyID" />
-    </Key>
-    <Property Name="CompanyID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="CompanyName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="LogoName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="TagLine" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="FoundedYear" Type="Int32" Nullable="false" />
-    <Property Name="MinEmployeeCount" Type="Int32" Nullable="false" />
-    <Property Name="MaxEmployeeCount" Type="Int32" Nullable="false" />
-    <Property Name="MinHourleyRate" Type="Decimal" Precision="10" Scale="2" />
-    <Property Name="MaxHourleyRate" Type="Decimal" Precision="10" Scale="2" />
-    <Property Name="URL" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
-    <Property Name="LinkedInProfileURL" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
-    <Property Name="TwitterProfileURL" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
-    <Property Name="FacebookProfileURL" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
-    <Property Name="GooglePlusProfileURL" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
-    <Property Name="Summary" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-    <Property Name="KeyClients" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-    <Property Name="IsActive" Type="Boolean" Nullable="false" />
-    <Property Name="CreatedBy" Type="Int32" />
-    <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-    <Property Name="ModifiedBy" Type="Int32" />
-    <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
-    <Property Name="Summary2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-    <Property Name="Summary3" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-    <NavigationProperty Name="CompanyBranches" Relationship="UpVotesModel.FK_CompanyBranch_Company" FromRole="Company" ToRole="CompanyBranch" />
-    <NavigationProperty Name="CompanyFocus" Relationship="UpVotesModel.FK_CompanyFocus_Company" FromRole="Company" ToRole="CompanyFocu" />
-    <NavigationProperty Name="CompanyPortFolios" Relationship="UpVotesModel.FK_CompanyPortFolio_Company_CompanyID" FromRole="Company" ToRole="CompanyPortFolio" />
-    <NavigationProperty Name="CompanyReviews" Relationship="UpVotesModel.FK_CompanyReviews_Company_CompanyID" FromRole="Company" ToRole="CompanyReview" />
-    <Property Name="Summary1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-    <NavigationProperty Name="CompanyVotes" Relationship="UpVotesModel.FK_CompanyVote_Company" FromRole="Company" ToRole="CompanyVote" />
-  </EntityType>
   <EntityType Name="CompanyBranch">
     <Key>
       <PropertyRef Name="BranchID" />
@@ -235,9 +198,9 @@
     <Property Name="CreatedDate" Type="DateTime" Precision="3" />
     <Property Name="ModifiedBy" Type="Int32" />
     <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
-    <NavigationProperty Name="Company" Relationship="UpVotesModel.FK_CompanyBranch_Company" FromRole="CompanyBranch" ToRole="Company" />
     <NavigationProperty Name="Country" Relationship="UpVotesModel.FK_CompanyBranch_Country" FromRole="CompanyBranch" ToRole="Country" />
     <NavigationProperty Name="State" Relationship="UpVotesModel.FK_CompanyBranch_State" FromRole="CompanyBranch" ToRole="State" />
+    <NavigationProperty Name="Company" Relationship="UpVotesModel.FK_CompanyBranch_Company" FromRole="CompanyBranch" ToRole="Company" />
   </EntityType>
   <EntityType Name="CompanyFocus">
     <Key>
@@ -252,7 +215,7 @@
     <Property Name="CreatedDate" Type="DateTime" Precision="3" />
     <Property Name="ModifiedBy" Type="Int32" />
     <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
-    <NavigationProperty Name="Company" Relationship="UpVotesModel.FK_CompanyFocus_Company" FromRole="CompanyFocu" ToRole="Company" />
+    <NavigationProperty Name="Company" Relationship="UpVotesModel.FK_CompanyFocus_Company" FromRole="CompanyFocus" ToRole="Company" />
   </EntityType>
   <EntityType Name="CompanyPortFolio">
     <Key>
@@ -282,10 +245,10 @@
     <Property Name="ReviewDate" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
     <Property Name="Phone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-    <NavigationProperty Name="Company" Relationship="UpVotesModel.FK_CompanyReviews_Company_CompanyID" FromRole="CompanyReview" ToRole="Company" />
     <NavigationProperty Name="CompanyReviewThankNotes" Relationship="UpVotesModel.FK_CompanyReviewThankNote_CompanyReviews" FromRole="CompanyReview" ToRole="CompanyReviewThankNote" />
     <NavigationProperty Name="FocusArea" Relationship="UpVotesModel.FK_FocusArea_CompanyReviews_FocusAreaID" FromRole="CompanyReview" ToRole="FocusArea" />
     <NavigationProperty Name="User" Relationship="UpVotesModel.FK_Users_CompanyReviews_UserID" FromRole="CompanyReview" ToRole="User" />
+    <NavigationProperty Name="Company" Relationship="UpVotesModel.FK_CompanyReviews_Company_CompanyID" FromRole="CompanyReview" ToRole="Company" />
   </EntityType>
   <EntityType Name="CompanyReviewThankNote">
     <Key>
@@ -384,7 +347,6 @@
     <NavigationProperty Name="UserTokens" Relationship="UpVotesModel.FK_Tokens_Users_UserID" FromRole="User" ToRole="UserToken" />
     <Property Name="ProfilePictureURL" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="ProfileID" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-    <NavigationProperty Name="CompanyVotes" Relationship="UpVotesModel.FK_CompanyVote_Users" FromRole="User" ToRole="CompanyVote" />
   </EntityType>
   <EntityType Name="UserToken">
     <Key>
@@ -405,54 +367,6 @@
     <Property Name="UserTypeDescription" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
     <NavigationProperty Name="UserRegistrations" Relationship="UpVotesModel.FK_UserRegistration_UserType_UserTypeID" FromRole="UserType" ToRole="UserRegistration" />
   </EntityType>
-  <Association Name="FK_CompanyBranch_Company">
-    <End Type="UpVotesModel.Company" Role="Company" Multiplicity="1" />
-    <End Type="UpVotesModel.CompanyBranch" Role="CompanyBranch" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Company">
-        <PropertyRef Name="CompanyID" />
-      </Principal>
-      <Dependent Role="CompanyBranch">
-        <PropertyRef Name="CompanyID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_CompanyFocus_Company">
-    <End Type="UpVotesModel.Company" Role="Company" Multiplicity="1" />
-    <End Type="UpVotesModel.CompanyFocus" Role="CompanyFocu" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Company">
-        <PropertyRef Name="CompanyID" />
-      </Principal>
-      <Dependent Role="CompanyFocu">
-        <PropertyRef Name="CompanyID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_CompanyPortFolio_Company_CompanyID">
-    <End Type="UpVotesModel.Company" Role="Company" Multiplicity="1" />
-    <End Type="UpVotesModel.CompanyPortFolio" Role="CompanyPortFolio" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Company">
-        <PropertyRef Name="CompanyID" />
-      </Principal>
-      <Dependent Role="CompanyPortFolio">
-        <PropertyRef Name="CompanyID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_CompanyReviews_Company_CompanyID">
-    <End Type="UpVotesModel.Company" Role="Company" Multiplicity="1" />
-    <End Type="UpVotesModel.CompanyReview" Role="CompanyReview" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Company">
-        <PropertyRef Name="CompanyID" />
-      </Principal>
-      <Dependent Role="CompanyReview">
-        <PropertyRef Name="CompanyID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_CompanyBranch_Country">
     <End Type="UpVotesModel.Country" Role="Country" Multiplicity="1" />
     <End Type="UpVotesModel.CompanyBranch" Role="CompanyBranch" Multiplicity="*" />
@@ -585,6 +499,88 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <EntityType Name="Company">
+    <Key>
+      <PropertyRef Name="CompanyID" />
+    </Key>
+    <Property Name="CompanyID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CompanyName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="LogoName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="TagLine" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="FoundedYear" Type="Int32" Nullable="false" />
+    <Property Name="MinEmployeeCount" Type="Int32" Nullable="false" />
+    <Property Name="MaxEmployeeCount" Type="Int32" Nullable="false" />
+    <Property Name="MinHourleyRate" Type="Decimal" Precision="10" Scale="2" />
+    <Property Name="MaxHourleyRate" Type="Decimal" Precision="10" Scale="2" />
+    <Property Name="URL" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="LinkedInProfileURL" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="TwitterProfileURL" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="FacebookProfileURL" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="GooglePlusProfileURL" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Summary" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="KeyClients" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreatedBy" Type="Int32" />
+    <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+    <Property Name="ModifiedBy" Type="Int32" />
+    <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+    <Property Name="Summary2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Summary3" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Summary1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="CompanyBranches" Relationship="UpVotesModel.FK_CompanyBranch_Company" FromRole="Company" ToRole="CompanyBranch" />
+    <NavigationProperty Name="CompanyFocus" Relationship="UpVotesModel.FK_CompanyFocus_Company" FromRole="Company" ToRole="CompanyFocus" />
+    <NavigationProperty Name="CompanyPortFolios" Relationship="UpVotesModel.FK_CompanyPortFolio_Company_CompanyID" FromRole="Company" ToRole="CompanyPortFolio" />
+    <NavigationProperty Name="CompanyReviews" Relationship="UpVotesModel.FK_CompanyReviews_Company_CompanyID" FromRole="Company" ToRole="CompanyReview" />
+    <NavigationProperty Name="CompanyVotes" Relationship="UpVotesModel.FK_CompanyVote_Company" FromRole="Company" ToRole="CompanyVote" />
+  </EntityType>
+  <Association Name="FK_CompanyBranch_Company">
+    <End Type="UpVotesModel.Company" Role="Company" Multiplicity="1" />
+    <End Type="UpVotesModel.CompanyBranch" Role="CompanyBranch" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Company">
+        <PropertyRef Name="CompanyID" />
+      </Principal>
+      <Dependent Role="CompanyBranch">
+        <PropertyRef Name="CompanyID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CompanyFocus_Company">
+    <End Type="UpVotesModel.Company" Role="Company" Multiplicity="1" />
+    <End Type="UpVotesModel.CompanyFocus" Role="CompanyFocus" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Company">
+        <PropertyRef Name="CompanyID" />
+      </Principal>
+      <Dependent Role="CompanyFocus">
+        <PropertyRef Name="CompanyID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CompanyPortFolio_Company_CompanyID">
+    <End Type="UpVotesModel.Company" Role="Company" Multiplicity="1" />
+    <End Type="UpVotesModel.CompanyPortFolio" Role="CompanyPortFolio" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Company">
+        <PropertyRef Name="CompanyID" />
+      </Principal>
+      <Dependent Role="CompanyPortFolio">
+        <PropertyRef Name="CompanyID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CompanyReviews_Company_CompanyID">
+    <End Type="UpVotesModel.Company" Role="Company" Multiplicity="1" />
+    <End Type="UpVotesModel.CompanyReview" Role="CompanyReview" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Company">
+        <PropertyRef Name="CompanyID" />
+      </Principal>
+      <Dependent Role="CompanyReview">
+        <PropertyRef Name="CompanyID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <EntityType Name="CompanyVote">
     <Key>
       <PropertyRef Name="CompanyVoteID" />
@@ -594,7 +590,6 @@
     <Property Name="UserID" Type="Int32" Nullable="false" />
     <Property Name="VotedDate" Type="DateTime" Nullable="false" Precision="3" />
     <NavigationProperty Name="Company" Relationship="UpVotesModel.FK_CompanyVote_Company" FromRole="CompanyVote" ToRole="Company" />
-    <NavigationProperty Name="User" Relationship="UpVotesModel.FK_CompanyVote_Users" FromRole="CompanyVote" ToRole="User" />
   </EntityType>
   <Association Name="FK_CompanyVote_Company">
     <End Type="UpVotesModel.Company" Role="Company" Multiplicity="1" />
@@ -605,18 +600,6 @@
       </Principal>
       <Dependent Role="CompanyVote">
         <PropertyRef Name="CompanyID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_CompanyVote_Users">
-    <End Type="UpVotesModel.User" Role="User" Multiplicity="1" />
-    <End Type="UpVotesModel.CompanyVote" Role="CompanyVote" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="User">
-        <PropertyRef Name="UserID" />
-      </Principal>
-      <Dependent Role="CompanyVote">
-        <PropertyRef Name="UserID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>

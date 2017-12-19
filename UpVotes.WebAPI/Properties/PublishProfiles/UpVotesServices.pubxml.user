@@ -184,19 +184,19 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/29/2015 01:52:30</publishTime>
     </File>
     <File Include="bin/UpVotes.BusinessServices.dll">
-      <publishTime>11/17/2017 23:36:27</publishTime>
+      <publishTime>11/23/2017 17:56:07</publishTime>
     </File>
     <File Include="bin/UpVotes.BussinessEntities.dll">
-      <publishTime>11/17/2017 23:36:26</publishTime>
+      <publishTime>11/23/2017 17:56:07</publishTime>
     </File>
     <File Include="bin/UpVotes.DataModel.dll">
-      <publishTime>11/17/2017 23:36:26</publishTime>
+      <publishTime>11/23/2017 17:56:07</publishTime>
     </File>
     <File Include="bin/UpVotes.Resolver.dll">
-      <publishTime>11/17/2017 23:36:25</publishTime>
+      <publishTime>11/23/2017 17:56:06</publishTime>
     </File>
     <File Include="bin/UpVotes.WebAPI.dll">
-      <publishTime>11/17/2017 23:36:32</publishTime>
+      <publishTime>11/23/2017 17:56:13</publishTime>
     </File>
     <File Include="bin/WebGrease.dll">
       <publishTime>09/10/2013 17:28:38</publishTime>
@@ -211,7 +211,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/22/2017 12:35:27</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>11/17/2017 23:36:32</publishTime>
+      <publishTime>11/23/2017 17:56:13</publishTime>
     </File>
   </ItemGroup>
 </Project>

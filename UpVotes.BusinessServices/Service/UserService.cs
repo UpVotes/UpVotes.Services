@@ -128,7 +128,7 @@ namespace UpVotes.BusinessServices.Service
         public UserEntity AddOrUpdateUser(UserEntity userObj)
         {
             UserEntity userEntityObj = new UserEntity();
-            User currentUser = _unitOfWork.UsersRepository.Get(u => u.ProfileID == userObj.ProfileID && u.UserType == userObj.UserType);
+            User currentUser = _unitOfWork.UsersRepository.Get(u => u.FirstName == userObj.FirstName && u.LastName == userObj.LastName && u.ProfileURL == userObj.ProfileURL && u.UserType == userObj.UserType);
             if (currentUser != null && currentUser.UserID > 0)
             {
                 userEntityObj = UpdateUser(userObj, currentUser);

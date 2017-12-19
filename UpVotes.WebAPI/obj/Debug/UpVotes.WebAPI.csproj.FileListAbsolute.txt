@@ -110,3 +110,6 @@ C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\bin\log4net.xml
 C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\obj\Debug\UpVotes.WebAPI.csprojResolveAssemblyReference.cache
 C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\obj\Debug\UpVotes.WebAPI.dll
 C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\obj\Debug\UpVotes.WebAPI.pdb
+C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\bin\UpVotes.BusinessServices.dll.config
+C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\bin\UpVotes.DataModel.dll.config
+C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\obj\Debug\UpVotes.WebAPI.csproj.CoreCompileInputs.cache

@@ -18,3 +18,5 @@ C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.BussinessEntities\bin\D
 C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.BussinessEntities\obj\Debug\UpVotes.BusinessEntities.csprojResolveAssemblyReference.cache
 C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.BussinessEntities\obj\Debug\UpVotes.BussinessEntities.dll
 C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.BussinessEntities\obj\Debug\UpVotes.BussinessEntities.pdb
+C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.BussinessEntities\bin\Debug\UpVotes.DataModel.dll.config
+C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.BussinessEntities\obj\Debug\UpVotes.BusinessEntities.csproj.CoreCompileInputs.cache
