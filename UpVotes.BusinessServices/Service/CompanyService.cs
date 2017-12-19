@@ -41,7 +41,7 @@ namespace UpVotes.BusinessServices.Service
         {
             CompanyDetail companyDetail = new CompanyDetail();
             companyDetail.CompanyList = new List<CompanyEntity>();
-            UpVotesEntities upVotesObj = new UpVotesEntities();
+            
             try
             {
                 IEnumerable<CompanyEntity> companyEntities = GetCompany(companyName);
@@ -80,7 +80,7 @@ namespace UpVotes.BusinessServices.Service
         {
             CompanyDetail companyDetail = new CompanyDetail();
             companyDetail.CompanyList = new List<CompanyEntity>();
-            UpVotesEntities upVotesObj = new UpVotesEntities();
+            
             try
             {
                 IEnumerable<CompanyEntity> companyEntities = GetCompany(companyName, minRate, maxRate, minEmployee, maxEmployee, sortby, focusAreaID, userID);
@@ -123,7 +123,7 @@ namespace UpVotes.BusinessServices.Service
         {
             using (_context = new UpVotesEntities())
             {
-                IEnumerable<Sp_GetCompany_Result> company = _context.Database.SqlQuery(typeof(Sp_GetCompany_Result), "EXEC Sp_GetCompany " + companyName).Cast<Sp_GetCompany_Result>().AsEnumerable();
+                IEnumerable<Sp_GetCompany_Result> company = _context.Database.SqlQuery(typeof(Sp_GetCompany_Result), "EXEC Sp_GetCompany '" + companyName + "'").Cast<Sp_GetCompany_Result>().AsEnumerable();
                 Mapper.Initialize(cfg => { cfg.CreateMap<Sp_GetCompany_Result, CompanyEntity>(); });
                 IEnumerable<CompanyEntity> companyEntity = Mapper.Map<IEnumerable<Sp_GetCompany_Result>, IEnumerable<CompanyEntity>>(company);
                 return companyEntity;
@@ -134,7 +134,7 @@ namespace UpVotes.BusinessServices.Service
         {
             using (_context = new UpVotesEntities())
             {
-                string sqlQuery = "EXEC Sp_GetCompany " + companyName + "," + minRate + "," + maxRate + "," + minEmployee + "," + maxEmployee + ",'" + sortby + "'," + focusAreaID + "," + userID;
+                string sqlQuery = "EXEC Sp_GetCompany '" + companyName + "'," + minRate + "," + maxRate + "," + minEmployee + "," + maxEmployee + ",'" + sortby + "'," + focusAreaID + "," + userID;
                 IEnumerable<Sp_GetCompany_Result> company = _context.Database.SqlQuery(typeof(Sp_GetCompany_Result), sqlQuery).Cast<Sp_GetCompany_Result>().AsEnumerable();
                 Mapper.Initialize(cfg => { cfg.CreateMap<Sp_GetCompany_Result, CompanyEntity>(); });
                 IEnumerable<CompanyEntity> companyEntity = Mapper.Map<IEnumerable<Sp_GetCompany_Result>, IEnumerable<CompanyEntity>>(company);

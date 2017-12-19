@@ -47,8 +47,7 @@ namespace UpVotes.WebAPI.Controllers
             }
         }
 
-        [HttpGet]
-        [System.Web.Mvc.ValidateInput(false)]
+        [HttpGet]        
         [Route("api/GetCompany/{companyName}/{minRate}/{maxRate}/{minEmployee}/{maxEmployee}/{sortby}/{focusAreaID}/{userID}")]
         public HttpResponseMessage GetCompany(string companyName, decimal? minRate, decimal? maxRate, int? minEmployee, int? maxEmployee, string sortby, int? focusAreaID, int userID = 0)
         {
