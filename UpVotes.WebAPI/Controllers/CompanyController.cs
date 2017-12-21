@@ -48,12 +48,12 @@ namespace UpVotes.WebAPI.Controllers
         }
 
         [HttpGet]        
-        [Route("api/GetCompany/{companyName}/{minRate}/{maxRate}/{minEmployee}/{maxEmployee}/{sortby}/{focusAreaID}/{userID}")]
-        public HttpResponseMessage GetCompany(string companyName, decimal? minRate, decimal? maxRate, int? minEmployee, int? maxEmployee, string sortby, int? focusAreaID, int userID = 0)
+        [Route("api/GetCompany/{companyName}/{minRate}/{maxRate}/{minEmployee}/{maxEmployee}/{sortby}/{focusAreaID}/{location}/{userID}")]
+        public HttpResponseMessage GetCompany(string companyName, decimal? minRate, decimal? maxRate, int? minEmployee, int? maxEmployee, string sortby, int? focusAreaID, string location, int userID = 0)
         {
             try
             {
-                CompanyDetail company = _companyServices.GetAllCompanyDetails(companyName, minRate, maxRate, minEmployee, maxEmployee, sortby, focusAreaID, userID);
+                CompanyDetail company = _companyServices.GetAllCompanyDetails(companyName, minRate, maxRate, minEmployee, maxEmployee, sortby, focusAreaID,location, userID);
                 if (company != null)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, company);

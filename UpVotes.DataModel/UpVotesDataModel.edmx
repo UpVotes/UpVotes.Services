@@ -407,6 +407,7 @@
           <Parameter Name="sortByVotes" Type="nvarchar" Mode="In" />
           <Parameter Name="focusAreaID" Type="int" Mode="In" />
           <Parameter Name="userID" Type="int" Mode="In" />
+          <Parameter Name="location" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="Sp_GetCompanyBranches" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyID" Type="int" Mode="In" />
@@ -520,6 +521,7 @@
             <Parameter Name="sortByVotes" Mode="In" Type="String" />
             <Parameter Name="focusAreaID" Mode="In" Type="Int32" />
             <Parameter Name="userID" Mode="In" Type="Int32" />
+            <Parameter Name="location" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="Sp_GetCompanyBranches" ReturnType="Collection(UpVotesModel.Sp_GetCompanyBranches_Result)">
           <Parameter Name="CompanyID" Mode="In" Type="Int32" />
@@ -615,7 +617,7 @@
             <End Role="CompanyVote" EntitySet="CompanyVotes" />
           </AssociationSet>
           <FunctionImport Name="Sp_GetCompanyReviews" ReturnType="Collection(UpVotesModel.Sp_GetCompanyReviews_Result)">
-            <Parameter Name="CompanyID" Mode="In" Type="Int32" />
+          <Parameter Name="CompanyID" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="Sp_GetCompanyBranches_Result">
