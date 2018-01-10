@@ -4,3 +4,10 @@
 
 /.vs/UpVotes.Services/v15/Server/sqlite3
 /.vs/UpVotes.Services/v15
+/UpVotes.BusinessServices/bin/Release
+/UpVotes.BusinessServices/obj/Release
+/UpVotes.BussinessEntities/bin/Release
+/UpVotes.BussinessEntities/obj/Release
+/UpVotes.DataModel/obj
+/UpVotes.Resolver/obj
+/UpVotes.WebAPI/obj

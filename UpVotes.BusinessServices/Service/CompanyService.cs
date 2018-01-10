@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net.Mail;
 using UpVotes.BusinessEntities.Entities;
 using UpVotes.BusinessServices.Interface;
 using UpVotes.DataModel;
@@ -235,6 +236,10 @@ namespace UpVotes.BusinessServices.Service
                         _context.CompanyVotes.Add(companyVoteAdd);
                         _context.SaveChanges();
 
+                        User user = _context.Users.Where(u => u.UserID == companyVote.UserID).FirstOrDefault();
+                        string companyName = _context.Companies.Where(c => c.CompanyID == companyVote.CompanyID).Select(c => c.CompanyName).FirstOrDefault();
+                        SendEmailForInternalUse(user, companyName);
+
                         return "Thanks for voting.";
                     }
                 }
@@ -244,6 +249,47 @@ namespace UpVotes.BusinessServices.Service
             {
                 return "Something error occured while voting. Please contact support.";
                 //throw ex;
+            }
+        }
+
+        private void SendEmailForInternalUse(User user, string companyName)
+        {            
+            using (SmtpClient smtpClient = new SmtpClient())
+            {
+                MailAddress mailAddress = new MailAddress(System.Configuration.ConfigurationManager.AppSettings["AdminEmail"]);
+                var From = new MailAddress(System.Configuration.ConfigurationManager.AppSettings["AdminEmail"]);
+                var To = new MailAddress(System.Configuration.ConfigurationManager.AppSettings["EmailTo"]);
+                using (MailMessage message = new MailMessage(From, To))
+                {                    
+                    message.IsBodyHtml = true;
+                    message.BodyEncoding = System.Text.Encoding.UTF8;
+                    message.Subject = user.FirstName + " " + user.LastName + " voted for " + companyName;
+                    message.SubjectEncoding = System.Text.Encoding.UTF8;
+                    message.Priority = MailPriority.Normal;
+                    message.From = new MailAddress(System.Configuration.ConfigurationManager.AppSettings["AdminEmail"], System.Configuration.ConfigurationManager.AppSettings["DomainDisplayName"]);
+
+                    System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+                    sb.Append("<p>Hello,</p><p> We got a vote for&nbsp;<em><strong><a href = '" + System.Configuration.ConfigurationManager.AppSettings["WebClientURL"] + "profile/" + companyName.Replace(" ", "-") + "' target = '_blank' rel = 'noopener'>" + companyName + "</a> &nbsp;</strong></em> from &nbsp;<em><strong>"
+                        + user.FirstName + " " + user.LastName + ".</strong></em></p>");
+                    sb.Append("<p> Click <a href = '" + user.ProfileURL + "' target = '_blank' rel = 'noopener' > here </a> to know more about user.</p>");
+                    sb.Append("<p><a href = '" + user.ProfileURL + "' ><img src = '" + user.ProfilePictureURL + "' alt = '" + user.FirstName + " " + user.LastName + "' width = '80' height = '80' /></a></p>");
+                    sb.Append("<p><strong> Thanks & Regards </strong></p>");
+                    sb.Append("<p> Upvotes.Co </p>");
+                    sb.Append("<p><a href = 'mailto:" + System.Configuration.ConfigurationManager.AppSettings["AdminEmail"] + "' > support@upvotes.co </a></p>");
+                    sb.Append("<p><a href = '" + System.Configuration.ConfigurationManager.AppSettings["WebClientURL"] + "' > www.upvotes.co </a></p>");
+
+                    message.Body = sb.ToString();
+
+                    smtpClient.Host = "smtpout.secureserver.net";
+                    smtpClient.Port = 80;
+                    smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    smtpClient.UseDefaultCredentials = false;
+                    smtpClient.EnableSsl = false;
+                    System.Net.NetworkCredential credentials = new System.Net.NetworkCredential(System.Configuration.ConfigurationManager.AppSettings["AdminEmail"], System.Configuration.ConfigurationManager.AppSettings["AdminPassword"]);
+                    smtpClient.Credentials = credentials;
+                    smtpClient.Send(message);
+                }
             }
         }
 
