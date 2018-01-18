@@ -688,7 +688,9 @@
 		  <Property Type="String" Name="Summary2" Nullable="true"/>
 		  <Property Type="String" Name="Summary3" Nullable="true"/>
 		  <Property Type="String" Name="KeyClients" Nullable="true"/> 
-<Property Type="Int32" Name="Ranks" Nullable="false" />		  
+<Property Type="Int32" Name="Ranks" Nullable="false" />
+          <Property Type="Int32" Name="RowNumber" Nullable="true" />
+          <Property Type="Int32" Name="TotalCount" Nullable="false" />
         </ComplexType>
         <EntityType Name="CompanyBranch">
           <Key>
@@ -1164,6 +1166,8 @@
 				<ScalarProperty Name="Summary3" ColumnName="Summary3" />
 				<ScalarProperty Name="KeyClients" ColumnName="KeyClients" />
 				<ScalarProperty Name="Ranks" ColumnName="Ranks" />
+                <ScalarProperty Name="RowNumber" ColumnName="RowNumber" />
+                <ScalarProperty Name="TotalCount" ColumnName="TotalCount" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

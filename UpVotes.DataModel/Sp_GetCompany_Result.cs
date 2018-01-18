@@ -40,5 +40,7 @@ namespace UpVotes.DataModel
         public string Summary3 { get; set; }
         public string KeyClients { get; set; }
         public int Ranks { get; set; }
+        public Nullable<int> RowNumber { get; set; }
+        public int TotalCount { get; set; }
     }
 }

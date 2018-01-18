@@ -43,6 +43,8 @@ namespace UpVotes.BusinessEntities.Entities
         public string KeyClients { get; set; }
 
         public int Ranks { get; set; }
+        public int? RowNumber { get; set; }
+        public int TotalCount { get; set; }
 
         public int UserID { get; set; }
 
