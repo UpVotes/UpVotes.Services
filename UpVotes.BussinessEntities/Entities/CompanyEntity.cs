@@ -12,15 +12,7 @@ namespace UpVotes.BusinessEntities.Entities
 
         public string TagLine { get; set; }
 
-        public int FoundedYear { get; set; }
-
-        public int MinEmployeeCount { get; set; }
-
-        public int MaxEmployeeCount { get; set; }
-
-        public int MinHourleyRate { get; set; }
-
-        public int MaxHourleyRate { get; set; }
+        public int FoundedYear { get; set; }        
 
         public string URL { get; set; }
 

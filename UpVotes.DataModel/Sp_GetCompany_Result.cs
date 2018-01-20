@@ -13,12 +13,14 @@ namespace UpVotes.DataModel
     
     public partial class Sp_GetCompany_Result
     {
-        public int CompanyID { get; set; }
+        public Nullable<int> CompanyID { get; set; }
         public string CompanyName { get; set; }
         public string LogoName { get; set; }
         public string TagLine { get; set; }
-        public int NoOfVotes { get; set; }
-        public bool IsVoted { get; set; }
+        public Nullable<int> UserRating { get; set; }
+        public Nullable<int> NoOfUsersRated { get; set; }
+        public Nullable<int> NoOfVotes { get; set; }
+        public Nullable<bool> IsVoted { get; set; }
         public string BranchName { get; set; }
         public string Address { get; set; }
         public string City { get; set; }
@@ -30,7 +32,7 @@ namespace UpVotes.DataModel
         public string GooglePlusProfileURL { get; set; }
         public string AveragHourlyRate { get; set; }
         public string TotalEmployees { get; set; }
-        public int FoundedYear { get; set; }
+        public Nullable<int> FoundedYear { get; set; }
         public string URL { get; set; }
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
@@ -39,8 +41,8 @@ namespace UpVotes.DataModel
         public string Summary2 { get; set; }
         public string Summary3 { get; set; }
         public string KeyClients { get; set; }
-        public int Ranks { get; set; }
+        public Nullable<int> RANKS { get; set; }
+        public Nullable<int> TotalCount { get; set; }
         public Nullable<int> RowNumber { get; set; }
-        public int TotalCount { get; set; }
     }
 }

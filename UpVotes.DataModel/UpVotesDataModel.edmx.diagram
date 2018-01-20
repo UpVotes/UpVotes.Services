@@ -6,7 +6,6 @@
     <edmx:Diagrams>
       <Diagram DiagramId="23d4a81d0031435f808aae03afc56633" Name="Diagram1">
         <EntityTypeShape EntityType="UpVotesModel.CompanyBranch" Width="1.5" PointX="12.5" PointY="16.125" />
-        <EntityTypeShape EntityType="UpVotesModel.CompanyFocus" Width="1.5" PointX="6" PointY="21.25" />
         <EntityTypeShape EntityType="UpVotesModel.CompanyPortFolio" Width="1.5" PointX="6" PointY="18.125" />
         <EntityTypeShape EntityType="UpVotesModel.CompanyReview" Width="1.5" PointX="6" PointY="4.875" />
         <EntityTypeShape EntityType="UpVotesModel.CompanyReviewThankNote" Width="1.5" PointX="8.25" PointY="5.875" />
@@ -29,12 +28,13 @@
         <AssociationConnector Association="UpVotesModel.FK_UserRegistration_Users_UserID" />
         <AssociationConnector Association="UpVotesModel.FK_UserRegistration_UserType_UserTypeID" />
         <AssociationConnector Association="UpVotesModel.FK_Tokens_Users_UserID" />
-        <EntityTypeShape EntityType="UpVotesModel.Company" Width="1.5" PointX="0.75" PointY="13.25" />
+        <EntityTypeShape EntityType="UpVotesModel.CompanyVote" Width="1.5" PointX="3" PointY="18.5" />
+        <EntityTypeShape EntityType="UpVotesModel.CompanyFocus" Width="1.5" PointX="3" PointY="11" />
+        <EntityTypeShape EntityType="UpVotesModel.Company" Width="1.5" PointX="0.75" PointY="10.5" />
         <AssociationConnector Association="UpVotesModel.FK_CompanyBranch_Company" />
         <AssociationConnector Association="UpVotesModel.FK_CompanyFocus_Company" />
         <AssociationConnector Association="UpVotesModel.FK_CompanyPortFolio_Company_CompanyID" />
         <AssociationConnector Association="UpVotesModel.FK_CompanyReviews_Company_CompanyID" />
-        <EntityTypeShape EntityType="UpVotesModel.CompanyVote" Width="1.5" PointX="3" PointY="18.5" />
         <AssociationConnector Association="UpVotesModel.FK_CompanyVote_Company" />
         </Diagram>
     </edmx:Diagrams>

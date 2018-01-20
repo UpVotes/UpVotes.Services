@@ -101,10 +101,7 @@ namespace UpVotes.BusinessServices.Service
                                 foreach (CompanyReviewsEntity companyReviewsEntity in company.CompanyReviews)
                                 {
                                     companyReviewsEntity.NoOfThankNotes = GetCompanyReviewThankNotes(company.CompanyID, companyReviewsEntity.CompanyReviewID).Count();
-                                }
-
-                                company.UserRating = Convert.ToInt32(company.CompanyReviews.Average(i => i.Rating));
-                                company.NoOfUsersRated = company.CompanyReviews.Count();
+                                }                                
                             }
                         }
 
@@ -196,21 +193,7 @@ namespace UpVotes.BusinessServices.Service
                 IEnumerable<CompanyReviewThankNoteEntity> companyReviewThankNotesEntity = Mapper.Map<IEnumerable<Sp_GetCompanyReviewThankNotedUsers_Result>, IEnumerable<CompanyReviewThankNoteEntity>>(companyReviewThankNotes);
                 return companyReviewThankNotesEntity;
             }
-        }
-
-        public IEnumerable<AutoComplete> GetCompanyNames()
-        {
-            //var companies = (from a in _unitOfWork.CompanyRepository.GetAll()
-            //                 select new AutoComplete()
-            //                 {
-            //                     ID = a.CompanyID,
-            //                     Value = a.CompanyName
-            //                 });
-
-            //return companies;
-
-            return null;
-        }
+        }        
 
         public string VoteForCompany(CompanyVoteEntity companyVote)
         {
@@ -237,7 +220,7 @@ namespace UpVotes.BusinessServices.Service
                         _context.SaveChanges();
 
                         User user = _context.Users.Where(u => u.UserID == companyVote.UserID).FirstOrDefault();
-                        string companyName = _context.Companies.Where(c => c.CompanyID == companyVote.CompanyID).Select(c => c.CompanyName).FirstOrDefault();
+                        string companyName = _context.Company.Where(c => c.CompanyID == companyVote.CompanyID).Select(c => c.CompanyName).FirstOrDefault();
                         SendEmailForInternalUse(user, companyName);
 
                         return "Thanks for voting.";
@@ -326,6 +309,75 @@ namespace UpVotes.BusinessServices.Service
             catch (Exception ex)
             {
                 return "Something error occured while providing thanks note. Please contact support.";
+            }
+        }
+
+        public List<string> GetDataForAutoComplete(int type, int focusAreaID, string searchTerm)
+        {
+            try
+            {
+                using (_context = new UpVotesEntities())
+                {
+                    List<string> myAutoCompleteList = new List<string>();                    
+
+                    if (type == 1)//CompanyName
+                    {
+                        myAutoCompleteList = (from a in _context.Company
+                                              join b in _context.CompanyFocus on a.CompanyID equals b.CompanyID
+                                              where a.IsActive == true && b.FocusAreaID == focusAreaID && a.CompanyName.Trim().ToUpper().Contains(searchTerm.Trim().ToUpper())
+                                              orderby a.CompanyName
+                                              select a.CompanyName).Distinct().ToList();
+
+                        return myAutoCompleteList;
+                    }
+                    else if (type == 2)//Location
+                    {
+                        myAutoCompleteList = (from a in _context.Company
+                                              join b in _context.CompanyFocus on a.CompanyID equals b.CompanyID
+                                              join c in _context.CompanyBranches on a.CompanyID equals c.CompanyID
+                                              where a.IsActive == true && b.FocusAreaID == focusAreaID && c.IsActive == true && c.City.Trim().ToUpper().Contains(searchTerm.Trim().ToUpper())
+                                              orderby c.City
+                                              select c.City).Distinct().ToList();
+
+                        if(myAutoCompleteList.Any())
+                        {
+                            return myAutoCompleteList;
+                        }
+                        else
+                        {
+                            myAutoCompleteList = (from a in _context.Company
+                                                  join b in _context.CompanyFocus on a.CompanyID equals b.CompanyID
+                                                  join c in _context.CompanyBranches on a.CompanyID equals c.CompanyID
+                                                  join d in _context.States on c.StateID equals d.StateID
+                                                  where a.IsActive == true && c.IsActive == true && d.StateName.Trim().ToUpper().Contains(searchTerm.Trim().ToUpper())
+                                                  orderby d.StateName
+                                                  select d.StateName).Distinct().ToList();
+
+                            if(myAutoCompleteList.Any())
+                            {
+                                return myAutoCompleteList;
+                            }
+                            else
+                            {
+                                myAutoCompleteList = (from a in _context.Company
+                                                      join b in _context.CompanyFocus on a.CompanyID equals b.CompanyID
+                                                      join c in _context.CompanyBranches on a.CompanyID equals c.CompanyID
+                                                      join d in _context.Countries on c.CountryID equals d.CountryID
+                                                      where a.IsActive == true && c.IsActive == true && d.CountryName.Trim().ToUpper().Contains(searchTerm.Trim().ToUpper())
+                                                      orderby d.CountryName
+                                                      select d.CountryName).Distinct().ToList();
+
+                                return myAutoCompleteList;
+                            }
+                        }
+                    }
+
+                    return myAutoCompleteList;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
     }

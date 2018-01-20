@@ -28,7 +28,6 @@ namespace UpVotes.DataModel
         }
     
         public virtual DbSet<CompanyBranch> CompanyBranches { get; set; }
-        public virtual DbSet<CompanyFocus> CompanyFocus1 { get; set; }
         public virtual DbSet<CompanyPortFolio> CompanyPortFolios { get; set; }
         public virtual DbSet<CompanyReview> CompanyReviews { get; set; }
         public virtual DbSet<CompanyReviewThankNote> CompanyReviewThankNotes { get; set; }
@@ -40,49 +39,9 @@ namespace UpVotes.DataModel
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserToken> UserTokens { get; set; }
         public virtual DbSet<UserType> UserTypes { get; set; }
-        public virtual DbSet<Company> Companies { get; set; }
         public virtual DbSet<CompanyVote> CompanyVotes { get; set; }
-    
-        public virtual ObjectResult<Sp_GetCompany_Result> Sp_GetCompany(string companyName, Nullable<decimal> minRate, Nullable<decimal> maxRate, Nullable<int> minEmployee, Nullable<int> maxEmployee, string sortByVotes, Nullable<int> focusAreaID, Nullable<int> userID, string location)
-        {
-            var companyNameParameter = companyName != null ?
-                new ObjectParameter("companyName", companyName) :
-                new ObjectParameter("companyName", typeof(string));
-    
-            var minRateParameter = minRate.HasValue ?
-                new ObjectParameter("minRate", minRate) :
-                new ObjectParameter("minRate", typeof(decimal));
-    
-            var maxRateParameter = maxRate.HasValue ?
-                new ObjectParameter("maxRate", maxRate) :
-                new ObjectParameter("maxRate", typeof(decimal));
-    
-            var minEmployeeParameter = minEmployee.HasValue ?
-                new ObjectParameter("minEmployee", minEmployee) :
-                new ObjectParameter("minEmployee", typeof(int));
-    
-            var maxEmployeeParameter = maxEmployee.HasValue ?
-                new ObjectParameter("maxEmployee", maxEmployee) :
-                new ObjectParameter("maxEmployee", typeof(int));
-    
-            var sortByVotesParameter = sortByVotes != null ?
-                new ObjectParameter("sortByVotes", sortByVotes) :
-                new ObjectParameter("sortByVotes", typeof(string));
-    
-            var focusAreaIDParameter = focusAreaID.HasValue ?
-                new ObjectParameter("focusAreaID", focusAreaID) :
-                new ObjectParameter("focusAreaID", typeof(int));
-    
-            var userIDParameter = userID.HasValue ?
-                new ObjectParameter("userID", userID) :
-                new ObjectParameter("userID", typeof(int));
-    
-            var locationParameter = location != null ?
-                new ObjectParameter("location", location) :
-                new ObjectParameter("location", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetCompany_Result>("Sp_GetCompany", companyNameParameter, minRateParameter, maxRateParameter, minEmployeeParameter, maxEmployeeParameter, sortByVotesParameter, focusAreaIDParameter, userIDParameter, locationParameter);
-        }
+        public virtual DbSet<CompanyFocus> CompanyFocus { get; set; }
+        public virtual DbSet<Company> Company { get; set; }
     
         public virtual ObjectResult<Sp_GetCompanyBranches_Result> Sp_GetCompanyBranches(Nullable<int> companyID)
         {
@@ -136,6 +95,55 @@ namespace UpVotes.DataModel
                 new ObjectParameter("CompanyID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetCompanyReviews_Result>("Sp_GetCompanyReviews", companyIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_GetCompany_Result> Sp_GetCompany(string companyName, Nullable<decimal> minRate, Nullable<decimal> maxRate, Nullable<int> minEmployee, Nullable<int> maxEmployee, string sortByVotes, Nullable<int> focusAreaID, Nullable<int> userID, string location, Nullable<int> pageNo, Nullable<int> pageSize)
+        {
+            var companyNameParameter = companyName != null ?
+                new ObjectParameter("companyName", companyName) :
+                new ObjectParameter("companyName", typeof(string));
+    
+            var minRateParameter = minRate.HasValue ?
+                new ObjectParameter("minRate", minRate) :
+                new ObjectParameter("minRate", typeof(decimal));
+    
+            var maxRateParameter = maxRate.HasValue ?
+                new ObjectParameter("maxRate", maxRate) :
+                new ObjectParameter("maxRate", typeof(decimal));
+    
+            var minEmployeeParameter = minEmployee.HasValue ?
+                new ObjectParameter("minEmployee", minEmployee) :
+                new ObjectParameter("minEmployee", typeof(int));
+    
+            var maxEmployeeParameter = maxEmployee.HasValue ?
+                new ObjectParameter("maxEmployee", maxEmployee) :
+                new ObjectParameter("maxEmployee", typeof(int));
+    
+            var sortByVotesParameter = sortByVotes != null ?
+                new ObjectParameter("sortByVotes", sortByVotes) :
+                new ObjectParameter("sortByVotes", typeof(string));
+    
+            var focusAreaIDParameter = focusAreaID.HasValue ?
+                new ObjectParameter("focusAreaID", focusAreaID) :
+                new ObjectParameter("focusAreaID", typeof(int));
+    
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("userID", userID) :
+                new ObjectParameter("userID", typeof(int));
+    
+            var locationParameter = location != null ?
+                new ObjectParameter("location", location) :
+                new ObjectParameter("location", typeof(string));
+    
+            var pageNoParameter = pageNo.HasValue ?
+                new ObjectParameter("PageNo", pageNo) :
+                new ObjectParameter("PageNo", typeof(int));
+    
+            var pageSizeParameter = pageSize.HasValue ?
+                new ObjectParameter("PageSize", pageSize) :
+                new ObjectParameter("PageSize", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetCompany_Result>("Sp_GetCompany", companyNameParameter, minRateParameter, maxRateParameter, minEmployeeParameter, maxEmployeeParameter, sortByVotesParameter, focusAreaIDParameter, userIDParameter, locationParameter, pageNoParameter, pageSizeParameter);
         }
     }
 }

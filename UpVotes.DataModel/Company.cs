@@ -17,11 +17,11 @@ namespace UpVotes.DataModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Company()
         {
-            this.CompanyBranches = new HashSet<CompanyBranch>();
+            this.CompanyBranch = new HashSet<CompanyBranch>();
             this.CompanyFocus = new HashSet<CompanyFocus>();
-            this.CompanyPortFolios = new HashSet<CompanyPortFolio>();
+            this.CompanyPortFolio = new HashSet<CompanyPortFolio>();
             this.CompanyReviews = new HashSet<CompanyReview>();
-            this.CompanyVotes = new HashSet<CompanyVote>();
+            this.CompanyVote = new HashSet<CompanyVote>();
         }
     
         public int CompanyID { get; set; }
@@ -50,14 +50,14 @@ namespace UpVotes.DataModel
         public string Summary1 { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CompanyBranch> CompanyBranches { get; set; }
+        public virtual ICollection<CompanyBranch> CompanyBranch { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CompanyFocus> CompanyFocus { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CompanyPortFolio> CompanyPortFolios { get; set; }
+        public virtual ICollection<CompanyPortFolio> CompanyPortFolio { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CompanyReview> CompanyReviews { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CompanyVote> CompanyVotes { get; set; }
+        public virtual ICollection<CompanyVote> CompanyVote { get; set; }
     }
 }

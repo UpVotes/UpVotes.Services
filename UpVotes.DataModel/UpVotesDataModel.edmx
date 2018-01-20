@@ -9,7 +9,7 @@
           <Key>
             <PropertyRef Name="CompanyID" />
           </Key>
-          <Property Name="CompanyID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CompanyID" Type="int" Nullable="false" />
           <Property Name="CompanyName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="LogoName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="TagLine" Type="nvarchar" MaxLength="50" />
@@ -408,6 +408,8 @@
           <Parameter Name="focusAreaID" Type="int" Mode="In" />
           <Parameter Name="userID" Type="int" Mode="In" />
           <Parameter Name="location" Type="nvarchar" Mode="In" />
+          <Parameter Name="PageNo" Type="int" Mode="In" />
+          <Parameter Name="PageSize" Type="int" Mode="In" />
         </Function>
         <Function Name="Sp_GetCompanyBranches" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyID" Type="int" Mode="In" />
@@ -512,17 +514,6 @@
     <edmx:ConceptualModels>
       <Schema Namespace="UpVotesModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="UpVotesEntities" annotation:LazyLoadingEnabled="true">
-          <FunctionImport Name="Sp_GetCompany" ReturnType="Collection(UpVotesModel.Sp_GetCompany_Result)">
-            <Parameter Name="companyName" Mode="In" Type="String" />
-            <Parameter Name="minRate" Mode="In" Type="Decimal" />
-            <Parameter Name="maxRate" Mode="In" Type="Decimal" />
-            <Parameter Name="minEmployee" Mode="In" Type="Int32" />
-            <Parameter Name="maxEmployee" Mode="In" Type="Int32" />
-            <Parameter Name="sortByVotes" Mode="In" Type="String" />
-            <Parameter Name="focusAreaID" Mode="In" Type="Int32" />
-            <Parameter Name="userID" Mode="In" Type="Int32" />
-            <Parameter Name="location" Mode="In" Type="String" />
-          </FunctionImport>
           <FunctionImport Name="Sp_GetCompanyBranches" ReturnType="Collection(UpVotesModel.Sp_GetCompanyBranches_Result)">
           <Parameter Name="CompanyID" Mode="In" Type="Int32" />
           </FunctionImport>
@@ -538,7 +529,6 @@
           </FunctionImport>
           <FunctionImport Name="Sp_GetFocusArea" ReturnType="Collection(UpVotesModel.Sp_GetFocusArea_Result)" />
           <EntitySet Name="CompanyBranches" EntityType="UpVotesModel.CompanyBranch" />
-          <EntitySet Name="CompanyFocus1" EntityType="UpVotesModel.CompanyFocus" />
           <EntitySet Name="CompanyPortFolios" EntityType="UpVotesModel.CompanyPortFolio" />
           <EntitySet Name="CompanyReviews" EntityType="UpVotesModel.CompanyReview" />
           <EntitySet Name="CompanyReviewThankNotes" EntityType="UpVotesModel.CompanyReviewThankNote" />
@@ -594,30 +584,44 @@
             <End Role="User" EntitySet="Users" />
             <End Role="UserToken" EntitySet="UserTokens" />
           </AssociationSet>
-          <EntitySet Name="Companies" EntityType="UpVotesModel.Company" />
+          <EntitySet Name="CompanyVotes" EntityType="UpVotesModel.CompanyVote" />
+          <FunctionImport Name="Sp_GetCompanyReviews" ReturnType="Collection(UpVotesModel.Sp_GetCompanyReviews_Result)">
+          <Parameter Name="CompanyID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="CompanyFocus" EntityType="UpVotesModel.CompanyFocus" />
+          <EntitySet Name="Company" EntityType="UpVotesModel.Company" />
           <AssociationSet Name="FK_CompanyBranch_Company" Association="UpVotesModel.FK_CompanyBranch_Company">
-            <End Role="Company" EntitySet="Companies" />
+            <End Role="Company" EntitySet="Company" />
             <End Role="CompanyBranch" EntitySet="CompanyBranches" />
           </AssociationSet>
           <AssociationSet Name="FK_CompanyFocus_Company" Association="UpVotesModel.FK_CompanyFocus_Company">
-            <End Role="Company" EntitySet="Companies" />
-            <End Role="CompanyFocus" EntitySet="CompanyFocus1" />
+            <End Role="Company" EntitySet="Company" />
+            <End Role="CompanyFocus" EntitySet="CompanyFocus" />
           </AssociationSet>
           <AssociationSet Name="FK_CompanyPortFolio_Company_CompanyID" Association="UpVotesModel.FK_CompanyPortFolio_Company_CompanyID">
-            <End Role="Company" EntitySet="Companies" />
+            <End Role="Company" EntitySet="Company" />
             <End Role="CompanyPortFolio" EntitySet="CompanyPortFolios" />
           </AssociationSet>
           <AssociationSet Name="FK_CompanyReviews_Company_CompanyID" Association="UpVotesModel.FK_CompanyReviews_Company_CompanyID">
-            <End Role="Company" EntitySet="Companies" />
+            <End Role="Company" EntitySet="Company" />
             <End Role="CompanyReview" EntitySet="CompanyReviews" />
           </AssociationSet>
-          <EntitySet Name="CompanyVotes" EntityType="UpVotesModel.CompanyVote" />
           <AssociationSet Name="FK_CompanyVote_Company" Association="UpVotesModel.FK_CompanyVote_Company">
-            <End Role="Company" EntitySet="Companies" />
+            <End Role="Company" EntitySet="Company" />
             <End Role="CompanyVote" EntitySet="CompanyVotes" />
           </AssociationSet>
-          <FunctionImport Name="Sp_GetCompanyReviews" ReturnType="Collection(UpVotesModel.Sp_GetCompanyReviews_Result)">
-          <Parameter Name="CompanyID" Mode="In" Type="Int32" />
+          <FunctionImport Name="Sp_GetCompany" ReturnType="Collection(UpVotesModel.Sp_GetCompany_Result)">
+            <Parameter Name="companyName" Mode="In" Type="String" />
+            <Parameter Name="minRate" Mode="In" Type="Decimal" />
+            <Parameter Name="maxRate" Mode="In" Type="Decimal" />
+            <Parameter Name="minEmployee" Mode="In" Type="Int32" />
+            <Parameter Name="maxEmployee" Mode="In" Type="Int32" />
+            <Parameter Name="sortByVotes" Mode="In" Type="String" />
+            <Parameter Name="focusAreaID" Mode="In" Type="Int32" />
+            <Parameter Name="userID" Mode="In" Type="Int32" />
+            <Parameter Name="location" Mode="In" Type="String" />
+            <Parameter Name="PageNo" Mode="In" Type="Int32" />
+            <Parameter Name="PageSize" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="Sp_GetCompanyBranches_Result">
@@ -661,37 +665,6 @@
           <Property Type="String" Name="FocusAreaName" Nullable="false" MaxLength="50" />
           <Property Type="Boolean" Name="IsActive" Nullable="false" />
         </ComplexType>
-        <ComplexType Name="Sp_GetCompany_Result">
-		  <Property Type="Int32" Name="CompanyID" Nullable="false" />
-          <Property Type="String" Name="CompanyName" Nullable="false" MaxLength="50" />
-		  <Property Type="String" Name="LogoName" Nullable="false" MaxLength="50" />
-		  <Property Type="String" Name="TagLine" Nullable="true" MaxLength="50" />
-		  <Property Type="Int32" Name="NoOfVotes" Nullable="false" />
-		  <Property Type="Boolean" Name="IsVoted" Nullable="false" />
-		  <Property Type="String" Name="BranchName" Nullable="false" MaxLength="50" />
-		  <Property Type="String" Name="Address" Nullable="true" MaxLength="300" />
-		  <Property Type="String" Name="City" Nullable="true" MaxLength="50" />
-		  <Property Type="String" Name="StateName" Nullable="false" MaxLength="50" />
-		  <Property Type="String" Name="CountryName" Nullable="false" MaxLength="50" />
-		  <Property Type="String" Name="LinkedInProfileURL" Nullable="false" MaxLength="250" />
-		  <Property Type="String" Name="FacebookProfileURL" Nullable="false" MaxLength="250" />
-		  <Property Type="String" Name="TwitterProfileURL" Nullable="false" MaxLength="250" />
-		  <Property Type="String" Name="GooglePlusProfileURL" Nullable="false" MaxLength="250" />
-		  <Property Type="String" Name="AveragHourlyRate" Nullable="false" MaxLength="100" />
-		  <Property Type="String" Name="TotalEmployees" Nullable="false" MaxLength="250" />
-		  <Property Type="Int32" Name="FoundedYear" Nullable="false"/>
-		  <Property Type="String" Name="URL" Nullable="false" MaxLength="250" />
-		  <Property Type="String" Name="PhoneNumber" Nullable="false" MaxLength="15" />
-		  <Property Type="String" Name="Email" Nullable="false" MaxLength="50" />
-		  <Property Type="String" Name="Summary" Nullable="true"/>
-		  <Property Type="String" Name="Summary1" Nullable="true"/>
-		  <Property Type="String" Name="Summary2" Nullable="true"/>
-		  <Property Type="String" Name="Summary3" Nullable="true"/>
-		  <Property Type="String" Name="KeyClients" Nullable="true"/> 
-<Property Type="Int32" Name="Ranks" Nullable="false" />
-          <Property Type="Int32" Name="RowNumber" Nullable="true" />
-          <Property Type="Int32" Name="TotalCount" Nullable="false" />
-        </ComplexType>
         <EntityType Name="CompanyBranch">
           <Key>
             <PropertyRef Name="BranchID" />
@@ -715,21 +688,6 @@
           <NavigationProperty Name="Country" Relationship="UpVotesModel.FK_CompanyBranch_Country" FromRole="CompanyBranch" ToRole="Country" />
           <NavigationProperty Name="State" Relationship="UpVotesModel.FK_CompanyBranch_State" FromRole="CompanyBranch" ToRole="State" />
           <NavigationProperty Name="Company" Relationship="UpVotesModel.FK_CompanyBranch_Company" FromRole="CompanyBranch" ToRole="Company" />
-        </EntityType>
-        <EntityType Name="CompanyFocus">
-          <Key>
-            <PropertyRef Name="CompanyFocusID" />
-          </Key>
-          <Property Name="CompanyFocusID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CompanyID" Type="Int32" Nullable="false" />
-          <Property Name="FocusAreaID" Type="Int32" Nullable="false" />
-          <Property Name="FocusAreaPercentage" Type="Double" Nullable="false" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="CreatedBy" Type="Int32" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="ModifiedBy" Type="Int32" />
-          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Company" Relationship="UpVotesModel.FK_CompanyFocus_Company" FromRole="CompanyFocus" ToRole="Company" />
         </EntityType>
         <EntityType Name="CompanyPortFolio">
           <Key>
@@ -1013,11 +971,49 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="CompanyVote">
+          <Key>
+            <PropertyRef Name="CompanyVoteID" />
+          </Key>
+          <Property Name="CompanyVoteID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CompanyID" Type="Int32" Nullable="false" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="VotedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Company" Relationship="UpVotesModel.FK_CompanyVote_Company" FromRole="CompanyVote" ToRole="Company" />
+        </EntityType>
+        <ComplexType Name="Sp_GetCompanyReviews_Result">
+          <Property Type="Int32" Name="CompanyID" Nullable="false" />
+          <Property Type="Int32" Name="CompanyReviewID" Nullable="false" />
+          <Property Type="String" Name="ReviewerFullName" Nullable="false" MaxLength="101" />
+          <Property Type="String" Name="ReviewerCompanyName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="ReviewerDesignation" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="ReviewerProjectName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="FocusAreaName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="FeedBack" Nullable="false" />
+          <Property Type="Int16" Name="Rating" Nullable="false" />
+          <Property Type="DateTime" Name="ReviewDate" Nullable="false" Precision="23" />
+          <Property Type="String" Name="UserProfilePicture" Nullable="false" />
+        </ComplexType>
+        <EntityType Name="CompanyFocus">
+          <Key>
+            <PropertyRef Name="CompanyFocusID" />
+          </Key>
+          <Property Name="CompanyFocusID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CompanyID" Type="Int32" Nullable="false" />
+          <Property Name="FocusAreaID" Type="Int32" Nullable="false" />
+          <Property Name="FocusAreaPercentage" Type="Double" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="Int32" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Company" Relationship="UpVotesModel.FK_CompanyFocus_Company" FromRole="CompanyFocus" ToRole="Company" />
+        </EntityType>
         <EntityType Name="Company">
           <Key>
             <PropertyRef Name="CompanyID" />
           </Key>
-          <Property Name="CompanyID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CompanyID" Type="Int32" Nullable="false" />
           <Property Name="CompanyName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="LogoName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="TagLine" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
@@ -1041,11 +1037,11 @@
           <Property Name="Summary2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Summary3" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Summary1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="CompanyBranches" Relationship="UpVotesModel.FK_CompanyBranch_Company" FromRole="Company" ToRole="CompanyBranch" />
+          <NavigationProperty Name="CompanyBranch" Relationship="UpVotesModel.FK_CompanyBranch_Company" FromRole="Company" ToRole="CompanyBranch" />
           <NavigationProperty Name="CompanyFocus" Relationship="UpVotesModel.FK_CompanyFocus_Company" FromRole="Company" ToRole="CompanyFocus" />
-          <NavigationProperty Name="CompanyPortFolios" Relationship="UpVotesModel.FK_CompanyPortFolio_Company_CompanyID" FromRole="Company" ToRole="CompanyPortFolio" />
+          <NavigationProperty Name="CompanyPortFolio" Relationship="UpVotesModel.FK_CompanyPortFolio_Company_CompanyID" FromRole="Company" ToRole="CompanyPortFolio" />
           <NavigationProperty Name="CompanyReviews" Relationship="UpVotesModel.FK_CompanyReviews_Company_CompanyID" FromRole="Company" ToRole="CompanyReview" />
-          <NavigationProperty Name="CompanyVotes" Relationship="UpVotesModel.FK_CompanyVote_Company" FromRole="Company" ToRole="CompanyVote" />
+          <NavigationProperty Name="CompanyVote" Relationship="UpVotesModel.FK_CompanyVote_Company" FromRole="Company" ToRole="CompanyVote" />
         </EntityType>
         <Association Name="FK_CompanyBranch_Company">
           <End Type="UpVotesModel.Company" Role="Company" Multiplicity="1" />
@@ -1095,16 +1091,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="CompanyVote">
-          <Key>
-            <PropertyRef Name="CompanyVoteID" />
-          </Key>
-          <Property Name="CompanyVoteID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CompanyID" Type="Int32" Nullable="false" />
-          <Property Name="UserID" Type="Int32" Nullable="false" />
-          <Property Name="VotedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Company" Relationship="UpVotesModel.FK_CompanyVote_Company" FromRole="CompanyVote" ToRole="Company" />
-        </EntityType>
         <Association Name="FK_CompanyVote_Company">
           <End Type="UpVotesModel.Company" Role="Company" Multiplicity="1" />
           <End Type="UpVotesModel.CompanyVote" Role="CompanyVote" Multiplicity="*" />
@@ -1117,18 +1103,38 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="Sp_GetCompanyReviews_Result">
-          <Property Type="Int32" Name="CompanyID" Nullable="false" />
-          <Property Type="Int32" Name="CompanyReviewID" Nullable="false" />
-          <Property Type="String" Name="ReviewerFullName" Nullable="false" MaxLength="101" />
-          <Property Type="String" Name="ReviewerCompanyName" Nullable="true" MaxLength="100" />
-          <Property Type="String" Name="ReviewerDesignation" Nullable="true" MaxLength="100" />
-          <Property Type="String" Name="ReviewerProjectName" Nullable="false" MaxLength="100" />
-          <Property Type="String" Name="FocusAreaName" Nullable="false" MaxLength="50" />
-          <Property Type="String" Name="FeedBack" Nullable="false" />
-          <Property Type="Int16" Name="Rating" Nullable="false" />
-          <Property Type="DateTime" Name="ReviewDate" Nullable="false" Precision="23" />
-          <Property Type="String" Name="UserProfilePicture" Nullable="false" />
+        <ComplexType Name="Sp_GetCompany_Result">
+          <Property Type="Int32" Name="CompanyID" Nullable="true" />
+          <Property Type="String" Name="CompanyName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="LogoName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="TagLine" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="UserRating" Nullable="true" />
+          <Property Type="Int32" Name="NoOfUsersRated" Nullable="true" />
+          <Property Type="Int32" Name="NoOfVotes" Nullable="true" />
+          <Property Type="Boolean" Name="IsVoted" Nullable="true" />
+          <Property Type="String" Name="BranchName" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="Address" Nullable="true" />
+          <Property Type="String" Name="City" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="StateName" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="CountryName" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="LinkedInProfileURL" Nullable="true" />
+          <Property Type="String" Name="FacebookProfileURL" Nullable="true" />
+          <Property Type="String" Name="TwitterProfileURL" Nullable="true" />
+          <Property Type="String" Name="GooglePlusProfileURL" Nullable="true" />
+          <Property Type="String" Name="AveragHourlyRate" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="TotalEmployees" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="FoundedYear" Nullable="true" />
+          <Property Type="String" Name="URL" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="PhoneNumber" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="Summary" Nullable="true" />
+          <Property Type="String" Name="Summary1" Nullable="true" />
+          <Property Type="String" Name="Summary2" Nullable="true" />
+          <Property Type="String" Name="Summary3" Nullable="true" />
+          <Property Type="String" Name="KeyClients" Nullable="true" />
+          <Property Type="Int32" Name="RANKS" Nullable="true" />
+          <Property Type="Int32" Name="TotalCount" Nullable="true" />
+          <Property Type="Int32" Name="RowNumber" Nullable="true" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -1136,41 +1142,6 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="UpVotesModelStoreContainer" CdmEntityContainer="UpVotesEntities">
-          <FunctionImportMapping FunctionImportName="Sp_GetCompany" FunctionName="UpVotesModel.Store.Sp_GetCompany">
-		  <ResultMapping>
-              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetCompany_Result">
-                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
-                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
-                <ScalarProperty Name="LogoName" ColumnName="LogoName" />
-                <ScalarProperty Name="TagLine" ColumnName="TagLine" />
-                <ScalarProperty Name="NoOfVotes" ColumnName="NoOfVotes" />
-				<ScalarProperty Name="IsVoted" ColumnName="IsVoted" />
-                <ScalarProperty Name="BranchName" ColumnName="BranchName" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="City" ColumnName="City" />
-                <ScalarProperty Name="StateName" ColumnName="StateName" />
-                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
-                <ScalarProperty Name="LinkedInProfileURL" ColumnName="LinkedInProfileURL" />				
-				<ScalarProperty Name="FacebookProfileURL" ColumnName="FacebookProfileURL" />
-				<ScalarProperty Name="TwitterProfileURL" ColumnName="TwitterProfileURL" />
-				<ScalarProperty Name="GooglePlusProfileURL" ColumnName="GooglePlusProfileURL" />
-				<ScalarProperty Name="AveragHourlyRate" ColumnName="AveragHourlyRate" />
-				<ScalarProperty Name="TotalEmployees" ColumnName="TotalEmployees" />
-				<ScalarProperty Name="FoundedYear" ColumnName="FoundedYear" />
-				<ScalarProperty Name="URL" ColumnName="URL" />
-				<ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
-				<ScalarProperty Name="Email" ColumnName="Email" />
-				<ScalarProperty Name="Summary" ColumnName="Summary" />
-				<ScalarProperty Name="Summary1" ColumnName="Summary1" />
-				<ScalarProperty Name="Summary2" ColumnName="Summary2" />
-				<ScalarProperty Name="Summary3" ColumnName="Summary3" />
-				<ScalarProperty Name="KeyClients" ColumnName="KeyClients" />
-				<ScalarProperty Name="Ranks" ColumnName="Ranks" />
-                <ScalarProperty Name="RowNumber" ColumnName="RowNumber" />
-                <ScalarProperty Name="TotalCount" ColumnName="TotalCount" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Sp_GetCompanyBranches" FunctionName="UpVotesModel.Store.Sp_GetCompanyBranches">
             <ResultMapping>
               <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetCompanyBranches_Result">
@@ -1251,21 +1222,6 @@
                 <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
                 <ScalarProperty Name="BranchName" ColumnName="BranchName" />
                 <ScalarProperty Name="BranchID" ColumnName="BranchID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="CompanyFocus1">
-            <EntityTypeMapping TypeName="UpVotesModel.CompanyFocus">
-              <MappingFragment StoreEntitySet="CompanyFocus">
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="FocusAreaPercentage" ColumnName="FocusAreaPercentage" />
-                <ScalarProperty Name="FocusAreaID" ColumnName="FocusAreaID" />
-                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
-                <ScalarProperty Name="CompanyFocusID" ColumnName="CompanyFocusID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1408,7 +1364,49 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Companies">
+          <EntitySetMapping Name="CompanyVotes">
+            <EntityTypeMapping TypeName="UpVotesModel.CompanyVote">
+              <MappingFragment StoreEntitySet="CompanyVote">
+                <ScalarProperty Name="VotedDate" ColumnName="VotedDate" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="CompanyVoteID" ColumnName="CompanyVoteID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="Sp_GetCompanyReviews" FunctionName="UpVotesModel.Store.Sp_GetCompanyReviews">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetCompanyReviews_Result">
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="CompanyReviewID" ColumnName="CompanyReviewID" />
+                <ScalarProperty Name="ReviewerFullName" ColumnName="ReviewerFullName" />
+                <ScalarProperty Name="ReviewerCompanyName" ColumnName="ReviewerCompanyName" />
+                <ScalarProperty Name="ReviewerDesignation" ColumnName="ReviewerDesignation" />
+                <ScalarProperty Name="ReviewerProjectName" ColumnName="ReviewerProjectName" />
+                <ScalarProperty Name="FocusAreaName" ColumnName="FocusAreaName" />
+                <ScalarProperty Name="FeedBack" ColumnName="FeedBack" />
+                <ScalarProperty Name="Rating" ColumnName="Rating" />
+                <ScalarProperty Name="ReviewDate" ColumnName="ReviewDate" />
+                <ScalarProperty Name="UserProfilePicture" ColumnName="UserProfilePicture" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="CompanyFocus">
+            <EntityTypeMapping TypeName="UpVotesModel.CompanyFocus">
+              <MappingFragment StoreEntitySet="CompanyFocus">
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="FocusAreaPercentage" ColumnName="FocusAreaPercentage" />
+                <ScalarProperty Name="FocusAreaID" ColumnName="FocusAreaID" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="CompanyFocusID" ColumnName="CompanyFocusID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Company">
             <EntityTypeMapping TypeName="UpVotesModel.Company">
               <MappingFragment StoreEntitySet="Company">
                 <ScalarProperty Name="Summary1" ColumnName="Summary1" />
@@ -1438,30 +1436,40 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="CompanyVotes">
-            <EntityTypeMapping TypeName="UpVotesModel.CompanyVote">
-              <MappingFragment StoreEntitySet="CompanyVote">
-                <ScalarProperty Name="VotedDate" ColumnName="VotedDate" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
-                <ScalarProperty Name="CompanyVoteID" ColumnName="CompanyVoteID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="Sp_GetCompanyReviews" FunctionName="UpVotesModel.Store.Sp_GetCompanyReviews">
+          <FunctionImportMapping FunctionImportName="Sp_GetCompany" FunctionName="UpVotesModel.Store.Sp_GetCompany">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetCompanyReviews_Result">
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetCompany_Result">
                 <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
-                <ScalarProperty Name="CompanyReviewID" ColumnName="CompanyReviewID" />
-                <ScalarProperty Name="ReviewerFullName" ColumnName="ReviewerFullName" />
-                <ScalarProperty Name="ReviewerCompanyName" ColumnName="ReviewerCompanyName" />
-                <ScalarProperty Name="ReviewerDesignation" ColumnName="ReviewerDesignation" />
-                <ScalarProperty Name="ReviewerProjectName" ColumnName="ReviewerProjectName" />
-                <ScalarProperty Name="FocusAreaName" ColumnName="FocusAreaName" />
-                <ScalarProperty Name="FeedBack" ColumnName="FeedBack" />
-                <ScalarProperty Name="Rating" ColumnName="Rating" />
-                <ScalarProperty Name="ReviewDate" ColumnName="ReviewDate" />
-                <ScalarProperty Name="UserProfilePicture" ColumnName="UserProfilePicture" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="LogoName" ColumnName="LogoName" />
+                <ScalarProperty Name="TagLine" ColumnName="TagLine" />
+                <ScalarProperty Name="UserRating" ColumnName="UserRating" />
+                <ScalarProperty Name="NoOfUsersRated" ColumnName="NoOfUsersRated" />
+                <ScalarProperty Name="NoOfVotes" ColumnName="NoOfVotes" />
+                <ScalarProperty Name="IsVoted" ColumnName="IsVoted" />
+                <ScalarProperty Name="BranchName" ColumnName="BranchName" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="StateName" ColumnName="StateName" />
+                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+                <ScalarProperty Name="LinkedInProfileURL" ColumnName="LinkedInProfileURL" />
+                <ScalarProperty Name="FacebookProfileURL" ColumnName="FacebookProfileURL" />
+                <ScalarProperty Name="TwitterProfileURL" ColumnName="TwitterProfileURL" />
+                <ScalarProperty Name="GooglePlusProfileURL" ColumnName="GooglePlusProfileURL" />
+                <ScalarProperty Name="AveragHourlyRate" ColumnName="AveragHourlyRate" />
+                <ScalarProperty Name="TotalEmployees" ColumnName="TotalEmployees" />
+                <ScalarProperty Name="FoundedYear" ColumnName="FoundedYear" />
+                <ScalarProperty Name="URL" ColumnName="URL" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Summary" ColumnName="Summary" />
+                <ScalarProperty Name="Summary1" ColumnName="Summary1" />
+                <ScalarProperty Name="Summary2" ColumnName="Summary2" />
+                <ScalarProperty Name="Summary3" ColumnName="Summary3" />
+                <ScalarProperty Name="KeyClients" ColumnName="KeyClients" />
+                <ScalarProperty Name="RANKS" ColumnName="RANKS" />
+                <ScalarProperty Name="TotalCount" ColumnName="TotalCount" />
+                <ScalarProperty Name="RowNumber" ColumnName="RowNumber" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -1479,7 +1487,7 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />

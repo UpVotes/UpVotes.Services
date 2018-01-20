@@ -13,12 +13,12 @@ namespace UpVotes.BusinessServices.Interface
 
         bool UpdateCompany(int companyID, CompanyEntity companyEntity);
 
-        bool DeleteCompany(int companyID);
-
-        IEnumerable<AutoComplete> GetCompanyNames();
+        bool DeleteCompany(int companyID);        
 
         string VoteForCompany(CompanyVoteEntity companyVote);
 
         string ThanksNoteForReview(CompanyReviewThankNoteEntity companyReviewThanksNoteEntity);
+
+        List<string> GetDataForAutoComplete(int type, int focusAreaID, string searchTerm);
     }
 }

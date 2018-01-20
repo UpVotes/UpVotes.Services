@@ -111,27 +111,27 @@ namespace UpVotes.WebAPI.Controllers
             {
                 return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
             }
-        }
+        }        
 
         [HttpGet]
-        [Route("api/GetCompanyNames")]
-        public HttpResponseMessage GetCompanyNames()
+        [Route("api/GetDataForAutoComplete/{type}/{focusAreaID}/{searchTerm}")]
+        public HttpResponseMessage GetDataForAutoComplete(int type, int focusAreaID, string searchTerm)
         {
             try
             {
-                var companyNames = _companyServices.GetCompanyNames();
-                if (companyNames.Any())
+                List<string> autoCompleteList = _companyServices.GetDataForAutoComplete(type, focusAreaID, searchTerm);
+                if (autoCompleteList.Any())
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, companyNames);
+                    return Request.CreateResponse(HttpStatusCode.OK, autoCompleteList);
                 }
                 else
                 {
-                    return Request.CreateResponse(HttpStatusCode.NotFound, "Company Names not found");
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Not found");
                 }
             }
             catch (Exception ex)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
             }
         }
     }
