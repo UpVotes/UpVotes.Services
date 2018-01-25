@@ -20,5 +20,6 @@ namespace UpVotes.BusinessServices.Interface
         string ThanksNoteForReview(CompanyReviewThankNoteEntity companyReviewThanksNoteEntity);
 
         List<string> GetDataForAutoComplete(int type, int focusAreaID, string searchTerm);
+        CompanyDetail GetUserReviews(CompanyEntity companyEntity);
     }
 }

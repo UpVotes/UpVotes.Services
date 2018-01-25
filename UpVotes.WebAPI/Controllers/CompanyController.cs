@@ -134,5 +134,20 @@ namespace UpVotes.WebAPI.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
             }
         }
+
+        [HttpPost]
+        [Route("api/GetUserReviews")]
+        public HttpResponseMessage GetUserReviews(CompanyEntity companyEntity)
+        {
+            try
+            {
+                CompanyDetail company = _companyServices.GetUserReviews(companyEntity);
+                return Request.CreateResponse(HttpStatusCode.OK, company);
+            }
+            catch(Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
     }
 }

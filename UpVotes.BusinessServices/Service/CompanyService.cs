@@ -42,7 +42,7 @@ namespace UpVotes.BusinessServices.Service
         {
             CompanyDetail companyDetail = new CompanyDetail();
             companyDetail.CompanyList = new List<CompanyEntity>();
-            
+
             try
             {
                 IEnumerable<CompanyEntity> companyEntities = GetCompany(companyName);
@@ -53,7 +53,7 @@ namespace UpVotes.BusinessServices.Service
                         company.CompanyFocus = GetCompanyFocus(company.CompanyID).ToList();
                         company.CompanyBranches = GetCompanyBranches(company.CompanyID).ToList();
                         company.CompanyPortFolio = GetCompanyPortFolio(company.CompanyID).ToList();
-                        company.CompanyReviews = GetCompanyReviews(company.CompanyID).ToList();
+                        company.CompanyReviews = GetCompanyReviews(company.CompanyName).ToList();
                         if (company.CompanyReviews.Count() > 0)
                         {
                             foreach (CompanyReviewsEntity companyReviewsEntity in company.CompanyReviews)
@@ -77,14 +77,14 @@ namespace UpVotes.BusinessServices.Service
             }
         }
 
-        public CompanyDetail GetAllCompanyDetails(string companyName, decimal? minRate, decimal? maxRate, int? minEmployee, int? maxEmployee, string sortby, int? focusAreaID,string location, int userID = 0, int PageNo = 1, int PageSize = 10)
+        public CompanyDetail GetAllCompanyDetails(string companyName, decimal? minRate, decimal? maxRate, int? minEmployee, int? maxEmployee, string sortby, int? focusAreaID, string location, int userID = 0, int PageNo = 1, int PageSize = 10)
         {
             CompanyDetail companyDetail = new CompanyDetail();
             companyDetail.CompanyList = new List<CompanyEntity>();
-            
+
             try
             {
-                IEnumerable<CompanyEntity> companyEntities = GetCompany(companyName, minRate, maxRate, minEmployee, maxEmployee, sortby, focusAreaID,location, userID, PageNo, PageSize);
+                IEnumerable<CompanyEntity> companyEntities = GetCompany(companyName, minRate, maxRate, minEmployee, maxEmployee, sortby, focusAreaID, location, userID, PageNo, PageSize);
                 if (companyEntities.Count() > 0)
                 {
                     foreach (CompanyEntity company in companyEntities)
@@ -95,13 +95,13 @@ namespace UpVotes.BusinessServices.Service
                             company.CompanyFocus = GetCompanyFocus(company.CompanyID).ToList();
                             company.CompanyBranches = GetCompanyBranches(company.CompanyID).ToList();
                             company.CompanyPortFolio = GetCompanyPortFolio(company.CompanyID).ToList();
-                            company.CompanyReviews = GetCompanyReviews(company.CompanyID).ToList();
+                            company.CompanyReviews = GetCompanyReviews(company.CompanyName).ToList();
                             if (company.CompanyReviews.Count() > 0)
                             {
                                 foreach (CompanyReviewsEntity companyReviewsEntity in company.CompanyReviews)
                                 {
                                     companyReviewsEntity.NoOfThankNotes = GetCompanyReviewThankNotes(company.CompanyID, companyReviewsEntity.CompanyReviewID).Count();
-                                }                                
+                                }
                             }
                         }
 
@@ -128,7 +128,7 @@ namespace UpVotes.BusinessServices.Service
             }
         }
 
-        private IEnumerable<CompanyEntity> GetCompany(string companyName, decimal? minRate, decimal? maxRate, int? minEmployee, int? maxEmployee, string sortby, int? focusAreaID,string location, int userID = 0, int PageNo = 1, int PageSize = 10)
+        private IEnumerable<CompanyEntity> GetCompany(string companyName, decimal? minRate, decimal? maxRate, int? minEmployee, int? maxEmployee, string sortby, int? focusAreaID, string location, int userID = 0, int PageNo = 1, int PageSize = 10)
         {
             using (_context = new UpVotesEntities())
             {
@@ -137,7 +137,7 @@ namespace UpVotes.BusinessServices.Service
                 Mapper.Initialize(cfg => { cfg.CreateMap<Sp_GetCompany_Result, CompanyEntity>(); });
                 IEnumerable<CompanyEntity> companyEntity = Mapper.Map<IEnumerable<Sp_GetCompany_Result>, IEnumerable<CompanyEntity>>(company);
                 return companyEntity;
-            }            
+            }
         }
 
         private IEnumerable<CompanyPortFolioEntity> GetCompanyPortFolio(int companyID)
@@ -148,7 +148,7 @@ namespace UpVotes.BusinessServices.Service
                 Mapper.Initialize(cfg => { cfg.CreateMap<Sp_GetCompanyPortFolio_Result, CompanyPortFolioEntity>(); });
                 IEnumerable<CompanyPortFolioEntity> companyPortFolioEntity = Mapper.Map<IEnumerable<Sp_GetCompanyPortFolio_Result>, IEnumerable<CompanyPortFolioEntity>>(companyPortFolio);
                 return companyPortFolioEntity;
-            }            
+            }
         }
 
         private IEnumerable<CompanyFocusEntity> GetCompanyFocus(int companyID)
@@ -159,7 +159,7 @@ namespace UpVotes.BusinessServices.Service
                 Mapper.Initialize(cfg => { cfg.CreateMap<Sp_GetCompanyFocus_Result, CompanyFocusEntity>(); });
                 IEnumerable<CompanyFocusEntity> companyFocusEntity = Mapper.Map<IEnumerable<Sp_GetCompanyFocus_Result>, IEnumerable<CompanyFocusEntity>>(companyFocus);
                 return companyFocusEntity;
-            }            
+            }
         }
 
         private IEnumerable<CompanyBranchEntity> GetCompanyBranches(int companyID)
@@ -170,18 +170,18 @@ namespace UpVotes.BusinessServices.Service
                 Mapper.Initialize(cfg => { cfg.CreateMap<Sp_GetCompanyBranches_Result, CompanyBranchEntity>(); });
                 IEnumerable<CompanyBranchEntity> companyBranchEntity = Mapper.Map<IEnumerable<Sp_GetCompanyBranches_Result>, IEnumerable<CompanyBranchEntity>>(companyBranches);
                 return companyBranchEntity;
-            }            
+            }
         }
 
-        private IEnumerable<CompanyReviewsEntity> GetCompanyReviews(int companyID)
+        private IEnumerable<CompanyReviewsEntity> GetCompanyReviews(string companyName)
         {
             using (_context = new UpVotesEntities())
             {
-                IEnumerable<Sp_GetCompanyReviews_Result> companyReviews = _context.Database.SqlQuery(typeof(Sp_GetCompanyReviews_Result), "EXEC Sp_GetCompanyReviews " + companyID).Cast<Sp_GetCompanyReviews_Result>().AsEnumerable();
+                IEnumerable<Sp_GetCompanyReviews_Result> companyReviews = _context.Database.SqlQuery(typeof(Sp_GetCompanyReviews_Result), "EXEC Sp_GetCompanyReviews " + "'" + companyName + "'").Cast<Sp_GetCompanyReviews_Result>().AsEnumerable();
                 Mapper.Initialize(cfg => { cfg.CreateMap<Sp_GetCompanyReviews_Result, CompanyReviewsEntity>(); });
                 IEnumerable<CompanyReviewsEntity> companyReviewEntity = Mapper.Map<IEnumerable<Sp_GetCompanyReviews_Result>, IEnumerable<CompanyReviewsEntity>>(companyReviews);
                 return companyReviewEntity;
-            }            
+            }
         }
 
         private IEnumerable<CompanyReviewThankNoteEntity> GetCompanyReviewThankNotes(int companyID, int companyReviewID)
@@ -193,7 +193,7 @@ namespace UpVotes.BusinessServices.Service
                 IEnumerable<CompanyReviewThankNoteEntity> companyReviewThankNotesEntity = Mapper.Map<IEnumerable<Sp_GetCompanyReviewThankNotedUsers_Result>, IEnumerable<CompanyReviewThankNoteEntity>>(companyReviewThankNotes);
                 return companyReviewThankNotesEntity;
             }
-        }        
+        }
 
         public string VoteForCompany(CompanyVoteEntity companyVote)
         {
@@ -236,14 +236,14 @@ namespace UpVotes.BusinessServices.Service
         }
 
         private void SendEmailForInternalUse(User user, string companyName)
-        {            
+        {
             using (SmtpClient smtpClient = new SmtpClient())
             {
                 MailAddress mailAddress = new MailAddress(System.Configuration.ConfigurationManager.AppSettings["AdminEmail"]);
                 var From = new MailAddress(System.Configuration.ConfigurationManager.AppSettings["AdminEmail"]);
                 var To = new MailAddress(System.Configuration.ConfigurationManager.AppSettings["EmailTo"]);
                 using (MailMessage message = new MailMessage(From, To))
-                {                    
+                {
                     message.IsBodyHtml = true;
                     message.BodyEncoding = System.Text.Encoding.UTF8;
                     message.Subject = user.FirstName + " " + user.LastName + " voted for " + companyName;
@@ -318,7 +318,7 @@ namespace UpVotes.BusinessServices.Service
             {
                 using (_context = new UpVotesEntities())
                 {
-                    List<string> myAutoCompleteList = new List<string>();                    
+                    List<string> myAutoCompleteList = new List<string>();
 
                     if (type == 1)//CompanyName
                     {
@@ -339,7 +339,7 @@ namespace UpVotes.BusinessServices.Service
                                               orderby c.City
                                               select c.City).Distinct().ToList();
 
-                        if(myAutoCompleteList.Any())
+                        if (myAutoCompleteList.Any())
                         {
                             return myAutoCompleteList;
                         }
@@ -353,7 +353,7 @@ namespace UpVotes.BusinessServices.Service
                                                   orderby d.StateName
                                                   select d.StateName).Distinct().ToList();
 
-                            if(myAutoCompleteList.Any())
+                            if (myAutoCompleteList.Any())
                             {
                                 return myAutoCompleteList;
                             }
@@ -380,5 +380,33 @@ namespace UpVotes.BusinessServices.Service
                 throw ex;
             }
         }
+
+        public CompanyDetail GetUserReviews(CompanyEntity companyEntity)
+        {
+            string[] companyNamesList = companyEntity.CompanyName.Split(',');
+            CompanyDetail companyDetail = new CompanyDetail();
+            companyDetail.CompanyList = new List<CompanyEntity>();
+
+            foreach (string companyName in companyNamesList)
+            {
+
+                CompanyEntity company = new CompanyEntity();
+                company.CompanyName = companyName.Trim();
+                company.CompanyReviews = GetCompanyReviews(company.CompanyName).ToList();
+                if (company.CompanyReviews.Count() > 0)
+                {
+                    foreach (CompanyReviewsEntity companyReviewsEntity in company.CompanyReviews)
+                    {
+                        companyReviewsEntity.NoOfThankNotes = GetCompanyReviewThankNotes(company.CompanyID, companyReviewsEntity.CompanyReviewID).Count();
+                    }
+                }
+
+                companyDetail.CompanyList.Add(company);
+
+            }
+
+            return companyDetail;
+        }
+
     }
 }
