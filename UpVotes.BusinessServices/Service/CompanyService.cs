@@ -381,29 +381,23 @@ namespace UpVotes.BusinessServices.Service
             }
         }
 
-        public CompanyDetail GetUserReviews(CompanyEntity companyEntity)
+        public CompanyDetail GetUserReviews(string companyName)
         {
-            string[] companyNamesList = companyEntity.CompanyName.Split(',');
             CompanyDetail companyDetail = new CompanyDetail();
             companyDetail.CompanyList = new List<CompanyEntity>();
 
-            foreach (string companyName in companyNamesList)
+            CompanyEntity company = new CompanyEntity();
+            company.CompanyName = companyName.Trim();
+            company.CompanyReviews = GetCompanyReviews(company.CompanyName).ToList();
+            if (company.CompanyReviews.Count() > 0)
             {
-
-                CompanyEntity company = new CompanyEntity();
-                company.CompanyName = companyName.Trim();
-                company.CompanyReviews = GetCompanyReviews(company.CompanyName).ToList();
-                if (company.CompanyReviews.Count() > 0)
+                foreach (CompanyReviewsEntity companyReviewsEntity in company.CompanyReviews)
                 {
-                    foreach (CompanyReviewsEntity companyReviewsEntity in company.CompanyReviews)
-                    {
-                        companyReviewsEntity.NoOfThankNotes = GetCompanyReviewThankNotes(company.CompanyID, companyReviewsEntity.CompanyReviewID).Count();
-                    }
+                    companyReviewsEntity.NoOfThankNotes = GetCompanyReviewThankNotes(company.CompanyID, companyReviewsEntity.CompanyReviewID).Count();
                 }
-
-                companyDetail.CompanyList.Add(company);
-
             }
+
+            companyDetail.CompanyList.Add(company);
 
             return companyDetail;
         }

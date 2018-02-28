@@ -135,13 +135,13 @@ namespace UpVotes.WebAPI.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("api/GetUserReviews")]
-        public HttpResponseMessage GetUserReviews(CompanyEntity companyEntity)
+        [HttpGet]
+        [Route("api/GetUserReviews/{companyName}")]
+        public HttpResponseMessage GetUserReviews(string companyName)
         {
             try
             {
-                CompanyDetail company = _companyServices.GetUserReviews(companyEntity);
+                CompanyDetail company = _companyServices.GetUserReviews(companyName);
                 return Request.CreateResponse(HttpStatusCode.OK, company);
             }
             catch(Exception ex)
