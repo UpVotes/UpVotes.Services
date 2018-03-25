@@ -9,7 +9,7 @@
           <Key>
             <PropertyRef Name="CompanyID" />
           </Key>
-          <Property Name="CompanyID" Type="int" Nullable="false" />
+          <Property Name="CompanyID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CompanyName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="LogoName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="TagLine" Type="nvarchar" MaxLength="50" />
@@ -417,11 +417,16 @@
         <Function Name="Sp_GetCompanyFocus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyID" Type="int" Mode="In" />
         </Function>
+        <Function Name="Sp_GetCompanyNames" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="type" Type="int" Mode="In" />
+          <Parameter Name="focusAreaID" Type="int" Mode="In" />
+          <Parameter Name="CompanyNamelocation" Type="nvarchar" Mode="In" />
+        </Function>
         <Function Name="Sp_GetCompanyPortFolio" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyID" Type="int" Mode="In" />
         </Function>
         <Function Name="Sp_GetCompanyReviews" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="CompanyID" Type="int" Mode="In" />
+          <Parameter Name="companyName" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="Sp_GetCompanyReviewThankNotedUsers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyID" Type="int" Mode="In" />
@@ -586,7 +591,7 @@
           </AssociationSet>
           <EntitySet Name="CompanyVotes" EntityType="UpVotesModel.CompanyVote" />
           <FunctionImport Name="Sp_GetCompanyReviews" ReturnType="Collection(UpVotesModel.Sp_GetCompanyReviews_Result)">
-          <Parameter Name="CompanyID" Mode="In" Type="Int32" />
+          <Parameter Name="companyName" Mode="In" Type="String" />
           </FunctionImport>
           <EntitySet Name="CompanyFocus" EntityType="UpVotesModel.CompanyFocus" />
           <EntitySet Name="Company" EntityType="UpVotesModel.Company" />
@@ -622,6 +627,11 @@
             <Parameter Name="location" Mode="In" Type="String" />
             <Parameter Name="PageNo" Mode="In" Type="Int32" />
             <Parameter Name="PageSize" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetCompanyNames" ReturnType="Collection(String)">
+            <Parameter Name="type" Mode="In" Type="Int32" />
+            <Parameter Name="focusAreaID" Mode="In" Type="Int32" />
+            <Parameter Name="CompanyNamelocation" Mode="In" Type="String" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="Sp_GetCompanyBranches_Result">
@@ -1473,6 +1483,7 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_GetCompanyNames" FunctionName="UpVotesModel.Store.Sp_GetCompanyNames" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

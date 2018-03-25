@@ -88,13 +88,13 @@ namespace UpVotes.DataModel
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetFocusArea_Result>("Sp_GetFocusArea");
         }
     
-        public virtual ObjectResult<Sp_GetCompanyReviews_Result> Sp_GetCompanyReviews(Nullable<int> companyID)
+        public virtual ObjectResult<Sp_GetCompanyReviews_Result> Sp_GetCompanyReviews(string companyName)
         {
-            var companyIDParameter = companyID.HasValue ?
-                new ObjectParameter("CompanyID", companyID) :
-                new ObjectParameter("CompanyID", typeof(int));
+            var companyNameParameter = companyName != null ?
+                new ObjectParameter("companyName", companyName) :
+                new ObjectParameter("companyName", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetCompanyReviews_Result>("Sp_GetCompanyReviews", companyIDParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetCompanyReviews_Result>("Sp_GetCompanyReviews", companyNameParameter);
         }
     
         public virtual ObjectResult<Sp_GetCompany_Result> Sp_GetCompany(string companyName, Nullable<decimal> minRate, Nullable<decimal> maxRate, Nullable<int> minEmployee, Nullable<int> maxEmployee, string sortByVotes, Nullable<int> focusAreaID, Nullable<int> userID, string location, Nullable<int> pageNo, Nullable<int> pageSize)
@@ -144,6 +144,23 @@ namespace UpVotes.DataModel
                 new ObjectParameter("PageSize", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetCompany_Result>("Sp_GetCompany", companyNameParameter, minRateParameter, maxRateParameter, minEmployeeParameter, maxEmployeeParameter, sortByVotesParameter, focusAreaIDParameter, userIDParameter, locationParameter, pageNoParameter, pageSizeParameter);
+        }
+    
+        public virtual ObjectResult<string> Sp_GetCompanyNames(Nullable<int> type, Nullable<int> focusAreaID, string companyNamelocation)
+        {
+            var typeParameter = type.HasValue ?
+                new ObjectParameter("type", type) :
+                new ObjectParameter("type", typeof(int));
+    
+            var focusAreaIDParameter = focusAreaID.HasValue ?
+                new ObjectParameter("focusAreaID", focusAreaID) :
+                new ObjectParameter("focusAreaID", typeof(int));
+    
+            var companyNamelocationParameter = companyNamelocation != null ?
+                new ObjectParameter("CompanyNamelocation", companyNamelocation) :
+                new ObjectParameter("CompanyNamelocation", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("Sp_GetCompanyNames", typeParameter, focusAreaIDParameter, companyNamelocationParameter);
         }
     }
 }
