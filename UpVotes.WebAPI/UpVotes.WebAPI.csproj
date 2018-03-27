@@ -25,6 +25,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -229,6 +230,7 @@
     <Compile Include="Controllers\AuthenticateController.cs" />
     <Compile Include="Controllers\CompanyController.cs" />
     <Compile Include="Controllers\FocusAreaController.cs" />
+    <Compile Include="Controllers\UserCompanyListController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Filters\Authentication\ApiAuthenticationFilter.cs" />
     <Compile Include="Filters\Authentication\BasicAuthenticationIdentity.cs" />

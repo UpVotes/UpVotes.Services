@@ -402,6 +402,9 @@
     <Parameter Name="sortByVotes" Type="nvarchar" Mode="In" />
     <Parameter Name="focusAreaID" Type="int" Mode="In" />
     <Parameter Name="userID" Type="int" Mode="In" />
+    <Parameter Name="location" Type="nvarchar" Mode="In" />
+    <Parameter Name="PageNo" Type="int" Mode="In" />
+    <Parameter Name="PageSize" Type="int" Mode="In" />
   </Function>
   <Function Name="Sp_GetCompanyBranches" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="CompanyID" Type="int" Mode="In" />
@@ -409,11 +412,16 @@
   <Function Name="Sp_GetCompanyFocus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="CompanyID" Type="int" Mode="In" />
   </Function>
+  <Function Name="Sp_GetCompanyNames" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="type" Type="int" Mode="In" />
+    <Parameter Name="focusAreaID" Type="int" Mode="In" />
+    <Parameter Name="CompanyNamelocation" Type="nvarchar" Mode="In" />
+  </Function>
   <Function Name="Sp_GetCompanyPortFolio" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="CompanyID" Type="int" Mode="In" />
   </Function>
   <Function Name="Sp_GetCompanyReviews" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-    <Parameter Name="CompanyID" Type="int" Mode="In" />
+    <Parameter Name="companyName" Type="nvarchar" Mode="In" />
   </Function>
   <Function Name="Sp_GetCompanyReviewThankNotedUsers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="CompanyID" Type="int" Mode="In" />

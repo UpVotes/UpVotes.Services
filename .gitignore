@@ -11,3 +11,5 @@
 /UpVotes.DataModel/obj
 /UpVotes.Resolver/obj
 /UpVotes.WebAPI/obj
+*.pdb
+*.dll

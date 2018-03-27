@@ -321,19 +321,13 @@ namespace UpVotes.BusinessServices.Service
                     List<string> myAutoCompleteList = new List<string>();
 
                     if (type == 1)//CompanyName
-                    {
-                        //myAutoCompleteList = (from a in _context.Company
-                        //                      join b in _context.CompanyFocus on a.CompanyID equals b.CompanyID
-                        //                      where a.IsActive == true && b.FocusAreaID == focusAreaID && a.CompanyName.Trim().ToUpper().Contains(searchTerm.Trim().ToUpper())
-                        //                      orderby a.CompanyName
-                        //                      select a.CompanyName).Distinct().ToList();
+                    {                       
                         using (_context = new UpVotesEntities())
                         {
                             myAutoCompleteList = _context.Database.SqlQuery(typeof(string), "EXEC Sp_GetCompanyNames " + type + "," + focusAreaID + "," + searchTerm).Cast<string>().ToList();
                             
                             return myAutoCompleteList;
-                        }
-                        //return myAutoCompleteList;
+                        }                        
                     }
                     else if (type == 2)//Location
                     {
@@ -342,45 +336,7 @@ namespace UpVotes.BusinessServices.Service
                             myAutoCompleteList = _context.Database.SqlQuery(typeof(string), "EXEC Sp_GetCompanyNames " + type + "," + focusAreaID+","+ searchTerm).Cast<string>().ToList();
 
                             return myAutoCompleteList;
-                        }
-                        //myAutoCompleteList = (from a in _context.Company
-                        //                      join b in _context.CompanyFocus on a.CompanyID equals b.CompanyID
-                        //                      join c in _context.CompanyBranches on a.CompanyID equals c.CompanyID
-                        //                      where a.IsActive == true && b.FocusAreaID == focusAreaID && c.IsActive == true && c.City.Trim().ToUpper().Contains(searchTerm.Trim().ToUpper())
-                        //                      orderby c.City
-                        //                      select c.City).Distinct().ToList();
-
-                        //if (myAutoCompleteList.Any())
-                        //{
-                        //    return myAutoCompleteList;
-                        //}
-                        //else
-                        //{
-                        //    myAutoCompleteList = (from a in _context.Company
-                        //                          join b in _context.CompanyFocus on a.CompanyID equals b.CompanyID
-                        //                          join c in _context.CompanyBranches on a.CompanyID equals c.CompanyID
-                        //                          join d in _context.States on c.StateID equals d.StateID
-                        //                          where a.IsActive == true && c.IsActive == true && d.StateName.Trim().ToUpper().Contains(searchTerm.Trim().ToUpper())
-                        //                          orderby d.StateName
-                        //                          select d.StateName).Distinct().ToList();
-
-                        //    if (myAutoCompleteList.Any())
-                        //    {
-                        //        return myAutoCompleteList;
-                        //    }
-                        //    else
-                        //    {
-                        //        myAutoCompleteList = (from a in _context.Company
-                        //                              join b in _context.CompanyFocus on a.CompanyID equals b.CompanyID
-                        //                              join c in _context.CompanyBranches on a.CompanyID equals c.CompanyID
-                        //                              join d in _context.Countries on c.CountryID equals d.CountryID
-                        //                              where a.IsActive == true && c.IsActive == true && d.CountryName.Trim().ToUpper().Contains(searchTerm.Trim().ToUpper())
-                        //                              orderby d.CountryName
-                        //                              select d.CountryName).Distinct().ToList();
-
-                        //        return myAutoCompleteList;
-                        //    }
-                        //}
+                        }                        
                     }
 
                     return myAutoCompleteList;
@@ -411,6 +367,39 @@ namespace UpVotes.BusinessServices.Service
             companyDetail.CompanyList.Add(company);
 
             return companyDetail;
+        }
+
+        public CompanyDetail GetUserCompanies(int userID)
+        {
+            CompanyDetail companyDetail = new CompanyDetail();
+            companyDetail.CompanyList = new List<CompanyEntity>();
+
+            try
+            {
+                using (_context = new UpVotesEntities())
+                {
+                    List<Company> companyListDb = _context.Company.Where(a => a.CreatedBy == userID).Take(2).ToList();
+                    foreach (Company companyDb in companyListDb)
+                    {
+                        CompanyEntity companyEntity = new CompanyEntity
+                        {
+                            CompanyID = companyDb.CompanyID,
+                            CompanyName = companyDb.CompanyName,
+                            UserRating = companyDb.CompanyReviews.Count() > 0 ? Convert.ToInt32(companyDb.CompanyReviews.Average(a => a.Rating)) : 0,
+                            NoOfVotes = companyDb.CompanyVote.Count() > 0 ? companyDb.CompanyVote.Count() : 0,
+                            FoundedYear = companyDb.FoundedYear,
+                            URL = companyDb.URL
+                        };
+                        companyDetail.CompanyList.Add(companyEntity);
+                    }
+
+                    return companyDetail;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
     }

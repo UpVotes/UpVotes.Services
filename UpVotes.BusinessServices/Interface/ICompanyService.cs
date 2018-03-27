@@ -19,7 +19,10 @@ namespace UpVotes.BusinessServices.Interface
 
         string ThanksNoteForReview(CompanyReviewThankNoteEntity companyReviewThanksNoteEntity);
 
+        CompanyDetail GetUserCompanies(int userID);
+
         List<string> GetDataForAutoComplete(int type, int focusAreaID, string searchTerm);
+
         CompanyDetail GetUserReviews(string companyName);
     }
 }

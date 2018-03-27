@@ -1,39 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
   <EntityContainerMapping StorageEntityContainer="UpVotesModelStoreContainer" CdmEntityContainer="UpVotesEntities">
-    <FunctionImportMapping FunctionImportName="Sp_GetCompany" FunctionName="UpVotesModel.Store.Sp_GetCompany">
-      <ResultMapping>
-        <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetCompany_Result">
-          <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
-          <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
-          <ScalarProperty Name="LogoName" ColumnName="LogoName" />
-          <ScalarProperty Name="TagLine" ColumnName="TagLine" />
-          <ScalarProperty Name="NoOfVotes" ColumnName="NoOfVotes" />
-          <ScalarProperty Name="IsVoted" ColumnName="IsVoted" />
-          <ScalarProperty Name="BranchName" ColumnName="BranchName" />
-          <ScalarProperty Name="Address" ColumnName="Address" />
-          <ScalarProperty Name="City" ColumnName="City" />
-          <ScalarProperty Name="StateName" ColumnName="StateName" />
-          <ScalarProperty Name="CountryName" ColumnName="CountryName" />
-          <ScalarProperty Name="LinkedInProfileURL" ColumnName="LinkedInProfileURL" />
-          <ScalarProperty Name="FacebookProfileURL" ColumnName="FacebookProfileURL" />
-          <ScalarProperty Name="TwitterProfileURL" ColumnName="TwitterProfileURL" />
-          <ScalarProperty Name="GooglePlusProfileURL" ColumnName="GooglePlusProfileURL" />
-          <ScalarProperty Name="AveragHourlyRate" ColumnName="AveragHourlyRate" />
-          <ScalarProperty Name="TotalEmployees" ColumnName="TotalEmployees" />
-          <ScalarProperty Name="FoundedYear" ColumnName="FoundedYear" />
-          <ScalarProperty Name="URL" ColumnName="URL" />
-          <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
-          <ScalarProperty Name="Email" ColumnName="Email" />
-          <ScalarProperty Name="Summary" ColumnName="Summary" />
-          <ScalarProperty Name="Summary1" ColumnName="Summary1" />
-          <ScalarProperty Name="Summary2" ColumnName="Summary2" />
-          <ScalarProperty Name="Summary3" ColumnName="Summary3" />
-          <ScalarProperty Name="KeyClients" ColumnName="KeyClients" />
-          <ScalarProperty Name="Ranks" ColumnName="Ranks" />
-        </ComplexTypeMapping>
-      </ResultMapping>
-    </FunctionImportMapping>
     <FunctionImportMapping FunctionImportName="Sp_GetCompanyBranches" FunctionName="UpVotesModel.Store.Sp_GetCompanyBranches">
       <ResultMapping>
         <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetCompanyBranches_Result">
@@ -114,21 +81,6 @@
           <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
           <ScalarProperty Name="BranchName" ColumnName="BranchName" />
           <ScalarProperty Name="BranchID" ColumnName="BranchID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="CompanyFocus1">
-      <EntityTypeMapping TypeName="UpVotesModel.CompanyFocus">
-        <MappingFragment StoreEntitySet="CompanyFocus">
-          <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-          <ScalarProperty Name="FocusAreaPercentage" ColumnName="FocusAreaPercentage" />
-          <ScalarProperty Name="FocusAreaID" ColumnName="FocusAreaID" />
-          <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
-          <ScalarProperty Name="CompanyFocusID" ColumnName="CompanyFocusID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -271,7 +223,49 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Companies">
+    <EntitySetMapping Name="CompanyVotes">
+      <EntityTypeMapping TypeName="UpVotesModel.CompanyVote">
+        <MappingFragment StoreEntitySet="CompanyVote">
+          <ScalarProperty Name="VotedDate" ColumnName="VotedDate" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+          <ScalarProperty Name="CompanyVoteID" ColumnName="CompanyVoteID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="Sp_GetCompanyReviews" FunctionName="UpVotesModel.Store.Sp_GetCompanyReviews">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetCompanyReviews_Result">
+          <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+          <ScalarProperty Name="CompanyReviewID" ColumnName="CompanyReviewID" />
+          <ScalarProperty Name="ReviewerFullName" ColumnName="ReviewerFullName" />
+          <ScalarProperty Name="ReviewerCompanyName" ColumnName="ReviewerCompanyName" />
+          <ScalarProperty Name="ReviewerDesignation" ColumnName="ReviewerDesignation" />
+          <ScalarProperty Name="ReviewerProjectName" ColumnName="ReviewerProjectName" />
+          <ScalarProperty Name="FocusAreaName" ColumnName="FocusAreaName" />
+          <ScalarProperty Name="FeedBack" ColumnName="FeedBack" />
+          <ScalarProperty Name="Rating" ColumnName="Rating" />
+          <ScalarProperty Name="ReviewDate" ColumnName="ReviewDate" />
+          <ScalarProperty Name="UserProfilePicture" ColumnName="UserProfilePicture" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <EntitySetMapping Name="CompanyFocus">
+      <EntityTypeMapping TypeName="UpVotesModel.CompanyFocus">
+        <MappingFragment StoreEntitySet="CompanyFocus">
+          <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="FocusAreaPercentage" ColumnName="FocusAreaPercentage" />
+          <ScalarProperty Name="FocusAreaID" ColumnName="FocusAreaID" />
+          <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+          <ScalarProperty Name="CompanyFocusID" ColumnName="CompanyFocusID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Company">
       <EntityTypeMapping TypeName="UpVotesModel.Company">
         <MappingFragment StoreEntitySet="Company">
           <ScalarProperty Name="Summary1" ColumnName="Summary1" />
@@ -301,32 +295,43 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="CompanyVotes">
-      <EntityTypeMapping TypeName="UpVotesModel.CompanyVote">
-        <MappingFragment StoreEntitySet="CompanyVote">
-          <ScalarProperty Name="VotedDate" ColumnName="VotedDate" />
-          <ScalarProperty Name="UserID" ColumnName="UserID" />
-          <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
-          <ScalarProperty Name="CompanyVoteID" ColumnName="CompanyVoteID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <FunctionImportMapping FunctionImportName="Sp_GetCompanyReviews" FunctionName="UpVotesModel.Store.Sp_GetCompanyReviews">
+    <FunctionImportMapping FunctionImportName="Sp_GetCompany" FunctionName="UpVotesModel.Store.Sp_GetCompany">
       <ResultMapping>
-        <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetCompanyReviews_Result">
+        <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetCompany_Result">
           <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
-          <ScalarProperty Name="CompanyReviewID" ColumnName="CompanyReviewID" />
-          <ScalarProperty Name="ReviewerFullName" ColumnName="ReviewerFullName" />
-          <ScalarProperty Name="ReviewerCompanyName" ColumnName="ReviewerCompanyName" />
-          <ScalarProperty Name="ReviewerDesignation" ColumnName="ReviewerDesignation" />
-          <ScalarProperty Name="ReviewerProjectName" ColumnName="ReviewerProjectName" />
-          <ScalarProperty Name="FocusAreaName" ColumnName="FocusAreaName" />
-          <ScalarProperty Name="FeedBack" ColumnName="FeedBack" />
-          <ScalarProperty Name="Rating" ColumnName="Rating" />
-          <ScalarProperty Name="ReviewDate" ColumnName="ReviewDate" />
-          <ScalarProperty Name="UserProfilePicture" ColumnName="UserProfilePicture" />
+          <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+          <ScalarProperty Name="LogoName" ColumnName="LogoName" />
+          <ScalarProperty Name="TagLine" ColumnName="TagLine" />
+          <ScalarProperty Name="UserRating" ColumnName="UserRating" />
+          <ScalarProperty Name="NoOfUsersRated" ColumnName="NoOfUsersRated" />
+          <ScalarProperty Name="NoOfVotes" ColumnName="NoOfVotes" />
+          <ScalarProperty Name="IsVoted" ColumnName="IsVoted" />
+          <ScalarProperty Name="BranchName" ColumnName="BranchName" />
+          <ScalarProperty Name="Address" ColumnName="Address" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="StateName" ColumnName="StateName" />
+          <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+          <ScalarProperty Name="LinkedInProfileURL" ColumnName="LinkedInProfileURL" />
+          <ScalarProperty Name="FacebookProfileURL" ColumnName="FacebookProfileURL" />
+          <ScalarProperty Name="TwitterProfileURL" ColumnName="TwitterProfileURL" />
+          <ScalarProperty Name="GooglePlusProfileURL" ColumnName="GooglePlusProfileURL" />
+          <ScalarProperty Name="AveragHourlyRate" ColumnName="AveragHourlyRate" />
+          <ScalarProperty Name="TotalEmployees" ColumnName="TotalEmployees" />
+          <ScalarProperty Name="FoundedYear" ColumnName="FoundedYear" />
+          <ScalarProperty Name="URL" ColumnName="URL" />
+          <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Summary" ColumnName="Summary" />
+          <ScalarProperty Name="Summary1" ColumnName="Summary1" />
+          <ScalarProperty Name="Summary2" ColumnName="Summary2" />
+          <ScalarProperty Name="Summary3" ColumnName="Summary3" />
+          <ScalarProperty Name="KeyClients" ColumnName="KeyClients" />
+          <ScalarProperty Name="RANKS" ColumnName="RANKS" />
+          <ScalarProperty Name="TotalCount" ColumnName="TotalCount" />
+          <ScalarProperty Name="RowNumber" ColumnName="RowNumber" />
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Sp_GetCompanyNames" FunctionName="UpVotesModel.Store.Sp_GetCompanyNames" />
   </EntityContainerMapping>
 </Mapping>
