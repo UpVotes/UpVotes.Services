@@ -276,6 +276,104 @@ namespace UpVotes.BusinessServices.Service
             }
         }
 
+        private void SendEmailForQuotation(QuotationRequest request,QuotationResponse response)
+        {
+            using (SmtpClient smtpClient = new SmtpClient())
+            {
+                MailAddress mailAddress = new MailAddress(System.Configuration.ConfigurationManager.AppSettings["AdminEmail"]);
+                var From = new MailAddress(System.Configuration.ConfigurationManager.AppSettings["AdminEmail"]);
+                var To = new MailAddress(System.Configuration.ConfigurationManager.AppSettings["EmailTo"]);
+                var UserTo = new MailAddress(request.EmailId);
+                using (MailMessage message = new MailMessage(From, UserTo))
+                {
+                    message.IsBodyHtml = true;
+                    message.BodyEncoding = System.Text.Encoding.UTF8;
+                    message.Subject = "Your Mobile App Development Cost Estimate";
+                    message.SubjectEncoding = System.Text.Encoding.UTF8;
+                    message.Priority = MailPriority.Normal;
+                    message.From = new MailAddress(System.Configuration.ConfigurationManager.AppSettings["AdminEmail"], System.Configuration.ConfigurationManager.AppSettings["DomainDisplayName"]);
+
+                    System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+                    sb.Append("<p>Dear "+ request.Name + ",</p><p> Thanks for trying out the Mobile App Cost Estimator. You can always find the details of your estimate by table below.</p>");
+                    sb.Append("<table style = 'font-family: arial, sans-serif;    border-collapse: collapse; width: 100%;'><tr><th style = 'background-color: #dddddd;'>Your Selection</th>");
+                    sb.Append("<th style = 'background-color: #dddddd;'> Zone 1 Amount </th>");
+                    sb.Append("<th style = 'background-color: #dddddd;'> Zone 2 Amount </th>");
+                    sb.Append("<th style = 'background-color: #dddddd;'> Zone 3 Amount </th></tr>");                   
+   
+                    foreach (var item in response.QuotationData)
+                    {
+                        if (item.SubCategory != "Features")
+                        {
+                            sb.Append("<tr><td style = 'border: 1px solid #dddddd; text-align: left;padding: 8px;'>" + item.Question + "<br/>" + item.Answer + "</td>");
+                            sb.Append("<td style = 'border: 1px solid #dddddd; text-align: left;padding: 8px;'>" + "$" + Convert.ToInt32(item.MinPriceZone1).ToString("#,##0") + " - " + "$" + Convert.ToInt32(item.MaxPriceZone1).ToString("#,##0") + "</td>");
+                            sb.Append("<td style = 'border: 1px solid #dddddd; text-align: left;padding: 8px;'>" + "$" + Convert.ToInt32(item.MinPriceZone2).ToString("#,##0") + " - " + "$" + Convert.ToInt32(item.MaxPriceZone2).ToString("#,##0") + "</td>");
+                            sb.Append("<td style = 'border: 1px solid #dddddd; text-align: left;padding: 8px;'>" + "$" + Convert.ToInt32(item.MinPriceZone3).ToString("#,##0") + " - " + "$" + Convert.ToInt32(item.MaxPriceZone3).ToString("#,##0") + "</td></tr>");
+                        }
+                        else
+                        {
+                            sb.Append("<tr><td style = 'border: 1px solid #dddddd; text-align: left;padding: 8px;'>" + item.Ctypes + "</td>");
+                            sb.Append("<td style = 'border: 1px solid #dddddd; text-align: left;padding: 8px;'>" + "$" + Convert.ToInt32(item.MinPriceZone1).ToString("#,##0") + " - " + "$" + Convert.ToInt32(item.MaxPriceZone1).ToString("#,##0") + "</td>");
+                            sb.Append("<td style = 'border: 1px solid #dddddd; text-align: left;padding: 8px;'>" + "$" + Convert.ToInt32(item.MinPriceZone2).ToString("#,##0") + " - " + "$" + Convert.ToInt32(item.MaxPriceZone2).ToString("#,##0") + "</td>");
+                            sb.Append("<td style = 'border: 1px solid #dddddd; text-align: left;padding: 8px;'>" + "$" + Convert.ToInt32(item.MinPriceZone3).ToString("#,##0") + " - " + "$" + Convert.ToInt32(item.MaxPriceZone3).ToString("#,##0") + "</td></tr>");
+                        }
+                     }
+
+                    sb.Append("<tr><td style = 'border: 1px solid #dddddd; text-align: left;padding: 8px;'><strong>Total Approximate Cost</strong></td>");
+                    sb.Append("<td style = 'border: 1px solid #dddddd; text-align: left;padding: 8px;'><strong>" + "$" + Convert.ToInt32(response.TotalMinZone1).ToString("#,##0") + " - " + "$" + Convert.ToInt32(response.TotalMaxZone1).ToString("#,##0") + "</strong></td>");
+                    sb.Append("<td style = 'border: 1px solid #dddddd; text-align: left;padding: 8px;'><strong>" + "$" + Convert.ToInt32(response.TotalMinZone2).ToString("#,##0") + " - " + "$" + Convert.ToInt32(response.TotalMaxZone2).ToString("#,##0") + "</strong></td>");
+                    sb.Append("<td style = 'border: 1px solid #dddddd; text-align: left;padding: 8px;'><strong>" + "$" + Convert.ToInt32(response.TotalMinZone3).ToString("#,##0") + " - " + "$" + Convert.ToInt32(response.TotalMaxZone3).ToString("#,##0") + "</strong></td>");
+                    sb.Append("</tr></table><br/><p>If you decide to go ahead and build your app, we would love the opportunity to talk about how we can help.</p>");
+
+                   
+                    sb.Append("<p><strong> Thanks & Regards </strong></p>");
+                    sb.Append("<p>Upvotes team</p>");
+                    sb.Append("<p><a href = '" + System.Configuration.ConfigurationManager.AppSettings["WebClientURL"] + "' > www.upvotes.co </a></p>");
+                    sb.Append("<p>Follow us on - <a href = 'https://www.linkedin.com/company/upvotes/'> LinkedIn </a> &nbsp;&nbsp;|&nbsp;&nbsp; <a href = 'https://twitter.com/upvotes_co'> Twitter </a> &nbsp;&nbsp;|&nbsp;&nbsp;<a href = 'https://www.facebook.com/upvotes.co/'> Facebook </a></p>");
+
+                    message.Body = sb.ToString();
+
+                    smtpClient.Host = "smtpout.secureserver.net";
+                    smtpClient.Port = 80;
+                    smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    smtpClient.UseDefaultCredentials = false;
+                    smtpClient.EnableSsl = false;
+                    System.Net.NetworkCredential credentials = new System.Net.NetworkCredential(System.Configuration.ConfigurationManager.AppSettings["AdminEmail"], System.Configuration.ConfigurationManager.AppSettings["AdminPassword"]);
+                    smtpClient.Credentials = credentials;
+                    smtpClient.Send(message);
+                }
+
+                using (MailMessage message = new MailMessage(From, To))
+                {
+                    message.IsBodyHtml = true;
+                    message.BodyEncoding = System.Text.Encoding.UTF8;
+                    message.Subject = request.Name + " - Mobile App Cost Estimator ";
+                    message.SubjectEncoding = System.Text.Encoding.UTF8;
+                    message.Priority = MailPriority.Normal;
+                    message.From = new MailAddress(System.Configuration.ConfigurationManager.AppSettings["AdminEmail"], System.Configuration.ConfigurationManager.AppSettings["DomainDisplayName"]);
+
+                    System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+                    sb.Append("<p>Hello,</p><p> " + request.Name + "(" + request.EmailId + ")" + " is used Upvotes Quotation tool");
+                    sb.Append("<p><strong> Thanks & Regards </strong></p>");
+                    sb.Append("<p> Upvotes.Co </p>");
+                    sb.Append("<p><a href = 'mailto:" + System.Configuration.ConfigurationManager.AppSettings["AdminEmail"] + "' > support@upvotes.co </a></p>");
+                    sb.Append("<p><a href = '" + System.Configuration.ConfigurationManager.AppSettings["WebClientURL"] + "' > www.upvotes.co </a></p>");
+
+                    message.Body = sb.ToString();
+
+                    smtpClient.Host = "smtpout.secureserver.net";
+                    smtpClient.Port = 80;
+                    smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    smtpClient.UseDefaultCredentials = false;
+                    smtpClient.EnableSsl = false;
+                    System.Net.NetworkCredential credentials = new System.Net.NetworkCredential(System.Configuration.ConfigurationManager.AppSettings["AdminEmail"], System.Configuration.ConfigurationManager.AppSettings["AdminPassword"]);
+                    smtpClient.Credentials = credentials;
+                    smtpClient.Send(message);
+                }
+            }
+        }
+
         public string ThanksNoteForReview(CompanyReviewThankNoteEntity companyReviewThanksNoteEntity)
         {
             try
@@ -400,6 +498,55 @@ namespace UpVotes.BusinessServices.Service
             {
                 throw ex;
             }
+        }
+
+        public QuotationResponse GetQuotationData(QuotationRequest request)
+        {
+            QuotationResponse QuotationResponseobj = new QuotationResponse();
+            QuotationInfo Quotationdetail = new QuotationInfo();
+            QuotationResponseobj.QuotationData = new List<QuotationInfo>();
+            try
+            {
+                using (_context = new UpVotesEntities())
+                {
+                    var quoteid = _context.Sp_InsUserQuotation(request.platform.ToString(), request.Theme.ToString(), request.LoginSecurity.ToString(), request.Profile.ToString(), request.Security.ToString(), request.ReviewRate.ToString(), request.Service.ToString(), request.Database.ToString(), request.featuresstring.ToString(), request.EmailId, request.Name, request.CompanyName);
+                    var response = _context.Sp_GetQuoteForMobileApp(request.platform.ToString(), request.Theme.ToString(), request.LoginSecurity.ToString(), request.Profile.ToString(), request.Security.ToString(), request.ReviewRate.ToString(), request.Service.ToString(), request.Database.ToString(), request.featuresstring.ToString()).ToList();
+                    if (response != null)
+                    {
+                        response.ToList().ForEach(q => QuotationResponseobj.QuotationData.Add(new QuotationInfo
+                        {
+                            QuotationRateCardID = q.QuotationRateCardID,
+                            MainCategory = q.MainCategory,
+                            SubCategory = q.SubCategory,
+                            Ctypes = q.Ctypes,
+                            Classname = q.Classname,
+                            MinPriceZone1 = q.MinPriceZone1,
+                            MaxPriceZone1 = q.MaxPriceZone1,
+                            MinPriceZone2 = q.MinPriceZone2,
+                            MaxPriceZone2 = q.MaxPriceZone2,
+                            MinPriceZone3 = q.MinPriceZone3,
+                            MaxPriceZone3 = q.MaxPriceZone3,
+                            Question = q.Question,
+                            Answer = q.Answer
+                        }
+                        ));
+                        QuotationResponseobj.TotalMinZone1 = QuotationResponseobj.QuotationData.Sum(i => i.MinPriceZone1);
+                        QuotationResponseobj.TotalMinZone2 = QuotationResponseobj.QuotationData.Sum(i => i.MinPriceZone2);
+                        QuotationResponseobj.TotalMinZone3 = QuotationResponseobj.QuotationData.Sum(i => i.MinPriceZone3);
+                        QuotationResponseobj.TotalMaxZone1 = QuotationResponseobj.QuotationData.Sum(i => i.MaxPriceZone1);
+                        QuotationResponseobj.TotalMaxZone2 = QuotationResponseobj.QuotationData.Sum(i => i.MaxPriceZone2);
+                        QuotationResponseobj.TotalMaxZone3 = QuotationResponseobj.QuotationData.Sum(i => i.MaxPriceZone3);
+
+                        SendEmailForQuotation(request, QuotationResponseobj);
+                    }
+                }
+                return QuotationResponseobj;
+            }
+            catch (Exception ex)
+            {
+                return QuotationResponseobj;
+            }
+            
         }
 
     }

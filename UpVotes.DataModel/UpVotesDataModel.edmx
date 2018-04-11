@@ -433,6 +433,31 @@
           <Parameter Name="CompanyReviewID" Type="int" Mode="In" />
         </Function>
         <Function Name="Sp_GetFocusArea" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="Sp_GetQuoteForMobileApp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="platformType" Type="nvarchar" Mode="In" />
+          <Parameter Name="themeType" Type="nvarchar" Mode="In" />
+          <Parameter Name="loginsecurityType" Type="nvarchar" Mode="In" />
+          <Parameter Name="profileType" Type="nvarchar" Mode="In" />
+          <Parameter Name="securityType" Type="nvarchar" Mode="In" />
+          <Parameter Name="reviewrateType" Type="nvarchar" Mode="In" />
+          <Parameter Name="serviceType" Type="nvarchar" Mode="In" />
+          <Parameter Name="databaseType" Type="nvarchar" Mode="In" />
+          <Parameter Name="featuresType" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="Sp_InsUserQuotation" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="platformType" Type="nvarchar" Mode="In" />
+          <Parameter Name="themeType" Type="nvarchar" Mode="In" />
+          <Parameter Name="loginsecurityType" Type="nvarchar" Mode="In" />
+          <Parameter Name="profileType" Type="nvarchar" Mode="In" />
+          <Parameter Name="securityType" Type="nvarchar" Mode="In" />
+          <Parameter Name="reviewrateType" Type="nvarchar" Mode="In" />
+          <Parameter Name="serviceType" Type="nvarchar" Mode="In" />
+          <Parameter Name="databaseType" Type="nvarchar" Mode="In" />
+          <Parameter Name="featuresType" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="emailID" Type="nvarchar" Mode="In" />
+          <Parameter Name="name" Type="nvarchar" Mode="In" />
+          <Parameter Name="companyName" Type="nvarchar" Mode="In" />
+        </Function>
         <EntityContainer Name="UpVotesModelStoreContainer">
           <EntitySet Name="Company" EntityType="Self.Company" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CompanyBranch" EntityType="Self.CompanyBranch" Schema="dbo" store:Type="Tables" />
@@ -632,6 +657,31 @@
             <Parameter Name="type" Mode="In" Type="Int32" />
             <Parameter Name="focusAreaID" Mode="In" Type="Int32" />
             <Parameter Name="CompanyNamelocation" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetQuoteForMobileApp" ReturnType="Collection(UpVotesModel.Sp_GetQuoteForMobileApp_Result)">
+            <Parameter Name="platformType" Mode="In" Type="String" />
+            <Parameter Name="themeType" Mode="In" Type="String" />
+            <Parameter Name="loginsecurityType" Mode="In" Type="String" />
+            <Parameter Name="profileType" Mode="In" Type="String" />
+            <Parameter Name="securityType" Mode="In" Type="String" />
+            <Parameter Name="reviewrateType" Mode="In" Type="String" />
+            <Parameter Name="serviceType" Mode="In" Type="String" />
+            <Parameter Name="databaseType" Mode="In" Type="String" />
+            <Parameter Name="featuresType" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_InsUserQuotation" ReturnType="Collection(Decimal)">
+            <Parameter Name="platformType" Mode="In" Type="String" />
+            <Parameter Name="themeType" Mode="In" Type="String" />
+            <Parameter Name="loginsecurityType" Mode="In" Type="String" />
+            <Parameter Name="profileType" Mode="In" Type="String" />
+            <Parameter Name="securityType" Mode="In" Type="String" />
+            <Parameter Name="reviewrateType" Mode="In" Type="String" />
+            <Parameter Name="serviceType" Mode="In" Type="String" />
+            <Parameter Name="databaseType" Mode="In" Type="String" />
+            <Parameter Name="featuresType" Mode="In" Type="String" />
+            <Parameter Name="emailID" Mode="In" Type="String" />
+            <Parameter Name="name" Mode="In" Type="String" />
+            <Parameter Name="companyName" Mode="In" Type="String" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="Sp_GetCompanyBranches_Result">
@@ -1146,6 +1196,21 @@
           <Property Type="Int32" Name="TotalCount" Nullable="true" />
           <Property Type="Int32" Name="RowNumber" Nullable="true" />
         </ComplexType>
+        <ComplexType Name="Sp_GetQuoteForMobileApp_Result">
+          <Property Type="Int32" Name="QuotationRateCardID" Nullable="false" />
+          <Property Type="String" Name="MainCategory" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="SubCategory" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="Ctypes" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="Classname" Nullable="true" MaxLength="200" />
+          <Property Type="Decimal" Name="MinPriceZone1" Nullable="true" Precision="10" Scale="2" />
+          <Property Type="Decimal" Name="MaxPriceZone1" Nullable="true" Precision="10" Scale="2" />
+          <Property Type="Decimal" Name="MinPriceZone2" Nullable="true" Precision="10" Scale="2" />
+          <Property Type="Decimal" Name="MaxPriceZone2" Nullable="true" Precision="10" Scale="2" />
+          <Property Type="Decimal" Name="MinPriceZone3" Nullable="true" Precision="10" Scale="2" />
+          <Property Type="Decimal" Name="MaxPriceZone3" Nullable="true" Precision="10" Scale="2" />
+          <Property Type="String" Name="Question" Nullable="true" />
+          <Property Type="String" Name="Answer" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1484,6 +1549,26 @@
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Sp_GetCompanyNames" FunctionName="UpVotesModel.Store.Sp_GetCompanyNames" />
+          <FunctionImportMapping FunctionImportName="Sp_GetQuoteForMobileApp" FunctionName="UpVotesModel.Store.Sp_GetQuoteForMobileApp">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetQuoteForMobileApp_Result">
+                <ScalarProperty Name="QuotationRateCardID" ColumnName="QuotationRateCardID" />
+                <ScalarProperty Name="MainCategory" ColumnName="MainCategory" />
+                <ScalarProperty Name="SubCategory" ColumnName="SubCategory" />
+                <ScalarProperty Name="Ctypes" ColumnName="Ctypes" />
+                <ScalarProperty Name="Classname" ColumnName="Classname" />
+                <ScalarProperty Name="MinPriceZone1" ColumnName="MinPriceZone1" />
+                <ScalarProperty Name="MaxPriceZone1" ColumnName="MaxPriceZone1" />
+                <ScalarProperty Name="MinPriceZone2" ColumnName="MinPriceZone2" />
+                <ScalarProperty Name="MaxPriceZone2" ColumnName="MaxPriceZone2" />
+                <ScalarProperty Name="MinPriceZone3" ColumnName="MinPriceZone3" />
+                <ScalarProperty Name="MaxPriceZone3" ColumnName="MaxPriceZone3" />
+                <ScalarProperty Name="Question" ColumnName="Question" />
+                <ScalarProperty Name="Answer" ColumnName="Answer" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_InsUserQuotation" FunctionName="UpVotesModel.Store.Sp_InsUserQuotation" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

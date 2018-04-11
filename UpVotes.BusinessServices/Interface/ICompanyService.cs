@@ -24,5 +24,6 @@ namespace UpVotes.BusinessServices.Interface
         List<string> GetDataForAutoComplete(int type, int focusAreaID, string searchTerm);
 
         CompanyDetail GetUserReviews(string companyName);
+        QuotationResponse GetQuotationData(QuotationRequest Quotationobj);
     }
 }

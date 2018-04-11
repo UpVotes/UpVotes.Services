@@ -111,6 +111,9 @@
     <Compile Include="Sp_GetFocusArea_Result.cs">
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Sp_GetQuoteForMobileApp_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="State.cs">
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>

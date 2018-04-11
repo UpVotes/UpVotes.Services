@@ -162,5 +162,99 @@ namespace UpVotes.DataModel
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("Sp_GetCompanyNames", typeParameter, focusAreaIDParameter, companyNamelocationParameter);
         }
+    
+        public virtual ObjectResult<Sp_GetQuoteForMobileApp_Result> Sp_GetQuoteForMobileApp(string platformType, string themeType, string loginsecurityType, string profileType, string securityType, string reviewrateType, string serviceType, string databaseType, string featuresType)
+        {
+            var platformTypeParameter = platformType != null ?
+                new ObjectParameter("platformType", platformType) :
+                new ObjectParameter("platformType", typeof(string));
+    
+            var themeTypeParameter = themeType != null ?
+                new ObjectParameter("themeType", themeType) :
+                new ObjectParameter("themeType", typeof(string));
+    
+            var loginsecurityTypeParameter = loginsecurityType != null ?
+                new ObjectParameter("loginsecurityType", loginsecurityType) :
+                new ObjectParameter("loginsecurityType", typeof(string));
+    
+            var profileTypeParameter = profileType != null ?
+                new ObjectParameter("profileType", profileType) :
+                new ObjectParameter("profileType", typeof(string));
+    
+            var securityTypeParameter = securityType != null ?
+                new ObjectParameter("securityType", securityType) :
+                new ObjectParameter("securityType", typeof(string));
+    
+            var reviewrateTypeParameter = reviewrateType != null ?
+                new ObjectParameter("reviewrateType", reviewrateType) :
+                new ObjectParameter("reviewrateType", typeof(string));
+    
+            var serviceTypeParameter = serviceType != null ?
+                new ObjectParameter("serviceType", serviceType) :
+                new ObjectParameter("serviceType", typeof(string));
+    
+            var databaseTypeParameter = databaseType != null ?
+                new ObjectParameter("databaseType", databaseType) :
+                new ObjectParameter("databaseType", typeof(string));
+    
+            var featuresTypeParameter = featuresType != null ?
+                new ObjectParameter("featuresType", featuresType) :
+                new ObjectParameter("featuresType", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetQuoteForMobileApp_Result>("Sp_GetQuoteForMobileApp", platformTypeParameter, themeTypeParameter, loginsecurityTypeParameter, profileTypeParameter, securityTypeParameter, reviewrateTypeParameter, serviceTypeParameter, databaseTypeParameter, featuresTypeParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<decimal>> Sp_InsUserQuotation(string platformType, string themeType, string loginsecurityType, string profileType, string securityType, string reviewrateType, string serviceType, string databaseType, string featuresType, string emailID, string name, string companyName)
+        {
+            var platformTypeParameter = platformType != null ?
+                new ObjectParameter("platformType", platformType) :
+                new ObjectParameter("platformType", typeof(string));
+    
+            var themeTypeParameter = themeType != null ?
+                new ObjectParameter("themeType", themeType) :
+                new ObjectParameter("themeType", typeof(string));
+    
+            var loginsecurityTypeParameter = loginsecurityType != null ?
+                new ObjectParameter("loginsecurityType", loginsecurityType) :
+                new ObjectParameter("loginsecurityType", typeof(string));
+    
+            var profileTypeParameter = profileType != null ?
+                new ObjectParameter("profileType", profileType) :
+                new ObjectParameter("profileType", typeof(string));
+    
+            var securityTypeParameter = securityType != null ?
+                new ObjectParameter("securityType", securityType) :
+                new ObjectParameter("securityType", typeof(string));
+    
+            var reviewrateTypeParameter = reviewrateType != null ?
+                new ObjectParameter("reviewrateType", reviewrateType) :
+                new ObjectParameter("reviewrateType", typeof(string));
+    
+            var serviceTypeParameter = serviceType != null ?
+                new ObjectParameter("serviceType", serviceType) :
+                new ObjectParameter("serviceType", typeof(string));
+    
+            var databaseTypeParameter = databaseType != null ?
+                new ObjectParameter("databaseType", databaseType) :
+                new ObjectParameter("databaseType", typeof(string));
+    
+            var featuresTypeParameter = featuresType != null ?
+                new ObjectParameter("featuresType", featuresType) :
+                new ObjectParameter("featuresType", typeof(string));
+    
+            var emailIDParameter = emailID != null ?
+                new ObjectParameter("emailID", emailID) :
+                new ObjectParameter("emailID", typeof(string));
+    
+            var nameParameter = name != null ?
+                new ObjectParameter("name", name) :
+                new ObjectParameter("name", typeof(string));
+    
+            var companyNameParameter = companyName != null ?
+                new ObjectParameter("companyName", companyName) :
+                new ObjectParameter("companyName", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("Sp_InsUserQuotation", platformTypeParameter, themeTypeParameter, loginsecurityTypeParameter, profileTypeParameter, securityTypeParameter, reviewrateTypeParameter, serviceTypeParameter, databaseTypeParameter, featuresTypeParameter, emailIDParameter, nameParameter, companyNameParameter);
+        }
     }
 }

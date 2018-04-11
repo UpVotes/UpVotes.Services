@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Quotation.cs" />
     <Compile Include="Entities\CompanyDetail.cs" />
     <Compile Include="Entities\CompanyEntity.cs" />
     <Compile Include="Entities\CompanyBranchEntity.cs" />

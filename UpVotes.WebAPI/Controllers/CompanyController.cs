@@ -149,5 +149,29 @@ namespace UpVotes.WebAPI.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
             }
         }
+        [HttpPost]
+        [Route("api/GetQuotationDetailsForMobileApp")]
+        public HttpResponseMessage GetQuotationDetails(QuotationRequest quotationrequest)
+        {
+
+            var retval = new ServiceResponse<QuotationResponse> { ResponseCode = 0, ResponseDescription = "Success" };
+            try
+            {
+                retval.ResponseObject = _companyServices.GetQuotationData(quotationrequest);
+                if (retval.ResponseObject != null)
+                {                    
+                    return Request.CreateResponse(HttpStatusCode.OK, retval);
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Quotation not found");
+                }
+            }
+            catch (Exception ex)
+            {                
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
+            }            
+
+        }
     }
 }
