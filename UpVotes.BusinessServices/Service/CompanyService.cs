@@ -93,6 +93,10 @@ namespace UpVotes.BusinessServices.Service
                         {
                             company.CompanyName = System.Web.HttpUtility.HtmlEncode(company.CompanyName);
                             company.CompanyFocus = GetCompanyFocus(company.CompanyID).ToList();
+                            company.IndustialCompanyFocus = GetIndustrialFocus(company.CompanyID).ToList();
+                            company.CompanyClientFocus = GetClientFocus(company.CompanyID).ToList();
+                            company.SubfocusNames = GetDistinctSubFocusNames(company.CompanyID).ToList();
+                            company.CompanySubFocus = GetCompanySubFocus(company.CompanyID).ToList();
                             company.CompanyBranches = GetCompanyBranches(company.CompanyID).ToList();
                             company.CompanyPortFolio = GetCompanyPortFolio(company.CompanyID).ToList();
                             company.CompanyReviews = GetCompanyReviews(company.CompanyName).ToList();
@@ -159,6 +163,50 @@ namespace UpVotes.BusinessServices.Service
                 Mapper.Initialize(cfg => { cfg.CreateMap<Sp_GetCompanyFocus_Result, CompanyFocusEntity>(); });
                 IEnumerable<CompanyFocusEntity> companyFocusEntity = Mapper.Map<IEnumerable<Sp_GetCompanyFocus_Result>, IEnumerable<CompanyFocusEntity>>(companyFocus);
                 return companyFocusEntity;
+            }
+        }
+
+        private IEnumerable<CompanyFocusEntity> GetIndustrialFocus(int companyID)
+        {
+            using (_context = new UpVotesEntities())
+            {
+                IEnumerable<Sp_GetIndustrialFocus_Result> companyIndustrialFocus = _context.Database.SqlQuery(typeof(Sp_GetIndustrialFocus_Result), "EXEC Sp_GetIndustrialFocus " + companyID).Cast<Sp_GetIndustrialFocus_Result>().AsEnumerable();
+                Mapper.Initialize(cfg => { cfg.CreateMap<Sp_GetIndustrialFocus_Result, CompanyFocusEntity>(); });
+                IEnumerable<CompanyFocusEntity> companyFocusEntity = Mapper.Map<IEnumerable<Sp_GetIndustrialFocus_Result>, IEnumerable<CompanyFocusEntity>>(companyIndustrialFocus);
+                return companyFocusEntity;
+            }
+        }
+
+        private IEnumerable<CompanyFocusEntity> GetClientFocus(int companyID)
+        {
+            using (_context = new UpVotesEntities())
+            {
+                IEnumerable<Sp_GetClientFocus_Result> companyclientFocus = _context.Database.SqlQuery(typeof(Sp_GetClientFocus_Result), "EXEC Sp_GetClientFocus " + companyID).Cast<Sp_GetClientFocus_Result>().AsEnumerable();
+                Mapper.Initialize(cfg => { cfg.CreateMap<Sp_GetClientFocus_Result, CompanyFocusEntity>(); });
+                IEnumerable<CompanyFocusEntity> companyclientFocusEntity = Mapper.Map<IEnumerable<Sp_GetClientFocus_Result>, IEnumerable<CompanyFocusEntity>>(companyclientFocus);
+                return companyclientFocusEntity;
+            }
+        }
+
+        private IEnumerable<string> GetDistinctSubFocusNames(int companyID)
+        {
+            using (_context = new UpVotesEntities())
+            {
+                IEnumerable<string> SubFocusNames = _context.Database.SqlQuery(typeof(string), "EXEC Sp_GetDistinctSubFocusNames " + companyID).Cast<string>().AsEnumerable();
+                Mapper.Initialize(cfg => { cfg.CreateMap<string, CompanyFocusEntity>(); });
+                IEnumerable<string> SubfocusNamesEntity = Mapper.Map<IEnumerable<string>, IEnumerable<string>>(SubFocusNames);
+                return SubfocusNamesEntity;
+            }
+        }
+
+        private IEnumerable<CompanyFocusEntity> GetCompanySubFocus(int companyID)
+        {
+            using (_context = new UpVotesEntities())
+            {
+                IEnumerable<Sp_GetSubFocus_Result> companyclientFocus = _context.Database.SqlQuery(typeof(Sp_GetSubFocus_Result), "EXEC Sp_GetSubFocus " + companyID).Cast<Sp_GetSubFocus_Result>().AsEnumerable();
+                Mapper.Initialize(cfg => { cfg.CreateMap<Sp_GetSubFocus_Result, CompanyFocusEntity>(); });
+                IEnumerable<CompanyFocusEntity> companyclientFocusEntity = Mapper.Map<IEnumerable<Sp_GetSubFocus_Result>, IEnumerable<CompanyFocusEntity>>(companyclientFocus);
+                return companyclientFocusEntity;
             }
         }
 

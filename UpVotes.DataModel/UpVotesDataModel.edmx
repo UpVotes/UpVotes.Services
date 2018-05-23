@@ -9,7 +9,7 @@
           <Key>
             <PropertyRef Name="CompanyID" />
           </Key>
-          <Property Name="CompanyID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CompanyID" Type="int" Nullable="false" />
           <Property Name="CompanyName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="LogoName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="TagLine" Type="nvarchar" MaxLength="50" />
@@ -142,6 +142,7 @@
           <Property Name="FocusAreaID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="FocusAreaName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="FocusType" Type="varchar" MaxLength="1" Nullable="false" />
         </EntityType>
         <EntityType Name="State">
           <Key>
@@ -398,6 +399,9 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="Sp_GetClientFocus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CompanyID" Type="int" Mode="In" />
+        </Function>
         <Function Name="Sp_GetCompany" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="companyName" Type="nvarchar" Mode="In" />
           <Parameter Name="minRate" Type="decimal" Mode="In" />
@@ -432,7 +436,13 @@
           <Parameter Name="CompanyID" Type="int" Mode="In" />
           <Parameter Name="CompanyReviewID" Type="int" Mode="In" />
         </Function>
+        <Function Name="Sp_GetDistinctSubFocusNames" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CompanyID" Type="int" Mode="In" />
+        </Function>
         <Function Name="Sp_GetFocusArea" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="Sp_GetIndustrialFocus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CompanyID" Type="int" Mode="In" />
+        </Function>
         <Function Name="Sp_GetQuoteForMobileApp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="platformType" Type="nvarchar" Mode="In" />
           <Parameter Name="themeType" Type="nvarchar" Mode="In" />
@@ -443,6 +453,9 @@
           <Parameter Name="serviceType" Type="nvarchar" Mode="In" />
           <Parameter Name="databaseType" Type="nvarchar" Mode="In" />
           <Parameter Name="featuresType" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="Sp_GetSubFocus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CompanyID" Type="int" Mode="In" />
         </Function>
         <Function Name="Sp_InsUserQuotation" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="platformType" Type="nvarchar" Mode="In" />
@@ -683,6 +696,18 @@
             <Parameter Name="name" Mode="In" Type="String" />
             <Parameter Name="companyName" Mode="In" Type="String" />
           </FunctionImport>
+          <FunctionImport Name="Sp_GetIndustrialFocus" ReturnType="Collection(UpVotesModel.Sp_GetIndustrialFocus_Result)">
+          <Parameter Name="CompanyID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetClientFocus" ReturnType="Collection(UpVotesModel.Sp_GetClientFocus_Result)">
+          <Parameter Name="CompanyID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetSubFocus" ReturnType="Collection(UpVotesModel.Sp_GetSubFocus_Result)">
+          <Parameter Name="CompanyID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetDistinctSubFocusNames" ReturnType="Collection(String)">
+            <Parameter Name="CompanyID" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="Sp_GetCompanyBranches_Result">
           <Property Type="Int32" Name="BranchID" Nullable="false" />
@@ -825,6 +850,7 @@
           <Property Name="FocusAreaName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="CompanyReviews" Relationship="UpVotesModel.FK_FocusArea_CompanyReviews_FocusAreaID" FromRole="FocusArea" ToRole="CompanyReview" />
+          <Property Name="FocusType" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="State">
           <Key>
@@ -1211,6 +1237,28 @@
           <Property Type="String" Name="Question" Nullable="true" />
           <Property Type="String" Name="Answer" Nullable="true" />
         </ComplexType>
+        <ComplexType Name="Sp_GetIndustrialFocus_Result">
+          <Property Type="Int32" Name="CompanyFocusID" Nullable="false" />
+          <Property Type="Int32" Name="CompanyID" Nullable="false" />
+          <Property Type="Int32" Name="FocusAreaID" Nullable="false" />
+          <Property Type="String" Name="FocusAreaName" Nullable="false" MaxLength="100" />
+          <Property Type="Double" Name="FocusAreaPercentage" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="Sp_GetClientFocus_Result">
+          <Property Type="Int32" Name="CompanyFocusID" Nullable="false" />
+          <Property Type="Int32" Name="CompanyID" Nullable="false" />
+          <Property Type="Int32" Name="FocusAreaID" Nullable="false" />
+          <Property Type="String" Name="FocusAreaName" Nullable="false" MaxLength="100" />
+          <Property Type="Double" Name="FocusAreaPercentage" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="Sp_GetSubFocus_Result">
+          <Property Type="Int32" Name="CompanyFocusID" Nullable="false" />
+          <Property Type="Int32" Name="CompanyID" Nullable="false" />
+          <Property Type="Int32" Name="SubFocusAreaID" Nullable="false" />
+          <Property Type="String" Name="FocusAreaName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="SubFocusAreaName" Nullable="false" MaxLength="100" />
+          <Property Type="Double" Name="SubFocusAreaPercentage" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1365,6 +1413,7 @@
           <EntitySetMapping Name="FocusAreas">
             <EntityTypeMapping TypeName="UpVotesModel.FocusArea">
               <MappingFragment StoreEntitySet="FocusArea">
+                <ScalarProperty Name="FocusType" ColumnName="FocusType" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="FocusAreaName" ColumnName="FocusAreaName" />
                 <ScalarProperty Name="FocusAreaID" ColumnName="FocusAreaID" />
@@ -1569,6 +1618,41 @@
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Sp_InsUserQuotation" FunctionName="UpVotesModel.Store.Sp_InsUserQuotation" />
+          <FunctionImportMapping FunctionImportName="Sp_GetIndustrialFocus" FunctionName="UpVotesModel.Store.Sp_GetIndustrialFocus">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetIndustrialFocus_Result">
+                <ScalarProperty Name="CompanyFocusID" ColumnName="CompanyFocusID" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="FocusAreaID" ColumnName="FocusAreaID" />
+                <ScalarProperty Name="FocusAreaName" ColumnName="FocusAreaName" />
+                <ScalarProperty Name="FocusAreaPercentage" ColumnName="FocusAreaPercentage" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_GetClientFocus" FunctionName="UpVotesModel.Store.Sp_GetClientFocus">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetClientFocus_Result">
+                <ScalarProperty Name="CompanyFocusID" ColumnName="CompanyFocusID" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="FocusAreaID" ColumnName="FocusAreaID" />
+                <ScalarProperty Name="FocusAreaName" ColumnName="FocusAreaName" />
+                <ScalarProperty Name="FocusAreaPercentage" ColumnName="FocusAreaPercentage" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_GetSubFocus" FunctionName="UpVotesModel.Store.Sp_GetSubFocus">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetSubFocus_Result">
+                <ScalarProperty Name="CompanyFocusID" ColumnName="CompanyFocusID" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="SubFocusAreaID" ColumnName="SubFocusAreaID" />
+                <ScalarProperty Name="FocusAreaName" ColumnName="FocusAreaName" />
+                <ScalarProperty Name="SubFocusAreaName" ColumnName="SubFocusAreaName" />
+                <ScalarProperty Name="SubFocusAreaPercentage" ColumnName="SubFocusAreaPercentage" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_GetDistinctSubFocusNames" FunctionName="UpVotesModel.Store.Sp_GetDistinctSubFocusNames" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -11,7 +11,8 @@ namespace UpVotes.BusinessEntities.Entities
         public int FocusAreaID { get; set; }
 
         public string FocusAreaName { get; set; }
-
+        public string SubFocusAreaName { get; set; }
+        public double SubFocusAreaPercentage { get; set; }
         public double FocusAreaPercentage { get; set; }
 
         public bool IsActive { get; set; }

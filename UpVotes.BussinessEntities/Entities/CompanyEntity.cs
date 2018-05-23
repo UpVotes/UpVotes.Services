@@ -71,7 +71,10 @@ namespace UpVotes.BusinessEntities.Entities
         public List<CompanyBranchEntity> CompanyBranches { get; set; }
 
         public List<CompanyFocusEntity> CompanyFocus { get; set; }
-
+        public List<CompanyFocusEntity> IndustialCompanyFocus { get; set; }
+        public List<CompanyFocusEntity> CompanyClientFocus { get; set; }
+        public List<CompanyFocusEntity> CompanySubFocus { get; set; }
+        public List<string> SubfocusNames { get; set; }
         public List<CompanyPortFolioEntity> CompanyPortFolio { get; set; }
 
         public List<CompanyReviewsEntity> CompanyReviews { get; set; }

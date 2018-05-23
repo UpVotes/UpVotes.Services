@@ -256,5 +256,41 @@ namespace UpVotes.DataModel
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("Sp_InsUserQuotation", platformTypeParameter, themeTypeParameter, loginsecurityTypeParameter, profileTypeParameter, securityTypeParameter, reviewrateTypeParameter, serviceTypeParameter, databaseTypeParameter, featuresTypeParameter, emailIDParameter, nameParameter, companyNameParameter);
         }
+    
+        public virtual ObjectResult<Sp_GetIndustrialFocus_Result> Sp_GetIndustrialFocus(Nullable<int> companyID)
+        {
+            var companyIDParameter = companyID.HasValue ?
+                new ObjectParameter("CompanyID", companyID) :
+                new ObjectParameter("CompanyID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetIndustrialFocus_Result>("Sp_GetIndustrialFocus", companyIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_GetClientFocus_Result> Sp_GetClientFocus(Nullable<int> companyID)
+        {
+            var companyIDParameter = companyID.HasValue ?
+                new ObjectParameter("CompanyID", companyID) :
+                new ObjectParameter("CompanyID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetClientFocus_Result>("Sp_GetClientFocus", companyIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_GetSubFocus_Result> Sp_GetSubFocus(Nullable<int> companyID)
+        {
+            var companyIDParameter = companyID.HasValue ?
+                new ObjectParameter("CompanyID", companyID) :
+                new ObjectParameter("CompanyID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetSubFocus_Result>("Sp_GetSubFocus", companyIDParameter);
+        }
+    
+        public virtual ObjectResult<string> Sp_GetDistinctSubFocusNames(Nullable<int> companyID)
+        {
+            var companyIDParameter = companyID.HasValue ?
+                new ObjectParameter("CompanyID", companyID) :
+                new ObjectParameter("CompanyID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("Sp_GetDistinctSubFocusNames", companyIDParameter);
+        }
     }
 }

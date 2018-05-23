@@ -23,6 +23,7 @@ namespace UpVotes.DataModel
         public int FocusAreaID { get; set; }
         public string FocusAreaName { get; set; }
         public bool IsActive { get; set; }
+        public string FocusType { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CompanyReview> CompanyReviews { get; set; }
