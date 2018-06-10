@@ -48,12 +48,12 @@ namespace UpVotes.WebAPI.Controllers
         }
 
         [HttpGet]        
-        [Route("api/GetCompany/{companyName}/{minRate}/{maxRate}/{minEmployee}/{maxEmployee}/{sortby}/{focusAreaID}/{location}/{userID}/{PageNo}/{PageSize}")]
-        public HttpResponseMessage GetCompany(string companyName, decimal? minRate, decimal? maxRate, int? minEmployee, int? maxEmployee, string sortby, int? focusAreaID, string location, int userID = 0, int PageNo = 1, int PageSize = 10)
+        [Route("api/GetCompany/{companyName}/{minRate}/{maxRate}/{minEmployee}/{maxEmployee}/{sortby}/{focusAreaID}/{location}/{SubFocusArea}/{userID}/{PageNo}/{PageSize}")]
+        public HttpResponseMessage GetCompany(string companyName, decimal? minRate, decimal? maxRate, int? minEmployee, int? maxEmployee, string sortby, int? focusAreaID, string location, string SubFocusArea = "0", int userID = 0, int PageNo = 1, int PageSize = 10)
         {
             try
             {
-                CompanyDetail company = _companyServices.GetAllCompanyDetails(companyName, minRate, maxRate, minEmployee, maxEmployee, sortby, focusAreaID,location, userID, PageNo, PageSize);
+                CompanyDetail company = _companyServices.GetAllCompanyDetails(companyName, minRate, maxRate, minEmployee, maxEmployee, sortby, focusAreaID,location, SubFocusArea, userID, PageNo, PageSize);
                 if (company != null)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, company);
@@ -171,6 +171,22 @@ namespace UpVotes.WebAPI.Controllers
             {                
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
             }            
+
+        }
+
+        [HttpGet]
+        [Route("api/GetCategoryMetaTags/{FocusAreaName}/{SubFocusAreaName}")]
+        public HttpResponseMessage GetCategoryMetaTags(string FocusAreaName, string SubFocusAreaName)
+        {   
+            try
+            {
+                CategoryMetaTags metaTagDetails = _companyServices.GetCategoryMetaTags(FocusAreaName, SubFocusAreaName);
+                return Request.CreateResponse(HttpStatusCode.OK, metaTagDetails);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
 
         }
     }

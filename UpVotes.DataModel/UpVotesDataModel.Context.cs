@@ -97,7 +97,7 @@ namespace UpVotes.DataModel
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetCompanyReviews_Result>("Sp_GetCompanyReviews", companyNameParameter);
         }
     
-        public virtual ObjectResult<Sp_GetCompany_Result> Sp_GetCompany(string companyName, Nullable<decimal> minRate, Nullable<decimal> maxRate, Nullable<int> minEmployee, Nullable<int> maxEmployee, string sortByVotes, Nullable<int> focusAreaID, Nullable<int> userID, string location, Nullable<int> pageNo, Nullable<int> pageSize)
+        public virtual ObjectResult<Sp_GetCompany_Result> Sp_GetCompany(string companyName, Nullable<decimal> minRate, Nullable<decimal> maxRate, Nullable<int> minEmployee, Nullable<int> maxEmployee, string sortByVotes, Nullable<int> focusAreaID, Nullable<int> userID, string location, Nullable<int> pageNo, Nullable<int> pageSize, string subFocusArea)
         {
             var companyNameParameter = companyName != null ?
                 new ObjectParameter("companyName", companyName) :
@@ -143,7 +143,11 @@ namespace UpVotes.DataModel
                 new ObjectParameter("PageSize", pageSize) :
                 new ObjectParameter("PageSize", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetCompany_Result>("Sp_GetCompany", companyNameParameter, minRateParameter, maxRateParameter, minEmployeeParameter, maxEmployeeParameter, sortByVotesParameter, focusAreaIDParameter, userIDParameter, locationParameter, pageNoParameter, pageSizeParameter);
+            var subFocusAreaParameter = subFocusArea != null ?
+                new ObjectParameter("SubFocusArea", subFocusArea) :
+                new ObjectParameter("SubFocusArea", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetCompany_Result>("Sp_GetCompany", companyNameParameter, minRateParameter, maxRateParameter, minEmployeeParameter, maxEmployeeParameter, sortByVotesParameter, focusAreaIDParameter, userIDParameter, locationParameter, pageNoParameter, pageSizeParameter, subFocusAreaParameter);
         }
     
         public virtual ObjectResult<string> Sp_GetCompanyNames(Nullable<int> type, Nullable<int> focusAreaID, string companyNamelocation)
@@ -291,6 +295,19 @@ namespace UpVotes.DataModel
                 new ObjectParameter("CompanyID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("Sp_GetDistinctSubFocusNames", companyIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_CategoryMetaTags_Result> Sp_CategoryMetaTags(string focusAreaName, string subFocusAreaName)
+        {
+            var focusAreaNameParameter = focusAreaName != null ?
+                new ObjectParameter("FocusAreaName", focusAreaName) :
+                new ObjectParameter("FocusAreaName", typeof(string));
+    
+            var subFocusAreaNameParameter = subFocusAreaName != null ?
+                new ObjectParameter("SubFocusAreaName", subFocusAreaName) :
+                new ObjectParameter("SubFocusAreaName", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_CategoryMetaTags_Result>("Sp_CategoryMetaTags", focusAreaNameParameter, subFocusAreaNameParameter);
         }
     }
 }
