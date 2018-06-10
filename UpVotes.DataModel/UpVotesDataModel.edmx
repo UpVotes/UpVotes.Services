@@ -9,7 +9,7 @@
           <Key>
             <PropertyRef Name="CompanyID" />
           </Key>
-          <Property Name="CompanyID" Type="int" Nullable="false" />
+          <Property Name="CompanyID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CompanyName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="LogoName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="TagLine" Type="nvarchar" MaxLength="50" />
@@ -59,7 +59,7 @@
           <Key>
             <PropertyRef Name="CompanyFocusID" />
           </Key>
-          <Property Name="CompanyFocusID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CompanyFocusID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="CompanyID" Type="int" Nullable="false" />
           <Property Name="FocusAreaID" Type="int" Nullable="false" />
           <Property Name="FocusAreaPercentage" Type="float" Nullable="false" />
@@ -399,6 +399,10 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="Sp_CategoryMetaTags" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="FocusAreaName" Type="nvarchar" Mode="In" />
+          <Parameter Name="SubFocusAreaName" Type="nvarchar" Mode="In" />
+        </Function>
         <Function Name="Sp_GetClientFocus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyID" Type="int" Mode="In" />
         </Function>
@@ -414,6 +418,7 @@
           <Parameter Name="location" Type="nvarchar" Mode="In" />
           <Parameter Name="PageNo" Type="int" Mode="In" />
           <Parameter Name="PageSize" Type="int" Mode="In" />
+          <Parameter Name="SubFocusArea" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="Sp_GetCompanyBranches" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyID" Type="int" Mode="In" />
@@ -665,6 +670,7 @@
             <Parameter Name="location" Mode="In" Type="String" />
             <Parameter Name="PageNo" Mode="In" Type="Int32" />
             <Parameter Name="PageSize" Mode="In" Type="Int32" />
+            <Parameter Name="SubFocusArea" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="Sp_GetCompanyNames" ReturnType="Collection(String)">
             <Parameter Name="type" Mode="In" Type="Int32" />
@@ -706,7 +712,11 @@
           <Parameter Name="CompanyID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="Sp_GetDistinctSubFocusNames" ReturnType="Collection(String)">
-            <Parameter Name="CompanyID" Mode="In" Type="Int32" />
+          <Parameter Name="CompanyID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_CategoryMetaTags" ReturnType="Collection(UpVotesModel.Sp_CategoryMetaTags_Result)">
+            <Parameter Name="FocusAreaName" Mode="In" Type="String" />
+            <Parameter Name="SubFocusAreaName" Mode="In" Type="String" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="Sp_GetCompanyBranches_Result">
@@ -1259,6 +1269,14 @@
           <Property Type="String" Name="SubFocusAreaName" Nullable="false" MaxLength="100" />
           <Property Type="Double" Name="SubFocusAreaPercentage" Nullable="true" />
         </ComplexType>
+        <ComplexType Name="Sp_CategoryMetaTags_Result">
+          <Property Type="Int32" Name="CategoryBasedMetaTagsID" Nullable="false" />
+          <Property Type="String" Name="FocusAreaName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="SubFocusAreaName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="Title" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="TwitterTitle" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="Descriptions" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1653,6 +1671,18 @@
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Sp_GetDistinctSubFocusNames" FunctionName="UpVotesModel.Store.Sp_GetDistinctSubFocusNames" />
+          <FunctionImportMapping FunctionImportName="Sp_CategoryMetaTags" FunctionName="UpVotesModel.Store.Sp_CategoryMetaTags">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_CategoryMetaTags_Result">
+                <ScalarProperty Name="CategoryBasedMetaTagsID" ColumnName="CategoryBasedMetaTagsID" />
+                <ScalarProperty Name="FocusAreaName" ColumnName="FocusAreaName" />
+                <ScalarProperty Name="SubFocusAreaName" ColumnName="SubFocusAreaName" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="TwitterTitle" ColumnName="TwitterTitle" />
+                <ScalarProperty Name="Descriptions" ColumnName="Descriptions" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

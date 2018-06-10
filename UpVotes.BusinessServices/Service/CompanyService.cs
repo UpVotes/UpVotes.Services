@@ -38,6 +38,25 @@ namespace UpVotes.BusinessServices.Service
             throw new NotImplementedException();
         }
 
+        public CategoryMetaTags GetCategoryMetaTags(string FocusAreaName, string SubFocusAreaName)
+        {
+            CategoryMetaTags metaTagAndTitle = new CategoryMetaTags();
+            IEnumerable<CategoryMetaTags> metaTag = CategoryMetaTags(FocusAreaName, SubFocusAreaName);
+            if (metaTag.Count() > 0)
+            {
+                foreach (CategoryMetaTags metadata in metaTag)
+                {
+                    metaTagAndTitle.CategoryBasedMetaTagsID = metadata.CategoryBasedMetaTagsID;
+                    metaTagAndTitle.FocusAreaName = metadata.FocusAreaName;
+                    metaTagAndTitle.SubFocusAreaName = metadata.SubFocusAreaName;
+                    metaTagAndTitle.Title = metadata.Title;
+                    metaTagAndTitle.TwitterTitle = metadata.TwitterTitle;
+                    metaTagAndTitle.Descriptions = metadata.Descriptions;
+                }
+            }
+            return metaTagAndTitle;
+        }
+
         public CompanyDetail GetCompanyDetails(string companyName)
         {
             CompanyDetail companyDetail = new CompanyDetail();
@@ -77,14 +96,14 @@ namespace UpVotes.BusinessServices.Service
             }
         }
 
-        public CompanyDetail GetAllCompanyDetails(string companyName, decimal? minRate, decimal? maxRate, int? minEmployee, int? maxEmployee, string sortby, int? focusAreaID, string location, int userID = 0, int PageNo = 1, int PageSize = 10)
+        public CompanyDetail GetAllCompanyDetails(string companyName, decimal? minRate, decimal? maxRate, int? minEmployee, int? maxEmployee, string sortby, int? focusAreaID, string location, string SubFocusArea = "0", int userID = 0, int PageNo = 1, int PageSize = 10)
         {
             CompanyDetail companyDetail = new CompanyDetail();
             companyDetail.CompanyList = new List<CompanyEntity>();
 
             try
             {
-                IEnumerable<CompanyEntity> companyEntities = GetCompany(companyName, minRate, maxRate, minEmployee, maxEmployee, sortby, focusAreaID, location, userID, PageNo, PageSize);
+                IEnumerable<CompanyEntity> companyEntities = GetCompany(companyName, minRate, maxRate, minEmployee, maxEmployee, sortby, focusAreaID, location, userID, PageNo, PageSize, SubFocusArea);
                 if (companyEntities.Count() > 0)
                 {
                     foreach (CompanyEntity company in companyEntities)
@@ -132,11 +151,11 @@ namespace UpVotes.BusinessServices.Service
             }
         }
 
-        private IEnumerable<CompanyEntity> GetCompany(string companyName, decimal? minRate, decimal? maxRate, int? minEmployee, int? maxEmployee, string sortby, int? focusAreaID, string location, int userID = 0, int PageNo = 1, int PageSize = 10)
+        private IEnumerable<CompanyEntity> GetCompany(string companyName, decimal? minRate, decimal? maxRate, int? minEmployee, int? maxEmployee, string sortby, int? focusAreaID, string location, int userID = 0, int PageNo = 1, int PageSize = 10, string SubFocusArea="0")
         {
             using (_context = new UpVotesEntities())
             {
-                string sqlQuery = "EXEC Sp_GetCompany '" + companyName + "'," + minRate + "," + maxRate + "," + minEmployee + "," + maxEmployee + ",'" + sortby + "'," + focusAreaID + "," + userID + "," + location + "," + PageNo + "," + PageSize;
+                string sqlQuery = "EXEC Sp_GetCompany '" + companyName + "'," + minRate + "," + maxRate + "," + minEmployee + "," + maxEmployee + ",'" + sortby + "'," + focusAreaID + "," + userID + "," + location + "," + PageNo + "," + PageSize + ",'" + SubFocusArea + "'";
                 IEnumerable<Sp_GetCompany_Result> company = _context.Database.SqlQuery(typeof(Sp_GetCompany_Result), sqlQuery).Cast<Sp_GetCompany_Result>().AsEnumerable();
                 Mapper.Initialize(cfg => { cfg.CreateMap<Sp_GetCompany_Result, CompanyEntity>(); });
                 IEnumerable<CompanyEntity> companyEntity = Mapper.Map<IEnumerable<Sp_GetCompany_Result>, IEnumerable<CompanyEntity>>(company);
@@ -163,6 +182,17 @@ namespace UpVotes.BusinessServices.Service
                 Mapper.Initialize(cfg => { cfg.CreateMap<Sp_GetCompanyFocus_Result, CompanyFocusEntity>(); });
                 IEnumerable<CompanyFocusEntity> companyFocusEntity = Mapper.Map<IEnumerable<Sp_GetCompanyFocus_Result>, IEnumerable<CompanyFocusEntity>>(companyFocus);
                 return companyFocusEntity;
+            }
+        }
+
+        private IEnumerable<CategoryMetaTags> CategoryMetaTags(string FocusAreaName, string SubFocusAreaName)
+        {
+            using (_context = new UpVotesEntities())
+            {
+                IEnumerable<Sp_CategoryMetaTags_Result> metaTag = _context.Database.SqlQuery(typeof(Sp_CategoryMetaTags_Result), "EXEC Sp_CategoryMetaTags '" + FocusAreaName+"','"+ SubFocusAreaName+"'").Cast<Sp_CategoryMetaTags_Result>().AsEnumerable();
+                Mapper.Initialize(cfg => { cfg.CreateMap<Sp_CategoryMetaTags_Result, CategoryMetaTags>(); });
+                IEnumerable<CategoryMetaTags> CategoryMetaTags = Mapper.Map<IEnumerable<Sp_CategoryMetaTags_Result>, IEnumerable<CategoryMetaTags>>(metaTag);
+                return CategoryMetaTags;
             }
         }
 

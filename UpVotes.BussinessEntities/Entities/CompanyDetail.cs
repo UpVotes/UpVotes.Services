@@ -10,4 +10,14 @@ namespace UpVotes.BusinessEntities.Entities
 
         public int TotalNoOfUsers { get; set; }
     }
+
+    public class CategoryMetaTags
+    {
+        public int CategoryBasedMetaTagsID { get; set; }
+        public string FocusAreaName { get; set; }
+        public string SubFocusAreaName { get; set; }
+        public string Title { get; set; }
+        public string TwitterTitle { get; set; }
+        public string Descriptions { get; set; }
+    }
 }
