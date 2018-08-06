@@ -9,6 +9,8 @@ namespace UpVotes.BusinessEntities.Entities
         public int AverageUserRating { get; set; }
 
         public int TotalNoOfUsers { get; set; }
+
+        public List<FocusAreaEntity> FocusAreaList { get; set; }
     }
 
     public class CategoryMetaTags

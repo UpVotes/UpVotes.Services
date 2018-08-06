@@ -16,5 +16,6 @@ namespace UpVotes.DataModel
         public int FocusAreaID { get; set; }
         public string FocusAreaName { get; set; }
         public bool IsActive { get; set; }
+        public string FocusType { get; set; }
     }
 }

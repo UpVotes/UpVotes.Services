@@ -14,6 +14,12 @@ namespace UpVotes.DataModel
     
     public partial class CompanyFocus
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public CompanyFocus()
+        {
+            this.CompanySubFocus = new HashSet<CompanySubFocus>();
+        }
+    
         public int CompanyFocusID { get; set; }
         public int CompanyID { get; set; }
         public int FocusAreaID { get; set; }
@@ -25,5 +31,7 @@ namespace UpVotes.DataModel
         public Nullable<System.DateTime> ModifiedDate { get; set; }
     
         public virtual Company Company { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CompanySubFocus> CompanySubFocus { get; set; }
     }
 }

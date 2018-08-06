@@ -1,3 +1,5 @@
+C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\obj\Debug\UpVotes.WebAPI.csproj.CoreCompileInputs.cache
+C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\obj\Debug\UpVotes.WebAPI.csprojAssemblyReference.cache
 C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\bin\ApplicationInsights.config
 C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\bin\roslyn\csc.exe
 C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
@@ -64,8 +66,10 @@ C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\bin\WebGrease.dl
 C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\bin\AutoMapper.dll
 C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\bin\log4net.dll
 C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\bin\UpVotes.BusinessServices.pdb
+C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\bin\UpVotes.BusinessServices.dll.config
 C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\bin\UpVotes.BussinessEntities.pdb
 C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\bin\UpVotes.DataModel.pdb
+C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\bin\UpVotes.DataModel.dll.config
 C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\bin\UpVotes.Resolver.pdb
 C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\bin\Microsoft.AI.DependencyCollector.xml
 C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\bin\Microsoft.AI.ServerTelemetryChannel.xml
@@ -107,9 +111,6 @@ C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\bin\Microsoft.Ow
 C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\bin\System.Web.Http.Owin.xml
 C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\bin\AutoMapper.xml
 C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\bin\log4net.xml
-C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\obj\Debug\UpVotes.WebAPI.csprojResolveAssemblyReference.cache
+C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\obj\Debug\UpVotes.WebAPI.csproj.CopyComplete
 C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\obj\Debug\UpVotes.WebAPI.dll
 C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\obj\Debug\UpVotes.WebAPI.pdb
-C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\bin\UpVotes.BusinessServices.dll.config
-C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\bin\UpVotes.DataModel.dll.config
-C:\PUNEETH_DATA\MyProjects\Code\UpVotes.Services\UpVotes.WebAPI\obj\Debug\UpVotes.WebAPI.csproj.CoreCompileInputs.cache

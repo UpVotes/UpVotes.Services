@@ -29,13 +29,25 @@
         <AssociationConnector Association="UpVotesModel.FK_UserRegistration_UserType_UserTypeID" />
         <AssociationConnector Association="UpVotesModel.FK_Tokens_Users_UserID" />
         <EntityTypeShape EntityType="UpVotesModel.CompanyVote" Width="1.5" PointX="3" PointY="18.5" />
-        <EntityTypeShape EntityType="UpVotesModel.CompanyFocus" Width="1.5" PointX="3" PointY="11" />
         <EntityTypeShape EntityType="UpVotesModel.Company" Width="1.5" PointX="0.75" PointY="10.5" />
         <AssociationConnector Association="UpVotesModel.FK_CompanyBranch_Company" />
-        <AssociationConnector Association="UpVotesModel.FK_CompanyFocus_Company" />
         <AssociationConnector Association="UpVotesModel.FK_CompanyPortFolio_Company_CompanyID" />
         <AssociationConnector Association="UpVotesModel.FK_CompanyReviews_Company_CompanyID" />
         <AssociationConnector Association="UpVotesModel.FK_CompanyVote_Company" />
+        <EntityTypeShape EntityType="UpVotesModel.CategoryBasedMetaTags" Width="1.5" PointX="8.375" PointY="0.75" />
+        <EntityTypeShape EntityType="UpVotesModel.CompanySubFocus" Width="1.5" PointX="5.25" PointY="22.125" />
+        <EntityTypeShape EntityType="UpVotesModel.QuotationRateCard" Width="1.5" PointX="10.375" PointY="0.75" />
+        <EntityTypeShape EntityType="UpVotesModel.SubFocusArea" Width="1.5" PointX="6" PointY="1.625" />
+        <EntityTypeShape EntityType="UpVotesModel.UserQuotation" Width="1.5" PointX="10.375" PointY="5.75" />
+        <EntityTypeShape EntityType="UpVotesModel.CompanyPendingForApproval" Width="1.5" PointX="5.375" PointY="9.75" />
+        <AssociationConnector Association="UpVotesModel.FK_SubFocusArea_FocusArea_FocusAreaID" />
+        <EntityTypeShape EntityType="UpVotesModel.CompanyFocus" Width="1.5" PointX="3" PointY="10.25" />
+        <AssociationConnector Association="UpVotesModel.FK_CompanyFocus_Company" />
+        <AssociationConnector Association="UpVotesModel.FK_CompanySubFocus_CompanyFocus_CompanyFocusID" />
+        <EntityTypeShape EntityType="UpVotesModel.AverageHourlyRate" Width="1.5" PointX="8" PointY="10.125" />
+        <EntityTypeShape EntityType="UpVotesModel.EmployeeRange" Width="1.5" PointX="12.375" PointY="0.75" />
+        <AssociationConnector Association="UpVotesModel.FK_AverageHourlyRate_Currency" />
+        <EntityTypeShape EntityType="UpVotesModel.Email" Width="1.5" PointX="12.375" PointY="3.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

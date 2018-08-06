@@ -10,9 +10,14 @@ namespace UpVotes.BusinessEntities.Entities
 
         public int FocusAreaID { get; set; }
 
+        public int SubFocusAreaID { get; set; }
+
         public string FocusAreaName { get; set; }
+
         public string SubFocusAreaName { get; set; }
+
         public double SubFocusAreaPercentage { get; set; }
+
         public double FocusAreaPercentage { get; set; }
 
         public bool IsActive { get; set; }
@@ -24,5 +29,7 @@ namespace UpVotes.BusinessEntities.Entities
         public int? ModifiedBy { get; set; }
 
         public DateTime? ModifiedDate { get; set; }
+
+        public System.Collections.Generic.List<CompanySubFocusEntity> CompanySubFocus { get; set; }
     }
 }

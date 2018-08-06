@@ -40,6 +40,8 @@ namespace UpVotes.DataModel
         public Nullable<System.DateTime> DateOfBirth { get; set; }
         public string ProfilePictureURL { get; set; }
         public string ProfileID { get; set; }
+        public Nullable<int> CreatedBy { get; set; }
+        public Nullable<System.DateTime> CreatedDate { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CompanyReview> CompanyReviews { get; set; }

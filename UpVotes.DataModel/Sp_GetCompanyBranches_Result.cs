@@ -16,7 +16,9 @@ namespace UpVotes.DataModel
         public int BranchID { get; set; }
         public string BranchName { get; set; }
         public int CompanyID { get; set; }
+        public int CountryID { get; set; }
         public string CountryName { get; set; }
+        public int StateID { get; set; }
         public string StateName { get; set; }
         public string Address { get; set; }
         public string City { get; set; }

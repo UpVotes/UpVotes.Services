@@ -18,6 +18,7 @@ namespace UpVotes.DataModel
         public Currency()
         {
             this.Countries = new HashSet<Country>();
+            this.AverageHourlyRate = new HashSet<AverageHourlyRate>();
         }
     
         public int CurrencyID { get; set; }
@@ -28,5 +29,7 @@ namespace UpVotes.DataModel
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Country> Countries { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AverageHourlyRate> AverageHourlyRate { get; set; }
     }
 }

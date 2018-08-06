@@ -1,18 +1,19 @@
 using System.Collections.Generic;
+using System.Web;
 
 namespace UpVotes.BusinessEntities.Entities
 {
     public class CompanyEntity
     {
         public int CompanyID { get; set; }
-        
+
         public string CompanyName { get; set; }
 
-        public string LogoName { get; set; }
+        public string LogoName { get; set; }        
 
         public string TagLine { get; set; }
 
-        public int FoundedYear { get; set; }        
+        public int FoundedYear { get; set; }
 
         public string URL { get; set; }
 
@@ -24,18 +25,25 @@ namespace UpVotes.BusinessEntities.Entities
 
         public string GooglePlusProfileURL { get; set; }
 
+        [System.Web.Mvc.AllowHtml]
         public string Summary { get; set; }
 
+        [System.Web.Mvc.AllowHtml]
         public string Summary1 { get; set; }
 
+        [System.Web.Mvc.AllowHtml]
         public string Summary2 { get; set; }
 
+        [System.Web.Mvc.AllowHtml]
         public string Summary3 { get; set; }
 
+        [System.Web.Mvc.AllowHtml]
         public string KeyClients { get; set; }
 
         public int Ranks { get; set; }
+
         public int? RowNumber { get; set; }
+
         public int TotalCount { get; set; }
 
         public int UserID { get; set; }
@@ -68,6 +76,20 @@ namespace UpVotes.BusinessEntities.Entities
 
         public string Email { get; set; }
 
+        public string WorkEmail { get; set; }
+
+        public string IsUserVerified { get; set; }
+
+        public string UserVerifiedDate { get; set; }
+
+        public string IsAdminApproved { get; set; }
+
+        public string AdminApprovedDate { get; set; }
+
+        public string Remarks { get; set; }
+
+        public bool IsAdminUser { get; set; }
+
         public List<CompanyBranchEntity> CompanyBranches { get; set; }
 
         public List<CompanyFocusEntity> CompanyFocus { get; set; }
@@ -77,6 +99,17 @@ namespace UpVotes.BusinessEntities.Entities
         public List<string> SubfocusNames { get; set; }
         public List<CompanyPortFolioEntity> CompanyPortFolio { get; set; }
 
-        public List<CompanyReviewsEntity> CompanyReviews { get; set; }
+        public List<CompanyReviewsEntity> CompanyReviews { get; set; }        
+    }
+
+    public class CompanyRejectComments
+    {
+        public int CompanyID { get; set; }
+
+        public string CompanyName { get; set; }
+
+        public string RejectComments { get; set; }
+
+        public string RejectedBy { get; set; }
     }
 }

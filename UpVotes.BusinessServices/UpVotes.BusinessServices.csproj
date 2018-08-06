@@ -56,7 +56,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DependencyResolver.cs" />
+    <Compile Include="Helper\DependencyResolver.cs" />
+    <Compile Include="Helper\EmailHelper.cs" />
+    <Compile Include="Helper\Helper.cs" />
     <Compile Include="Interface\ICompanyReviewsService.cs" />
     <Compile Include="Interface\ICompanyService.cs" />
     <Compile Include="Interface\IFocusArea.cs" />

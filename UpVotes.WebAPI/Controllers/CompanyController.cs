@@ -25,35 +25,14 @@ namespace UpVotes.WebAPI.Controllers
             _companyReviewsServices = companyReviewsService;
         }
 
-        [HttpGet]
-        [Route("api/GetCompany/{companyName}")]
-        public HttpResponseMessage GetCompany(string companyName)
+        [HttpPost]
+        [Route("api/GetCompany")]
+        public HttpResponseMessage GetCompany(CompanyFilterEntity companyFilter)
         {
             try
             {
-                CompanyDetail company = _companyServices.GetCompanyDetails(companyName);
-                if (company != null)
-                {
-                    return Request.CreateResponse(HttpStatusCode.OK, company);
-                }
-                else
-                {
-                    return Request.CreateResponse(HttpStatusCode.NotFound, "Companies not found");
-                }
-            }
-            catch (Exception ex)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
-            }
-        }
+                CompanyDetail company = _companyServices.GetAllCompanyDetails(companyFilter.CompanyName, companyFilter.MinRate, companyFilter.MaxRate, companyFilter.MinEmployee, companyFilter.MaxEmployee, companyFilter.SortBy, companyFilter.FocusAreaID, companyFilter.Location, companyFilter.SubFocusArea, companyFilter.UserID, companyFilter.PageNo, companyFilter.PageSize);
 
-        [HttpGet]        
-        [Route("api/GetCompany/{companyName}/{minRate}/{maxRate}/{minEmployee}/{maxEmployee}/{sortby}/{focusAreaID}/{location}/{SubFocusArea}/{userID}/{PageNo}/{PageSize}")]
-        public HttpResponseMessage GetCompany(string companyName, decimal? minRate, decimal? maxRate, int? minEmployee, int? maxEmployee, string sortby, int? focusAreaID, string location, string SubFocusArea = "0", int userID = 0, int PageNo = 1, int PageSize = 10)
-        {
-            try
-            {
-                CompanyDetail company = _companyServices.GetAllCompanyDetails(companyName, minRate, maxRate, minEmployee, maxEmployee, sortby, focusAreaID,location, SubFocusArea, userID, PageNo, PageSize);
                 if (company != null)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, company);
@@ -64,7 +43,7 @@ namespace UpVotes.WebAPI.Controllers
                 }
             }
             catch (Exception ex)
-            {
+            {                
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
             }
         }
@@ -92,7 +71,7 @@ namespace UpVotes.WebAPI.Controllers
             {
                 return Request.CreateResponse(HttpStatusCode.OK, _companyServices.VoteForCompany(companyVote));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
             }
@@ -111,7 +90,7 @@ namespace UpVotes.WebAPI.Controllers
             {
                 return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
             }
-        }        
+        }
 
         [HttpGet]
         [Route("api/GetDataForAutoComplete/{type}/{focusAreaID}/{searchTerm}")]
@@ -144,11 +123,12 @@ namespace UpVotes.WebAPI.Controllers
                 CompanyDetail company = _companyServices.GetUserReviews(companyName);
                 return Request.CreateResponse(HttpStatusCode.OK, company);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
             }
         }
+
         [HttpPost]
         [Route("api/GetQuotationDetailsForMobileApp")]
         public HttpResponseMessage GetQuotationDetails(QuotationRequest quotationrequest)
@@ -159,7 +139,7 @@ namespace UpVotes.WebAPI.Controllers
             {
                 retval.ResponseObject = _companyServices.GetQuotationData(quotationrequest);
                 if (retval.ResponseObject != null)
-                {                    
+                {
                     return Request.CreateResponse(HttpStatusCode.OK, retval);
                 }
                 else
@@ -168,16 +148,16 @@ namespace UpVotes.WebAPI.Controllers
                 }
             }
             catch (Exception ex)
-            {                
+            {
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
-            }            
+            }
 
         }
 
         [HttpGet]
         [Route("api/GetCategoryMetaTags/{FocusAreaName}/{SubFocusAreaName}")]
         public HttpResponseMessage GetCategoryMetaTags(string FocusAreaName, string SubFocusAreaName)
-        {   
+        {
             try
             {
                 CategoryMetaTags metaTagDetails = _companyServices.GetCategoryMetaTags(FocusAreaName, SubFocusAreaName);
@@ -187,7 +167,21 @@ namespace UpVotes.WebAPI.Controllers
             {
                 return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
             }
+        }
 
+        [HttpPost]
+        [Route("api/SaveCompany")]
+        public HttpResponseMessage SaveCompany(CompanyEntity companyEntity)
+        {
+            try
+            {
+                int companyID = _companyServices.SaveCompany(companyEntity);
+                return Request.CreateResponse(HttpStatusCode.OK, companyID);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
         }
     }
 }

@@ -65,8 +65,9 @@ namespace UpVotes.BusinessServices.Service
             throw new NotImplementedException();
         }
 
-        public UserEntity UpdateUser(UserEntity userEntity, User currentUser)
+        public UserEntity UpdateUser(UserEntity userEntity, User currentUser, UpVotesEntities _upvotesContext)
         {
+            int currentUserID = currentUser.UserID;
             currentUser.UserName = userEntity.UserName;
             currentUser.UserPassword = userEntity.UserPassword;
             currentUser.FirstName = userEntity.FirstName;
@@ -81,19 +82,33 @@ namespace UpVotes.BusinessServices.Service
             currentUser.ProfilePictureURL = userEntity.ProfilePictureURL;
             currentUser.ProfileID = userEntity.ProfileID;
 
-            _unitOfWork.UsersRepository.Update(currentUser);
-            _unitOfWork.Save();
+            _upvotesContext.SaveChanges();
 
             currentUser = new User();
-            currentUser = _unitOfWork.UsersRepository.Get(u => u.ProfileID == userEntity.ProfileID && u.UserType == userEntity.UserType);
+            ////currentUser = _unitOfWork.UsersRepository.Get(u => u.ProfileID == userEntity.ProfileID && u.UserType == userEntity.UserType);
+            ////currentUser = _upvotesContext.Users.Where(u => u.ProfileID == userEntity.ProfileID && u.UserType == userEntity.UserType).FirstOrDefault();
+            //if(userEntity.ProfileID == null)
+            //{
+            //    currentUser = _upvotesContext.Users.Where(u => u.UserName == userEntity.UserName && u.UserType == 4).FirstOrDefault();
+            //}
+            //else
+            //{
+            //    currentUser = _upvotesContext.Users.Where(u => u.ProfileID == "KxFiKBWaUu" && u.UserType == 4).FirstOrDefault();
+            //}
+
+            currentUser = _upvotesContext.Users.Where(a => a.UserID == currentUserID).FirstOrDefault();
+            
+            currentUser.ProfileID = userEntity.ProfileID;
+            currentUser.ProfilePictureURL = userEntity.ProfilePictureURL;
             Mapper.Initialize(cfg => { cfg.CreateMap<User, UserEntity>(); });
             UserEntity userObj = Mapper.Map<User, UserEntity>(currentUser);
 
             return userObj;
         }
 
-        public UserEntity InsertUser(UserEntity userEntity)
+        public UserEntity InsertUser(UserEntity userEntity, UpVotesEntities _upvotesContext)
         {
+
             User newUserObj = new User
             {
                 UserName = userEntity.UserName,
@@ -114,11 +129,10 @@ namespace UpVotes.BusinessServices.Service
                 ProfileID = userEntity.ProfileID,
             };
 
-            _unitOfWork.UsersRepository.Add(newUserObj);
-            _unitOfWork.Save();
+            _upvotesContext.Users.Add(newUserObj);
+            _upvotesContext.SaveChanges();
 
-            User currentUser = new User();
-            currentUser = _unitOfWork.UsersRepository.Get(u => u.ProfileID == userEntity.ProfileID && u.UserType == userEntity.UserType);
+            User currentUser = _upvotesContext.Users.Where(u => u.ProfileID == userEntity.ProfileID && u.UserType == userEntity.UserType).FirstOrDefault();
             Mapper.Initialize(cfg => { cfg.CreateMap<User, UserEntity>(); });
             UserEntity userObj = Mapper.Map<User, UserEntity>(currentUser);
 
@@ -127,18 +141,21 @@ namespace UpVotes.BusinessServices.Service
 
         public UserEntity AddOrUpdateUser(UserEntity userObj)
         {
-            UserEntity userEntityObj = new UserEntity();
-            User currentUser = _unitOfWork.UsersRepository.Get(u => u.FirstName == userObj.FirstName && u.LastName == userObj.LastName && u.ProfileURL == userObj.ProfileURL && u.UserType == userObj.UserType);
-            if (currentUser != null && currentUser.UserID > 0)
+            using (UpVotesEntities _upVotesContext = new UpVotesEntities())
             {
-                userEntityObj = UpdateUser(userObj, currentUser);
-            }
-            else
-            {
-                userEntityObj = InsertUser(userObj);
-            }
+                UserEntity userEntityObj = new UserEntity();
+                User currentUser = _upVotesContext.Users.Where(u => u.FirstName == userObj.FirstName && u.LastName == userObj.LastName && u.ProfileURL == userObj.ProfileURL && u.UserType == userObj.UserType).FirstOrDefault();
+                if (currentUser != null && currentUser.UserID > 0)
+                {
+                    userEntityObj = UpdateUser(userObj, currentUser, _upVotesContext);
+                }
+                else
+                {
+                    userEntityObj = InsertUser(userObj, _upVotesContext);
+                }
 
-            return userEntityObj;
+                return userEntityObj;
+            }
         }
     }
 }

@@ -19,12 +19,12 @@ namespace UpVotes.WebAPI.Controllers
         }
 
         [HttpGet]
-        [Route("api/GetUserCompanies/{userID}")]
-        public HttpResponseMessage GetUserCompanies(int userID)
+        [Route("api/GetUserCompanies/{userID}/{companyName}")]
+        public HttpResponseMessage GetUserCompanies(int userID, string companyName)
         {
             try
             {
-                CompanyDetail company = _companyServices.GetUserCompanies(userID);
+                CompanyDetail company = _companyServices.GetUserCompanies(userID, companyName);
                 if (company != null)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, company);
@@ -39,5 +39,68 @@ namespace UpVotes.WebAPI.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
             }
         }
+
+        [HttpGet]
+        [Route("api/GetCountry")]
+        public HttpResponseMessage GetCountry()
+        {
+            try
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, _companyServices.GetCountry());
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
+
+        [HttpGet]
+        [Route("api/GetStates/{countryID}")]
+        public HttpResponseMessage GetStates(int countryID)
+        {
+            try
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, _companyServices.GetStates(countryID));
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
+
+        [HttpGet]
+        [Route("api/CompanyVerificationByUser/{uID}/{cID}/{compID}")]
+        public HttpResponseMessage CompanyVerificationByUser(int uID, string cID, int compID)
+        {
+            try
+            {
+                bool isUserVerifiedCompany = _companyServices.CompanyVerificationByUser(uID, cID, compID);
+                if (isUserVerifiedCompany)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, isUserVerifiedCompany);
+                }
+
+                return Request.CreateResponse(HttpStatusCode.BadRequest, isUserVerifiedCompany);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
+
+        [HttpPost]
+        [Route("api/UpdateRejectionComments")]
+        public HttpResponseMessage UpdateRejectionComments(CompanyRejectComments companyRejectComments)
+        {
+            try
+            {
+                bool isRejectionCommentsUpdated = _companyServices.UpdateRejectionComments(companyRejectComments);
+                return Request.CreateResponse(HttpStatusCode.OK, isRejectionCommentsUpdated);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }        
     }
 }

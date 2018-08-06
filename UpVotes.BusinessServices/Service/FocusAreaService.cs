@@ -18,20 +18,45 @@ namespace UpVotes.BusinessServices.Service
                 return Logger.Instance();
             }
         }
-
-        private UpVotesEntities _context = null;        
+        
+        private UpVotesEntities _context = null;
 
         public List<FocusAreaEntity> GetFocusAreaList()
         {
-            using (_context = new UpVotesEntities())
+            try
             {
-                FocusAreaDetail focusArea = new FocusAreaDetail();
+                using (_context = new UpVotesEntities())
+                {
+                    IEnumerable<Sp_GetFocusArea_Result> focusAreaResult = _context.Database.SqlQuery(typeof(Sp_GetFocusArea_Result), "EXEC Sp_GetFocusArea").Cast<Sp_GetFocusArea_Result>().AsEnumerable();
+                    Mapper.Initialize(cfg => { cfg.CreateMap<Sp_GetFocusArea_Result, FocusAreaEntity>(); });
+                    IEnumerable<FocusAreaEntity> iefocusAreaEntity = Mapper.Map<IEnumerable<Sp_GetFocusArea_Result>, IEnumerable<FocusAreaEntity>>(focusAreaResult);
 
-                IEnumerable<Sp_GetFocusArea_Result> focusAreaResult = _context.Database.SqlQuery(typeof(Sp_GetFocusArea_Result), "EXEC Sp_GetFocusArea").Cast<Sp_GetFocusArea_Result>().AsEnumerable();
-                Mapper.Initialize(cfg => { cfg.CreateMap<Sp_GetFocusArea_Result, FocusAreaEntity>(); });
-                IEnumerable<FocusAreaEntity> focusAreaEntity = Mapper.Map<IEnumerable<Sp_GetFocusArea_Result>, IEnumerable<FocusAreaEntity>>(focusAreaResult);
-                return focusAreaEntity.ToList();
-            }            
+                    List<FocusAreaEntity> focusAreaEntityList = new List<FocusAreaEntity>();
+
+                    foreach (FocusAreaEntity focusAreaObj in iefocusAreaEntity)
+                    {
+                        List<SubFocusAreaEntity> subFocusAreaList = (from a in _context.SubFocusArea
+                                                                     where a.FocusAreaID == focusAreaObj.FocusAreaID
+                                                                     select new SubFocusAreaEntity()
+                                                                     {
+                                                                         SubFocusAreaID = a.SubFocusAreaID,
+                                                                         FocusAreaID = a.FocusAreaID,
+                                                                         SubFocusAreaName = a.SubFocusAreaName
+                                                                     }).ToList();
+
+                        focusAreaObj.SubFocusAreaEntity = subFocusAreaList;
+
+                        focusAreaEntityList.Add(focusAreaObj);
+                    }
+
+
+                    return focusAreaEntityList;
+                }
+            }
+            catch(System.Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public int GetFocusAreaID(string focusAreaName)
@@ -40,7 +65,7 @@ namespace UpVotes.BusinessServices.Service
             {
                 int focusAreaID = _context.FocusAreas.Where(a => a.FocusAreaName.ToUpper().Contains(focusAreaName.ToUpper())).Select(a => a.FocusAreaID).FirstOrDefault();
                 return focusAreaID;
-            }            
+            }
         }
     }
 }

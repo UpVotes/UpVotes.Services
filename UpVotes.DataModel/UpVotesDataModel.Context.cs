@@ -40,17 +40,17 @@ namespace UpVotes.DataModel
         public virtual DbSet<UserToken> UserTokens { get; set; }
         public virtual DbSet<UserType> UserTypes { get; set; }
         public virtual DbSet<CompanyVote> CompanyVotes { get; set; }
-        public virtual DbSet<CompanyFocus> CompanyFocus { get; set; }
         public virtual DbSet<Company> Company { get; set; }
-    
-        public virtual ObjectResult<Sp_GetCompanyBranches_Result> Sp_GetCompanyBranches(Nullable<int> companyID)
-        {
-            var companyIDParameter = companyID.HasValue ?
-                new ObjectParameter("CompanyID", companyID) :
-                new ObjectParameter("CompanyID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetCompanyBranches_Result>("Sp_GetCompanyBranches", companyIDParameter);
-        }
+        public virtual DbSet<CategoryBasedMetaTags> CategoryBasedMetaTags { get; set; }
+        public virtual DbSet<CompanySubFocus> CompanySubFocus { get; set; }
+        public virtual DbSet<QuotationRateCard> QuotationRateCard { get; set; }
+        public virtual DbSet<SubFocusArea> SubFocusArea { get; set; }
+        public virtual DbSet<UserQuotation> UserQuotation { get; set; }
+        public virtual DbSet<CompanyPendingForApproval> CompanyPendingForApproval { get; set; }
+        public virtual DbSet<CompanyFocus> CompanyFocus { get; set; }
+        public virtual DbSet<AverageHourlyRate> AverageHourlyRate { get; set; }
+        public virtual DbSet<EmployeeRange> EmployeeRange { get; set; }
+        public virtual DbSet<Email> Email { get; set; }
     
         public virtual ObjectResult<Sp_GetCompanyFocus_Result> Sp_GetCompanyFocus(Nullable<int> companyID)
         {
@@ -308,6 +308,15 @@ namespace UpVotes.DataModel
                 new ObjectParameter("SubFocusAreaName", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_CategoryMetaTags_Result>("Sp_CategoryMetaTags", focusAreaNameParameter, subFocusAreaNameParameter);
+        }
+    
+        public virtual ObjectResult<Sp_GetCompanyBranches_Result> Sp_GetCompanyBranches(Nullable<int> companyID)
+        {
+            var companyIDParameter = companyID.HasValue ?
+                new ObjectParameter("CompanyID", companyID) :
+                new ObjectParameter("CompanyID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetCompanyBranches_Result>("Sp_GetCompanyBranches", companyIDParameter);
         }
     }
 }

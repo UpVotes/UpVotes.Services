@@ -18,6 +18,7 @@ namespace UpVotes.DataModel
         public FocusArea()
         {
             this.CompanyReviews = new HashSet<CompanyReview>();
+            this.SubFocusArea = new HashSet<SubFocusArea>();
         }
     
         public int FocusAreaID { get; set; }
@@ -27,5 +28,7 @@ namespace UpVotes.DataModel
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CompanyReview> CompanyReviews { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SubFocusArea> SubFocusArea { get; set; }
     }
 }

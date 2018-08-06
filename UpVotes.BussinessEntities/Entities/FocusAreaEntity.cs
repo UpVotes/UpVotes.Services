@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace UpVotes.BusinessEntities.Entities
 {
     public class FocusAreaEntity
@@ -6,11 +8,15 @@ namespace UpVotes.BusinessEntities.Entities
 
         public string FocusAreaName { get; set; }
 
+        public string FocusType { get; set; }
+
         public bool IsActive { get; set; }
+
+        public List<SubFocusAreaEntity> SubFocusAreaEntity { get; set; }
     }
 
     public  class FocusAreaDetail
     {
-        public System.Collections.Generic.List<FocusAreaEntity> FocusAreaList { get; set; }
+        public List<FocusAreaEntity> FocusAreaList { get; set; }
     }
 }

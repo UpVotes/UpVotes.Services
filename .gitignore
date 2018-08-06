@@ -13,3 +13,7 @@
 /UpVotes.WebAPI/obj
 *.pdb
 *.dll
+/UpVotes.BusinessServices/bin/Debug
+/UpVotes.Services/obj/Debug
+/UpVotes.Services.Tests/obj/Debug
+/UpVotes.WebAPI.Tests/obj/Debug

@@ -282,7 +282,7 @@
       <Name>UpVotes.BusinessEntities</Name>
     </ProjectReference>
     <ProjectReference Include="..\UpVotes.DataModel\UpVotes.DataModel.csproj">
-      <Project>{828BEDA2-6DEC-4BC1-936C-3D66A3CDCC64}</Project>
+      <Project>{828beda2-6dec-4bc1-936c-3d66a3cdcc64}</Project>
       <Name>UpVotes.DataModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\UpVotes.Resolver\UpVotes.Resolver.csproj">
@@ -308,7 +308,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>18515</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost/Service/</IISUrl>
+          <IISUrl>http://localhost:18515/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

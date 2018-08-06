@@ -7,9 +7,9 @@ namespace UpVotes.BusinessServices.Interface
     {
         int Authenticate(string userName, string password);
 
-        UserEntity InsertUser(UserEntity userEntity);
+        UserEntity InsertUser(UserEntity userEntity, UpVotesEntities _upvotesContex);
 
-        UserEntity UpdateUser(UserEntity userEntity, User currentUse);
+        UserEntity UpdateUser(UserEntity userEntity, User currentUse, UpVotesEntities _upvotesContex);
 
         bool DeleteUser(int userID);
 
