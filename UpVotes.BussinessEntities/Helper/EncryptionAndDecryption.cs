@@ -10,6 +10,13 @@ namespace UpVotes.BusinessEntities.Helper
 {
     public class EncryptionAndDecryption
     {
+        const string _availChars = "abcdefghijklmnopqrstuvwxyz0123456789";
+        public static string GenRandomAlphaNum(int length)
+        {
+            var random = new Random(); //requires seed
+            return new string(Enumerable.Repeat(_availChars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
         public static string Encrypt(string clearText)
         {
             string EncryptionKey = "puneethm!06#11%1988@upvotes.co";

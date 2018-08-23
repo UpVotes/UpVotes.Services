@@ -175,7 +175,7 @@ namespace UpVotes.BusinessServices.Service
                     User newUserObj = new User()
                     {
                         UserName = companyObj.WorkEmail,
-                        UserPassword = "$upVotes007@!",
+                        UserPassword = EncryptionAndDecryption.Encrypt(dbUser.FirstName+ EncryptionAndDecryption.GenRandomAlphaNum(6)),
                         FirstName = dbUser.FirstName,
                         LastName = dbUser.LastName,
                         UserEmail = dbUser.UserEmail,
@@ -578,7 +578,7 @@ namespace UpVotes.BusinessServices.Service
             {
                 sb.Append("<p>Please use below credentials to login to the upvotes portal.</p>");
                 sb.Append("<p> User Name:-" + newUserObj.UserName + "</p>");
-                sb.Append("<p> Password:-" + newUserObj.UserPassword + "</p>");
+                sb.Append("<p> Password:-" + EncryptionAndDecryption.Decrypt(newUserObj.UserPassword) + "</p>");
             }
 
             EmailHelper.GetEmailSignature(sb);

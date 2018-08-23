@@ -18,5 +18,8 @@ namespace UpVotes.BusinessServices.Interface
         bool UpdateMemberShip(int userID, int userType);
 
         UserEntity AddOrUpdateUser(UserEntity userObj);
+        UserEntity LoginRegisteredUser(UserEntity userObj);
+        UserEntity ForgotPassword(UserEntity userObj);
+        UserEntity ChangePassword(ChangePassword userObj);
     }
 }

@@ -3,8 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using UpVotes.BusinessEntities.Entities;
+using UpVotes.BusinessEntities.Helper;
 using UpVotes.BusinessServices.Interface;
 using UpVotes.DataModel;
 using UpVotes.DataModel.UnitOfWork;
@@ -156,6 +158,78 @@ namespace UpVotes.BusinessServices.Service
 
                 return userEntityObj;
             }
+        }
+        public UserEntity LoginRegisteredUser(UserEntity userObj)
+        {
+            using (UpVotesEntities _upVotesContext = new UpVotesEntities())
+            {
+                UserEntity userEntityObj = new UserEntity();
+                string EncryptPwd = EncryptionAndDecryption.Encrypt(userObj.UserPassword);
+                User currentUser = _upVotesContext.Users.Where(u => u.UserName == userObj.UserName && u.UserPassword == EncryptPwd).FirstOrDefault();
+                if (currentUser != null && currentUser.UserID > 0)
+                {                    
+                    Mapper.Initialize(cfg => { cfg.CreateMap<User, UserEntity>(); });
+                    userEntityObj = Mapper.Map<User, UserEntity>(currentUser);                    
+                }
+                return userEntityObj;
+            }
+        }
+        public UserEntity ForgotPassword(UserEntity userObj)
+        {
+            using (UpVotesEntities _upVotesContext = new UpVotesEntities())
+            {
+                UserEntity userEntityObj = new UserEntity();
+                //string EncryptPwd = EncryptionAndDecryption.Encrypt(userObj.UserPassword);
+                User currentUser = _upVotesContext.Users.Where(u => u.UserName == userObj.UserName).FirstOrDefault();
+                if (currentUser != null)
+                {
+                    string pwdgen = EncryptionAndDecryption.GenRandomAlphaNum(8);
+                    currentUser.UserPassword = EncryptionAndDecryption.Encrypt(pwdgen);
+                    _upVotesContext.SaveChanges();                    
+                    Mapper.Initialize(cfg => { cfg.CreateMap<User, UserEntity>(); });
+                    userEntityObj = Mapper.Map<User, UserEntity>(currentUser);
+                    Thread thread = new Thread(() => SendForgotPasswordEmail(currentUser.UserName, pwdgen));
+                    thread.Start();
+                }
+                return userEntityObj;
+            }
+        }
+        public UserEntity ChangePassword(ChangePassword changeObj)
+        {
+            using (UpVotesEntities _upVotesContext = new UpVotesEntities())
+            {
+                UserEntity userEntityObj = new UserEntity();
+                //string EncryptPwd = EncryptionAndDecryption.Encrypt(userObj.UserPassword);
+                User currentUser = _upVotesContext.Users.Where(u => u.UserID == changeObj.UserID).FirstOrDefault();
+                if (currentUser != null && (changeObj.Password == EncryptionAndDecryption.Decrypt(currentUser.UserPassword)))
+                {                    
+                    currentUser.UserPassword = EncryptionAndDecryption.Encrypt(changeObj.NewPassword);
+                    _upVotesContext.SaveChanges();                    
+                    Mapper.Initialize(cfg => { cfg.CreateMap<User, UserEntity>(); });
+                    userEntityObj = Mapper.Map<User, UserEntity>(currentUser);                    
+                }
+                return userEntityObj;
+            }
+        }
+
+        private void SendForgotPasswordEmail(string workEmail, string pwd)
+        {
+            Email emailProperties = new Email();
+            emailProperties.EmailFrom = System.Configuration.ConfigurationManager.AppSettings["AdminEmail"];
+            emailProperties.DomainDisplayName = System.Configuration.ConfigurationManager.AppSettings["DomainDisplayName"];
+            emailProperties.EmailTo = workEmail;
+            emailProperties.EmailSubject = "Reset Password Successful";
+            emailProperties.EmailBody = ForgetEmailContent(workEmail, pwd);
+            EmailHelper.SendEmail(emailProperties);
+        }
+        private string ForgetEmailContent(string workEmail, string pwd)
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.Append("<p>Hello,</p><p>As you requested password has been reset successfully</p>");
+             sb.Append("<p> Below is your new password</p>");
+            sb.Append("<p> Password:-" + pwd + "</p>");
+            EmailHelper.GetEmailSignature(sb);
+            return sb.ToString();
         }
     }
 }

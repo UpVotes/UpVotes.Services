@@ -33,5 +33,50 @@ namespace UpVotes.WebAPI.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
             }
         }
+
+        [HttpPost]
+        [Route("api/LoginRegisteredUser")]
+        public HttpResponseMessage LoginRegisteredUser(UserEntity userObj)
+        {
+            try
+            {
+                UserEntity updatedUserObj = _userService.LoginRegisteredUser(userObj);
+                return Request.CreateResponse(HttpStatusCode.OK, updatedUserObj);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
+
+        [HttpPost]
+        [Route("api/ForgotPassword")]
+        public HttpResponseMessage ForgotPassword(UserEntity userObj)
+        {
+            try
+            {
+                UserEntity updatedUserObj = _userService.ForgotPassword(userObj);
+                return Request.CreateResponse(HttpStatusCode.OK, updatedUserObj);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
+
+        [HttpPost]
+        [Route("api/ChangePassword")]
+        public HttpResponseMessage ChangePassword(ChangePassword changepwdObj)
+        {
+            try
+            {
+                UserEntity updatedUserObj = _userService.ChangePassword(changepwdObj);
+                return Request.CreateResponse(HttpStatusCode.OK, updatedUserObj);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
     }
 }
