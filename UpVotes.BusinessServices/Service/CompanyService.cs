@@ -34,6 +34,12 @@ namespace UpVotes.BusinessServices.Service
                     bool isAdd = false; string companyOTP = string.Empty;
                     if (companyEntity.CompanyID == 0)
                     {
+                        bool isCompanyExists = _context.Company.Where(a => a.CompanyName.Trim().ToUpper() == companyEntity.CompanyName.Trim().ToUpper()).Count() > 0 ? true : false;
+                        if(isCompanyExists)
+                        {
+                            return 0;
+                        }
+
                         isAdd = true;
                         companyID = _context.Company.OrderByDescending(a => a.CompanyID).Take(1).Select(a => a.CompanyID).FirstOrDefault();
                         companyID = companyID + 1;

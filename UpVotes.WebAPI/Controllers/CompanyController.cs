@@ -176,7 +176,14 @@ namespace UpVotes.WebAPI.Controllers
             try
             {
                 int companyID = _companyServices.SaveCompany(companyEntity);
-                return Request.CreateResponse(HttpStatusCode.OK, companyID);
+                if (companyID != 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, companyID);
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.Conflict, companyID);
+                }
             }
             catch (Exception ex)
             {
