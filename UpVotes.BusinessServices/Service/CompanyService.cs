@@ -35,7 +35,7 @@ namespace UpVotes.BusinessServices.Service
                     if (companyEntity.CompanyID == 0)
                     {
                         bool isCompanyExists = _context.Company.Where(a => a.CompanyName.Trim().ToUpper() == companyEntity.CompanyName.Trim().ToUpper()).Count() > 0 ? true : false;
-                        if(isCompanyExists)
+                        if (isCompanyExists)
                         {
                             return 0;
                         }
@@ -138,8 +138,16 @@ namespace UpVotes.BusinessServices.Service
                     }
 
                     if (isAdd)
-                    {                        
-                        SendEmailForUserVerification(companyEntity.UserID, companyObj.CompanyName, companyID, companyObj.CompanyOTP, companyObj.WorkEmail);
+                    {
+                        if (!companyEntity.IsAdminUser)
+                        {
+                            SendEmailForUserVerification(companyEntity.UserID, companyObj.CompanyName, companyID, companyObj.CompanyOTP, companyObj.WorkEmail);
+                        }
+                        else
+                        {
+                            companyObj.IsUserApproved = true;
+                            companyObj.UserApprovedDate = DateTime.Now;
+                        }
                     }
 
                     if (!companyEntity.IsAdminUser)
@@ -153,7 +161,7 @@ namespace UpVotes.BusinessServices.Service
                         string deleteQuery = "DELETE FROM dbo.CompanyPendingForApproval WHERE CompanyID =" + companyEntity.CompanyID;
                         _context.Database.ExecuteSqlCommand(deleteQuery, companyID);
                         companyObj.IsAdminApproved = true;
-                        companyObj.AdminApprovedDate = DateTime.Now;
+                        companyObj.AdminApprovedDate = DateTime.Now;                        
                         User newUserObj = AddUserByWorkEmailID(companyObj, _context);
                         SendCompanyApprovedEmail(companyObj.CompanyName, companyObj.WorkEmail, newUserObj);
                     }
@@ -181,7 +189,7 @@ namespace UpVotes.BusinessServices.Service
                     User newUserObj = new User()
                     {
                         UserName = companyObj.WorkEmail,
-                        UserPassword = EncryptionAndDecryption.Encrypt(dbUser.FirstName+ EncryptionAndDecryption.GenRandomAlphaNum(6)),
+                        UserPassword = EncryptionAndDecryption.Encrypt(dbUser.FirstName + EncryptionAndDecryption.GenRandomAlphaNum(6)),
                         FirstName = dbUser.FirstName,
                         LastName = dbUser.LastName,
                         UserEmail = dbUser.UserEmail,
@@ -570,7 +578,7 @@ namespace UpVotes.BusinessServices.Service
             emailProperties.DomainDisplayName = System.Configuration.ConfigurationManager.AppSettings["DomainDisplayName"];
             emailProperties.EmailTo = workEmail;
             emailProperties.EmailBCC = "upvotes7@gmail.com; puneethm@hotmail.com";
-            emailProperties.EmailSubject = companyName + " is approved at upvotes.co";
+            emailProperties.EmailSubject = companyName + " is updated at upvotes.co";
             emailProperties.EmailBody = GetAdminApprovedEmailContent(companyName, newUserObj);
             EmailHelper.SendEmail(emailProperties);
         }
@@ -578,8 +586,8 @@ namespace UpVotes.BusinessServices.Service
         private string GetAdminApprovedEmailContent(string companyName, User newUserObj)
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.Append("<p>Hello,</p><p> Your company profile " + companyName + " has been approved from admin at upvotes.co. Click on the below link to verify the contents.</p>");
-            sb.Append("<p><em><strong><a href='" + System.Configuration.ConfigurationManager.AppSettings["WebClientURL"] + "/profile/" + companyName.Replace(" ", "-").Trim().ToLower() + "' target='_blank' rel='noopener'>" + System.Configuration.ConfigurationManager.AppSettings["WebClientURL"] + "/profile/" + companyName.Replace(" ", "-").Trim().ToLower() + "</a></strong></em><p>");
+            sb.Append("<p>Hello,</p><p> Your company profile " + companyName + " has been updated at upvotes.co. Click on the below link to verify the contents.</p>");
+            sb.Append("<p><em><strong><a href='" + System.Configuration.ConfigurationManager.AppSettings["WebClientURL"] + "profile/" + companyName.Replace(" ", "-").Trim().ToLower() + "' target='_blank' rel='noopener'>" + System.Configuration.ConfigurationManager.AppSettings["WebClientURL"] + "profile/" + companyName.Replace(" ", "-").Trim().ToLower() + "</a></strong></em><p>");
             if (newUserObj != null)
             {
                 sb.Append("<p>Please use below credentials to login to the upvotes portal.</p>");
