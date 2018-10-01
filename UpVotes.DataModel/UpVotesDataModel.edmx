@@ -5,7 +5,7 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="UpVotesModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="AverageHourlyRate">
+	<EntityType Name="AverageHourlyRate">
           <Key>
             <PropertyRef Name="AverageHourlyRateID" />
           </Key>
@@ -59,6 +59,7 @@
           <Property Name="Remarks" Type="nvarchar" MaxLength="500" />
           <Property Name="CompanyOTP" Type="varchar" MaxLength="6" />
           <Property Name="WorkEmail" Type="nvarchar" MaxLength="100" />
+          <Property Name="CompanyDomain" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="CompanyBranch">
           <Key>
@@ -197,7 +198,7 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Property Name="EmailSentDate" Type="datetime" />
           <Property Name="DomainDisplayName" Type="nvarchar" MaxLength="100" />
         </EntityType>
-        <EntityType Name="EmployeeRange">
+		<EntityType Name="EmployeeRange">
           <Key>
             <PropertyRef Name="EmployeeRangeID" />
           </Key>
@@ -323,7 +324,7 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Property Name="UserTypeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserTypeDescription" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
-        <Association Name="FK_AverageHourlyRate_Currency">
+		<Association Name="FK_AverageHourlyRate_Currency">
           <End Role="Currency" Type="Self.Currency" Multiplicity="1" />
           <End Role="AverageHourlyRate" Type="Self.AverageHourlyRate" Multiplicity="*" />
           <ReferentialConstraint>
@@ -551,9 +552,19 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="Sp_AdminApproveRejectForClaiming" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ClaimListingID" Type="int" Mode="In" />
+          <Parameter Name="userID" Type="int" Mode="In" />
+          <Parameter Name="CompanyID" Type="int" Mode="In" />
+          <Parameter Name="IsAdminApproved" Type="bit" Mode="In" />
+          <Parameter Name="userPassword" Type="nvarchar" Mode="In" />
+        </Function>
         <Function Name="Sp_CategoryMetaTags" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="FocusAreaName" Type="nvarchar" Mode="In" />
           <Parameter Name="SubFocusAreaName" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="Sp_GetClaimListingsForApproval" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserID" Type="int" Mode="In" />
         </Function>
         <Function Name="Sp_GetClientFocus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyID" Type="int" Mode="In" />
@@ -614,6 +625,13 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
         <Function Name="Sp_GetSubFocus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyID" Type="int" Mode="In" />
         </Function>
+        <Function Name="Sp_InsertUpdateClaimListing" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ClaimListingID" Type="int" Mode="In" />
+          <Parameter Name="companyID" Type="int" Mode="In" />
+          <Parameter Name="userID" Type="int" Mode="In" />
+          <Parameter Name="IsUserApproved" Type="bit" Mode="In" />
+          <Parameter Name="WorkEmail" Type="nvarchar" Mode="In" />
+        </Function>
         <Function Name="Sp_InsUserQuotation" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="platformType" Type="nvarchar" Mode="In" />
           <Parameter Name="themeType" Type="nvarchar" Mode="In" />
@@ -629,7 +647,7 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Parameter Name="companyName" Type="nvarchar" Mode="In" />
         </Function>
         <EntityContainer Name="UpVotesModelStoreContainer">
-          <EntitySet Name="AverageHourlyRate" EntityType="Self.AverageHourlyRate" Schema="dbo" store:Type="Tables" />
+		<EntitySet Name="AverageHourlyRate" EntityType="Self.AverageHourlyRate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CategoryBasedMetaTags" EntityType="Self.CategoryBasedMetaTags" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Company" EntityType="Self.Company" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CompanyBranch" EntityType="Self.CompanyBranch" Schema="dbo" store:Type="Tables" />
@@ -642,7 +660,7 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <EntitySet Name="Country" EntityType="Self.Country" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Currency" EntityType="Self.Currency" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Email" EntityType="Self.Email" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="EmployeeRange" EntityType="Self.EmployeeRange" Schema="dbo" store:Type="Tables" />
+		  <EntitySet Name="EmployeeRange" EntityType="Self.EmployeeRange" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FocusArea" EntityType="Self.FocusArea" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="QuotationRateCard" EntityType="Self.QuotationRateCard" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="State" EntityType="Self.State" Schema="dbo" store:Type="Tables" />
@@ -657,7 +675,7 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
     [CompanyPendingForApproval].[CompanyID] AS [CompanyID]
     FROM [dbo].[CompanyPendingForApproval] AS [CompanyPendingForApproval]</DefiningQuery>
           </EntitySet>
-          <AssociationSet Name="FK_AverageHourlyRate_Currency" Association="Self.FK_AverageHourlyRate_Currency">
+		  <AssociationSet Name="FK_AverageHourlyRate_Currency" Association="Self.FK_AverageHourlyRate_Currency">
             <End Role="Currency" EntitySet="Currency" />
             <End Role="AverageHourlyRate" EntitySet="AverageHourlyRate" />
           </AssociationSet>
@@ -916,6 +934,23 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
             <End Role="AverageHourlyRate" EntitySet="AverageHourlyRate" />
           </AssociationSet>
           <EntitySet Name="Email" EntityType="UpVotesModel.Email" />
+          <FunctionImport Name="Sp_InsertUpdateClaimListing" ReturnType="Collection(Int32)">
+            <Parameter Name="ClaimListingID" Mode="In" Type="Int32" />
+            <Parameter Name="companyID" Mode="In" Type="Int32" />
+            <Parameter Name="userID" Mode="In" Type="Int32" />
+            <Parameter Name="IsUserApproved" Mode="In" Type="Boolean" />
+            <Parameter Name="WorkEmail" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetClaimListingsForApproval" ReturnType="Collection(UpVotesModel.Sp_GetClaimListingsForApproval_Result)">
+          <Parameter Name="UserID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_AdminApproveRejectForClaiming">
+            <Parameter Name="ClaimListingID" Mode="In" Type="Int32" />
+            <Parameter Name="userID" Mode="In" Type="Int32" />
+            <Parameter Name="CompanyID" Mode="In" Type="Int32" />
+            <Parameter Name="IsAdminApproved" Mode="In" Type="Boolean" />
+            <Parameter Name="userPassword" Mode="In" Type="String" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="Sp_GetCompanyFocus_Result">
           <Property Type="Int32" Name="CompanyFocusID" Nullable="false" />
@@ -1319,7 +1354,8 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Property Name="AdminApprovedDate" Type="DateTime" Precision="3" />
           <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="CompanyOTP" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
-          <Property Name="WorkEmail" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="WorkEmail" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />          
+          <Property Name="CompanyDomain" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_CompanyBranch_Company">
           <End Type="UpVotesModel.Company" Role="Company" Multiplicity="1" />
@@ -1401,6 +1437,8 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Property Type="Int32" Name="RANKS" Nullable="true" />
           <Property Type="Int32" Name="TotalCount" Nullable="true" />
           <Property Type="Int32" Name="RowNumber" Nullable="true" />
+          <Property Type="Boolean" Name="IsClaim" Nullable="false" />
+          <Property Type="String" Name="CompanyDomain" Nullable="true" />
         </ComplexType>
         <ComplexType Name="Sp_GetQuoteForMobileApp_Result">
           <Property Type="Int32" Name="QuotationRateCardID" Nullable="false" />
@@ -1634,6 +1672,18 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Property Name="EmailSentDate" Type="DateTime" Precision="3" />
           <Property Name="DomainDisplayName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
+        <ComplexType Name="Sp_GetClaimListingsForApproval_Result">
+          <Property Type="Int32" Name="ClaimListingID" Nullable="false" />
+          <Property Type="Int32" Name="CompanyID" Nullable="false" />
+          <Property Type="String" Name="CompanyDomain" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="CompanyName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="IsUserApproved" Nullable="false" MaxLength="3" />
+          <Property Type="String" Name="URL" Nullable="false" MaxLength="250" />
+          <Property Type="String" Name="WorkEmail" Nullable="true" MaxLength="150" />
+          <Property Type="String" Name="ProfileURL" Nullable="false" />
+          <Property Type="String" Name="UpvotesURL" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="UserApprovedDate" Nullable="true" MaxLength="150" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1910,6 +1960,7 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
                 <ScalarProperty Name="LogoName" ColumnName="LogoName" />
                 <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
                 <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="CompanyDomain" ColumnName="CompanyDomain" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1947,6 +1998,8 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
                 <ScalarProperty Name="RANKS" ColumnName="RANKS" />
                 <ScalarProperty Name="TotalCount" ColumnName="TotalCount" />
                 <ScalarProperty Name="RowNumber" ColumnName="RowNumber" />
+                <ScalarProperty Name="IsClaim" ColumnName="IsClaim" />
+                <ScalarProperty Name="CompanyDomain" ColumnName="CompanyDomain" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -2134,7 +2187,7 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="AverageHourlyRate">
+		  <EntitySetMapping Name="AverageHourlyRate">
             <EntityTypeMapping TypeName="UpVotesModel.AverageHourlyRate">
               <MappingFragment StoreEntitySet="AverageHourlyRate">
                 <ScalarProperty Name="CurrencyID" ColumnName="CurrencyID" />
@@ -2166,6 +2219,24 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="Sp_InsertUpdateClaimListing" FunctionName="UpVotesModel.Store.Sp_InsertUpdateClaimListing" />
+          <FunctionImportMapping FunctionImportName="Sp_GetClaimListingsForApproval" FunctionName="UpVotesModel.Store.Sp_GetClaimListingsForApproval">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetClaimListingsForApproval_Result">
+                <ScalarProperty Name="ClaimListingID" ColumnName="ClaimListingID" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="CompanyDomain" ColumnName="CompanyDomain" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="IsUserApproved" ColumnName="IsUserApproved" />
+                <ScalarProperty Name="URL" ColumnName="URL" />
+                <ScalarProperty Name="WorkEmail" ColumnName="WorkEmail" />
+                <ScalarProperty Name="ProfileURL" ColumnName="ProfileURL" />
+                <ScalarProperty Name="UpvotesURL" ColumnName="UpvotesURL" />
+                <ScalarProperty Name="UserApprovedDate" ColumnName="UserApprovedDate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_AdminApproveRejectForClaiming" FunctionName="UpVotesModel.Store.Sp_AdminApproveRejectForClaiming" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

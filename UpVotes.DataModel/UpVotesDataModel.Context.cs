@@ -318,5 +318,64 @@ namespace UpVotes.DataModel
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetCompanyBranches_Result>("Sp_GetCompanyBranches", companyIDParameter);
         }
+    
+        public virtual ObjectResult<Nullable<int>> Sp_InsertUpdateClaimListing(Nullable<int> claimListingID, Nullable<int> companyID, Nullable<int> userID, Nullable<bool> isUserApproved, string workEmail)
+        {
+            var claimListingIDParameter = claimListingID.HasValue ?
+                new ObjectParameter("ClaimListingID", claimListingID) :
+                new ObjectParameter("ClaimListingID", typeof(int));
+    
+            var companyIDParameter = companyID.HasValue ?
+                new ObjectParameter("companyID", companyID) :
+                new ObjectParameter("companyID", typeof(int));
+    
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("userID", userID) :
+                new ObjectParameter("userID", typeof(int));
+    
+            var isUserApprovedParameter = isUserApproved.HasValue ?
+                new ObjectParameter("IsUserApproved", isUserApproved) :
+                new ObjectParameter("IsUserApproved", typeof(bool));
+    
+            var workEmailParameter = workEmail != null ?
+                new ObjectParameter("WorkEmail", workEmail) :
+                new ObjectParameter("WorkEmail", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("Sp_InsertUpdateClaimListing", claimListingIDParameter, companyIDParameter, userIDParameter, isUserApprovedParameter, workEmailParameter);
+        }
+    
+        public virtual ObjectResult<Sp_GetClaimListingsForApproval_Result> Sp_GetClaimListingsForApproval(Nullable<int> userID)
+        {
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetClaimListingsForApproval_Result>("Sp_GetClaimListingsForApproval", userIDParameter);
+        }
+    
+        public virtual int Sp_AdminApproveRejectForClaiming(Nullable<int> claimListingID, Nullable<int> userID, Nullable<int> companyID, Nullable<bool> isAdminApproved, string userPassword)
+        {
+            var claimListingIDParameter = claimListingID.HasValue ?
+                new ObjectParameter("ClaimListingID", claimListingID) :
+                new ObjectParameter("ClaimListingID", typeof(int));
+    
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("userID", userID) :
+                new ObjectParameter("userID", typeof(int));
+    
+            var companyIDParameter = companyID.HasValue ?
+                new ObjectParameter("CompanyID", companyID) :
+                new ObjectParameter("CompanyID", typeof(int));
+    
+            var isAdminApprovedParameter = isAdminApproved.HasValue ?
+                new ObjectParameter("IsAdminApproved", isAdminApproved) :
+                new ObjectParameter("IsAdminApproved", typeof(bool));
+    
+            var userPasswordParameter = userPassword != null ?
+                new ObjectParameter("userPassword", userPassword) :
+                new ObjectParameter("userPassword", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Sp_AdminApproveRejectForClaiming", claimListingIDParameter, userIDParameter, companyIDParameter, isAdminApprovedParameter, userPasswordParameter);
+        }
     }
 }

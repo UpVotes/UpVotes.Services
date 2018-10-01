@@ -11,6 +11,7 @@ namespace UpVotes.BusinessEntities.Entities
         public int TotalNoOfUsers { get; set; }
 
         public List<FocusAreaEntity> FocusAreaList { get; set; }
+        public List<ClaimInfoDetail> ClaimList { get; set; }
     }
 
     public class CategoryMetaTags

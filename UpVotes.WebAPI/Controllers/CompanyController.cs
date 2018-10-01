@@ -154,6 +154,38 @@ namespace UpVotes.WebAPI.Controllers
 
         }
 
+        [HttpPost]
+        [Route("api/InsertVerifyClaimListing")]
+        public HttpResponseMessage InsertUpdateClaimListing(ClaimApproveRejectListingRequest claimrequest)
+        {   
+            try
+            {
+                string message = _companyServices.InsertUpdateClaimListing(claimrequest);
+                return Request.CreateResponse(HttpStatusCode.OK, message);               
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
+            }
+
+        }
+
+        [HttpPost]
+        [Route("api/AdminApproveRejectForClaim")]
+        public string AdminApproveRejectForClaiming(ClaimApproveRejectListingRequest claimrequest)
+        {
+            try
+            {                
+                string status = _companyServices.AdminApproveRejectForClaiming(claimrequest);
+                return status;
+            }
+            catch (Exception ex)
+            {
+                return "error";
+            }
+
+        }
+
         [HttpGet]
         [Route("api/GetCategoryMetaTags/{FocusAreaName}/{SubFocusAreaName}")]
         public HttpResponseMessage GetCategoryMetaTags(string FocusAreaName, string SubFocusAreaName)

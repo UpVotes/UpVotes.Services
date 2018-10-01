@@ -66,6 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\ClaimListing.cs" />
     <Compile Include="Entities\Quotation.cs" />
     <Compile Include="Entities\CompanyDetail.cs" />
     <Compile Include="Entities\CompanyEntity.cs" />

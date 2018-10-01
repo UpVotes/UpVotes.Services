@@ -55,6 +55,7 @@ namespace UpVotes.DataModel
         public string Remarks { get; set; }
         public string CompanyOTP { get; set; }
         public string WorkEmail { get; set; }
+        public string CompanyDomain { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CompanyBranch> CompanyBranch { get; set; }

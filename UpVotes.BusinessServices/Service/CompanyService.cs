@@ -141,7 +141,7 @@ namespace UpVotes.BusinessServices.Service
                     {
                         if (!companyEntity.IsAdminUser)
                         {
-                            SendEmailForUserVerification(companyEntity.UserID, companyObj.CompanyName, companyID, companyObj.CompanyOTP, companyObj.WorkEmail);
+                            SendEmailForUserVerification(companyEntity.UserID, companyObj.CompanyName, companyID, companyObj.CompanyOTP, companyObj.WorkEmail,false);
                         }
                         else
                         {
@@ -484,15 +484,24 @@ namespace UpVotes.BusinessServices.Service
             EmailHelper.SendEmail(emailProperties);
         }
 
-        private void SendEmailForUserVerification(int userID, string companyName, int companyID, string companyOTP, string workEmail)
+        private void SendEmailForUserVerification(int userID, string companyName, int companyID, string companyOTP, string workEmail, bool IsClaim)
         {
             Email emailProperties = new Email();
             emailProperties.EmailFrom = System.Configuration.ConfigurationManager.AppSettings["AdminEmail"];
             emailProperties.DomainDisplayName = System.Configuration.ConfigurationManager.AppSettings["DomainDisplayName"];
             emailProperties.EmailTo = workEmail;
             emailProperties.EmailBCC = "upvotes7@gmail.com; puneethm@hotmail.com";
-            emailProperties.EmailSubject = "Company profile verification at upvotes.co";
-            emailProperties.EmailBody = GetUserVerificationEmailContent(userID, companyName, companyID, companyOTP).ToString();
+            if (!IsClaim)
+            {
+                emailProperties.EmailSubject = "Company profile verification at upvotes.co";
+                emailProperties.EmailBody = GetUserVerificationEmailContent(userID, companyName, companyID, companyOTP).ToString();
+            }
+            else
+            {
+                emailProperties.EmailSubject = "Company profile claimed at upvotes.co";
+                emailProperties.EmailBody = GetUserClaimedEmailContent(userID, companyName, companyID, workEmail).ToString();
+            }
+            
             EmailHelper.SendEmail(emailProperties);
         }
 
@@ -503,6 +512,18 @@ namespace UpVotes.BusinessServices.Service
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             sb.Append("<p>Hello,</p>");
             sb.Append("<p>Click the below link to verify your company profile at upvotes.co</p>");
+            sb.Append("<p><em><strong><a href = '" + url + "' target = '_blank' rel = 'noopener'>" + url + "</a> &nbsp;</strong></em></p>");
+            EmailHelper.GetEmailSignature(sb);
+            return sb.ToString();
+        }
+
+        private string GetUserClaimedEmailContent(int claimID, string companyName, int companyID, string workEmail)
+        {
+            string url = System.Configuration.ConfigurationManager.AppSettings["WebClientURL"] + "company/claimcompanyverification?CID=" + System.Web.HttpUtility.UrlEncode(EncryptionAndDecryption.Encrypt(claimID.ToString())) + "&WID=" + System.Web.HttpUtility.UrlEncode(EncryptionAndDecryption.Encrypt(workEmail)) + "&KID=" + System.Web.HttpUtility.UrlEncode(EncryptionAndDecryption.Encrypt(companyID.ToString()));
+
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.Append("<p>Hello,</p>");
+            sb.Append("<p>Click the below link to verify your claimed company profile at upvotes.co</p>");
             sb.Append("<p><em><strong><a href = '" + url + "' target = '_blank' rel = 'noopener'>" + url + "</a> &nbsp;</strong></em></p>");
             EmailHelper.GetEmailSignature(sb);
             return sb.ToString();
@@ -582,6 +603,46 @@ namespace UpVotes.BusinessServices.Service
             emailProperties.EmailBody = GetAdminApprovedEmailContent(companyName, newUserObj);
             EmailHelper.SendEmail(emailProperties);
         }
+
+        private void SendApproveRejectEmailForClaimedUser(string CompanyName, string Email, string password, bool IsAdminApproved, string RejectionComment)
+        {
+            Email emailProperties = new Email();
+            emailProperties.EmailFrom = System.Configuration.ConfigurationManager.AppSettings["AdminEmail"];
+            emailProperties.DomainDisplayName = System.Configuration.ConfigurationManager.AppSettings["DomainDisplayName"];
+            emailProperties.EmailTo = Email;
+            emailProperties.EmailBCC = "upvotes7@gmail.com; puneethm@hotmail.com";
+            if (IsAdminApproved)
+            {
+                emailProperties.EmailSubject = CompanyName + " is approved at upvotes.co";
+            }
+            else
+            {
+                emailProperties.EmailSubject = CompanyName + " is rejected at upvotes.co";
+            }
+            emailProperties.EmailBody = GetAdminApprovedRejectedEmailContentForClaimedUser(CompanyName, Email, password, IsAdminApproved, RejectionComment);
+            EmailHelper.SendEmail(emailProperties);
+        }
+
+        private string GetAdminApprovedRejectedEmailContentForClaimedUser(string CompanyName, string Email, string password, bool IsAdminApproved, string RejectionComment)
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            if (IsAdminApproved)
+            {
+                sb.Append("<p>Hello,</p><p> Your claimed company profile " + CompanyName + " has been approved at upvotes.co. Click on the below link to verify the contents.</p>");
+                sb.Append("<p><em><strong><a href='" + System.Configuration.ConfigurationManager.AppSettings["WebClientURL"] + "profile/" + CompanyName.Replace(" ", "-").Trim().ToLower() + "' target='_blank' rel='noopener'>" + System.Configuration.ConfigurationManager.AppSettings["WebClientURL"] + "profile/" + CompanyName.Replace(" ", "-").Trim().ToLower() + "</a></strong></em><p>");
+                sb.Append("<p>Please use below credentials to login to the upvotes portal.</p>");
+                sb.Append("<p> User Name:-" + Email + "</p>");
+                sb.Append("<p> Password:-" + EncryptionAndDecryption.Decrypt(password) + "</p>");
+            }
+            else
+            {
+                sb.Append("<p>Hello,</p><p> Your claimed company profile " + CompanyName + " has been rejected at upvotes.co.</p>");                
+                sb.Append("<p>Below is the reason for rejection.</p>");
+                sb.Append("<p>"+RejectionComment+"</p>");
+            }
+            EmailHelper.GetEmailSignature(sb);
+            return sb.ToString();
+        }        
 
         private string GetAdminApprovedEmailContent(string companyName, User newUserObj)
         {
@@ -718,7 +779,8 @@ namespace UpVotes.BusinessServices.Service
         {
             CompanyDetail companyDetail = new CompanyDetail();
             companyDetail.CompanyList = new List<CompanyEntity>();
-
+            companyDetail.ClaimList = new List<ClaimInfoDetail>();
+            bool isAdminUser = false;
             try
             {
                 using (_context = new UpVotesEntities())
@@ -764,7 +826,7 @@ namespace UpVotes.BusinessServices.Service
                     }
                     else
                     {
-                        bool isAdminUser = _context.Users.Where(a => a.UserID == userID && a.UserType == 4).Count() > 0 ? true : false;
+                        isAdminUser = _context.Users.Where(a => a.UserID == userID && a.UserType == 4).Count() > 0 ? true : false;
                         if (isAdminUser)
                         {
                             companyListDb = (from a in _context.Company join b in _context.CompanyPendingForApproval on a.CompanyID equals b.CompanyID where a.IsUserApproved == true && a.IsAdminApproved == false select a).Distinct().ToList();
@@ -793,6 +855,28 @@ namespace UpVotes.BusinessServices.Service
                     }
 
                     companyDetail.FocusAreaList = new FocusAreaService().GetFocusAreaList();
+
+                    if (isAdminUser)
+                    {
+                        var response = _context.Sp_GetClaimListingsForApproval(userID).ToList();
+                        if (response != null)
+                        {
+                            response.ToList().ForEach(q => companyDetail.ClaimList.Add(new ClaimInfoDetail
+                            {
+                                ClaimListingID = q.ClaimListingID,
+                                CompanyID = q.CompanyID,
+                                CompanyDomain = q.CompanyDomain,
+                                CompanyName = q.CompanyName,
+                                IsUserApproved = q.IsUserApproved,
+                                URL = q.URL,
+                                WorkEmail = q.WorkEmail,
+                                ProfileURL = q.ProfileURL,
+                                UpvotesURL = q.UpvotesURL,
+                                UserApprovedDate = q.UserApprovedDate
+                            }
+                        ));
+                        }
+                    }
 
                     return companyDetail;
                 }
@@ -947,6 +1031,63 @@ namespace UpVotes.BusinessServices.Service
             {
                 throw ex;
             }
+        }
+
+        public string InsertUpdateClaimListing(ClaimApproveRejectListingRequest request)
+        {                        
+            try
+            {
+                using (_context = new UpVotesEntities())
+                {
+                    var ClaimId = _context.Sp_InsertUpdateClaimListing(request.ClaimListingID, request.companyID, request.userID, request.IsUserVerify, request.Email+request.Domain).FirstOrDefault();
+                    if (request.ClaimListingID == 0)
+                    {
+                        SendEmailForUserVerification(Convert.ToInt32(ClaimId), request.CompanyName, request.companyID, new Random().Next(100000, 999999).ToString("D6"), request.Email + request.Domain, true);
+                    }
+                    return "OK";       
+                }
+               
+            }
+            catch (Exception ex)
+            {
+                return "Error";
+            }
+
+        }
+
+        public string AdminApproveRejectForClaiming(ClaimApproveRejectListingRequest request)
+        {
+            try
+            {
+                using (_context = new UpVotesEntities())
+                {
+                    string pwd = EncryptionAndDecryption.Encrypt(EncryptionAndDecryption.GenRandomAlphaNum(6));
+                    int result = _context.Sp_AdminApproveRejectForClaiming(request.ClaimListingID,request.userID,request.companyID,request.IsAdminApproved, pwd);
+                    if (result != -1)
+                    {
+                        SendApproveRejectEmailForClaimedUser(request.CompanyName, request.Email, pwd, request.IsAdminApproved, request.RejectionComment);
+                        if (request.IsAdminApproved)
+                        {
+                            return "claimed";
+                        }
+                        else
+                        {
+                            return "Rejected";
+                        }
+                    }
+                    else
+                    {
+                        return "error";
+                    }
+                    
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return "error";
+            }
+
         }
     }
 }

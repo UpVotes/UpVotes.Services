@@ -89,6 +89,8 @@ namespace UpVotes.BusinessEntities.Entities
         public string Remarks { get; set; }
 
         public bool IsAdminUser { get; set; }
+        public bool IsClaim { get; set; }
+        public string CompanyDomain { get; set; }
 
         public List<CompanyBranchEntity> CompanyBranches { get; set; }
 

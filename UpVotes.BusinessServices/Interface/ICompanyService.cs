@@ -31,5 +31,7 @@ namespace UpVotes.BusinessServices.Interface
 
         bool CompanyVerificationByUser(int uID, string cID, int compID);
         bool UpdateRejectionComments(CompanyRejectComments companyRejectComments);
+        string InsertUpdateClaimListing(ClaimApproveRejectListingRequest ClaimListingobj);
+        string AdminApproveRejectForClaiming(ClaimApproveRejectListingRequest ClaimListingobj);
     }
 }
