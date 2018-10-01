@@ -5,14 +5,6 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="UpVotesModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-	<EntityType Name="AverageHourlyRate">
-          <Key>
-            <PropertyRef Name="AverageHourlyRateID" />
-          </Key>
-          <Property Name="AverageHourlyRateID" Type="int" Nullable="false" />
-          <Property Name="AverageHourlyRate" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="CurrencyID" Type="int" Nullable="false" />
-        </EntityType>
         <EntityType Name="CategoryBasedMetaTags">
           <Key>
             <PropertyRef Name="CategoryBasedMetaTagsID" />
@@ -198,13 +190,6 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Property Name="EmailSentDate" Type="datetime" />
           <Property Name="DomainDisplayName" Type="nvarchar" MaxLength="100" />
         </EntityType>
-		<EntityType Name="EmployeeRange">
-          <Key>
-            <PropertyRef Name="EmployeeRangeID" />
-          </Key>
-          <Property Name="EmployeeRangeID" Type="int" Nullable="false" />
-          <Property Name="EmployeeRange" Type="nvarchar" MaxLength="50" Nullable="false" />
-        </EntityType>
         <EntityType Name="FocusArea">
           <Key>
             <PropertyRef Name="FocusAreaID" />
@@ -324,18 +309,6 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Property Name="UserTypeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserTypeDescription" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
-		<Association Name="FK_AverageHourlyRate_Currency">
-          <End Role="Currency" Type="Self.Currency" Multiplicity="1" />
-          <End Role="AverageHourlyRate" Type="Self.AverageHourlyRate" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Currency">
-              <PropertyRef Name="CurrencyID" />
-            </Principal>
-            <Dependent Role="AverageHourlyRate">
-              <PropertyRef Name="CurrencyID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_CompanyBranch_Company">
           <End Role="Company" Type="Self.Company" Multiplicity="1" />
           <End Role="CompanyBranch" Type="Self.CompanyBranch" Multiplicity="*" />
@@ -563,6 +536,12 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Parameter Name="FocusAreaName" Type="nvarchar" Mode="In" />
           <Parameter Name="SubFocusAreaName" Type="nvarchar" Mode="In" />
         </Function>
+        <Function Name="SP_CopyCompany" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="companyID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_DeleteCompanyHistory" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="companyID" Type="int" Mode="In" />
+        </Function>
         <Function Name="Sp_GetClaimListingsForApproval" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UserID" Type="int" Mode="In" />
         </Function>
@@ -647,7 +626,6 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Parameter Name="companyName" Type="nvarchar" Mode="In" />
         </Function>
         <EntityContainer Name="UpVotesModelStoreContainer">
-		<EntitySet Name="AverageHourlyRate" EntityType="Self.AverageHourlyRate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CategoryBasedMetaTags" EntityType="Self.CategoryBasedMetaTags" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Company" EntityType="Self.Company" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CompanyBranch" EntityType="Self.CompanyBranch" Schema="dbo" store:Type="Tables" />
@@ -660,7 +638,6 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <EntitySet Name="Country" EntityType="Self.Country" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Currency" EntityType="Self.Currency" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Email" EntityType="Self.Email" Schema="dbo" store:Type="Tables" />
-		  <EntitySet Name="EmployeeRange" EntityType="Self.EmployeeRange" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FocusArea" EntityType="Self.FocusArea" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="QuotationRateCard" EntityType="Self.QuotationRateCard" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="State" EntityType="Self.State" Schema="dbo" store:Type="Tables" />
@@ -675,10 +652,6 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
     [CompanyPendingForApproval].[CompanyID] AS [CompanyID]
     FROM [dbo].[CompanyPendingForApproval] AS [CompanyPendingForApproval]</DefiningQuery>
           </EntitySet>
-		  <AssociationSet Name="FK_AverageHourlyRate_Currency" Association="Self.FK_AverageHourlyRate_Currency">
-            <End Role="Currency" EntitySet="Currency" />
-            <End Role="AverageHourlyRate" EntitySet="AverageHourlyRate" />
-          </AssociationSet>
           <AssociationSet Name="FK_CompanyBranch_Company" Association="Self.FK_CompanyBranch_Company">
             <End Role="Company" EntitySet="Company" />
             <End Role="CompanyBranch" EntitySet="CompanyBranch" />
@@ -927,12 +900,6 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <FunctionImport Name="Sp_GetCompanyBranches" ReturnType="Collection(UpVotesModel.Sp_GetCompanyBranches_Result)">
           <Parameter Name="CompanyID" Mode="In" Type="Int32" />
           </FunctionImport>
-          <EntitySet Name="AverageHourlyRate" EntityType="UpVotesModel.AverageHourlyRate" />
-          <EntitySet Name="EmployeeRange" EntityType="UpVotesModel.EmployeeRange" />
-          <AssociationSet Name="FK_AverageHourlyRate_Currency" Association="UpVotesModel.FK_AverageHourlyRate_Currency">
-            <End Role="Currency" EntitySet="Currencies" />
-            <End Role="AverageHourlyRate" EntitySet="AverageHourlyRate" />
-          </AssociationSet>
           <EntitySet Name="Email" EntityType="UpVotesModel.Email" />
           <FunctionImport Name="Sp_InsertUpdateClaimListing" ReturnType="Collection(Int32)">
             <Parameter Name="ClaimListingID" Mode="In" Type="Int32" />
@@ -950,6 +917,12 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
             <Parameter Name="CompanyID" Mode="In" Type="Int32" />
             <Parameter Name="IsAdminApproved" Mode="In" Type="Boolean" />
             <Parameter Name="userPassword" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SP_CopyCompany">
+          <Parameter Name="companyID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_DeleteCompanyHistory">
+            <Parameter Name="companyID" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="Sp_GetCompanyFocus_Result">
@@ -1072,7 +1045,6 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Property Name="CurrencyCode" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="true" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Countries" Relationship="UpVotesModel.FK_Country_Currency_CurrencyID" FromRole="Currency" ToRole="Country" />
-          <NavigationProperty Name="AverageHourlyRate" Relationship="UpVotesModel.FK_AverageHourlyRate_Currency" FromRole="Currency" ToRole="AverageHourlyRate" />
         </EntityType>
         <EntityType Name="FocusArea">
           <Key>
@@ -1630,34 +1602,6 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Property Type="String" Name="Email" Nullable="true" MaxLength="100" />
           <Property Type="Boolean" Name="IsHeadQuarters" Nullable="false" />
         </ComplexType>
-        <EntityType Name="AverageHourlyRate">
-          <Key>
-            <PropertyRef Name="AverageHourlyRateID" />
-          </Key>
-          <Property Name="AverageHourlyRateID" Type="Int32" Nullable="false" />
-          <Property Name="AverageHourlyRate1" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="CurrencyID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Currency" Relationship="UpVotesModel.FK_AverageHourlyRate_Currency" FromRole="AverageHourlyRate" ToRole="Currency" />
-        </EntityType>
-        <EntityType Name="EmployeeRange">
-          <Key>
-            <PropertyRef Name="EmployeeRangeID" />
-          </Key>
-          <Property Name="EmployeeRangeID" Type="Int32" Nullable="false" />
-          <Property Name="EmployeeRange1" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <Association Name="FK_AverageHourlyRate_Currency">
-          <End Type="UpVotesModel.Currency" Role="Currency" Multiplicity="1" />
-          <End Type="UpVotesModel.AverageHourlyRate" Role="AverageHourlyRate" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Currency">
-              <PropertyRef Name="CurrencyID" />
-            </Principal>
-            <Dependent Role="AverageHourlyRate">
-              <PropertyRef Name="CurrencyID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="Email">
           <Key>
             <PropertyRef Name="EmailID" />
@@ -2187,23 +2131,6 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-		  <EntitySetMapping Name="AverageHourlyRate">
-            <EntityTypeMapping TypeName="UpVotesModel.AverageHourlyRate">
-              <MappingFragment StoreEntitySet="AverageHourlyRate">
-                <ScalarProperty Name="CurrencyID" ColumnName="CurrencyID" />
-                <ScalarProperty Name="AverageHourlyRate1" ColumnName="AverageHourlyRate" />
-                <ScalarProperty Name="AverageHourlyRateID" ColumnName="AverageHourlyRateID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="EmployeeRange">
-            <EntityTypeMapping TypeName="UpVotesModel.EmployeeRange">
-              <MappingFragment StoreEntitySet="EmployeeRange">
-                <ScalarProperty Name="EmployeeRange1" ColumnName="EmployeeRange" />
-                <ScalarProperty Name="EmployeeRangeID" ColumnName="EmployeeRangeID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Email">
             <EntityTypeMapping TypeName="UpVotesModel.Email">
               <MappingFragment StoreEntitySet="Email">
@@ -2237,6 +2164,8 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Sp_AdminApproveRejectForClaiming" FunctionName="UpVotesModel.Store.Sp_AdminApproveRejectForClaiming" />
+          <FunctionImportMapping FunctionImportName="SP_CopyCompany" FunctionName="UpVotesModel.Store.SP_CopyCompany" />
+          <FunctionImportMapping FunctionImportName="Sp_DeleteCompanyHistory" FunctionName="UpVotesModel.Store.Sp_DeleteCompanyHistory" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

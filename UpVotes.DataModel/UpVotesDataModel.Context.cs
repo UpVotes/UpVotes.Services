@@ -48,8 +48,6 @@ namespace UpVotes.DataModel
         public virtual DbSet<UserQuotation> UserQuotation { get; set; }
         public virtual DbSet<CompanyPendingForApproval> CompanyPendingForApproval { get; set; }
         public virtual DbSet<CompanyFocus> CompanyFocus { get; set; }
-        public virtual DbSet<AverageHourlyRate> AverageHourlyRate { get; set; }
-        public virtual DbSet<EmployeeRange> EmployeeRange { get; set; }
         public virtual DbSet<Email> Email { get; set; }
     
         public virtual ObjectResult<Sp_GetCompanyFocus_Result> Sp_GetCompanyFocus(Nullable<int> companyID)
@@ -376,6 +374,24 @@ namespace UpVotes.DataModel
                 new ObjectParameter("userPassword", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Sp_AdminApproveRejectForClaiming", claimListingIDParameter, userIDParameter, companyIDParameter, isAdminApprovedParameter, userPasswordParameter);
+        }
+    
+        public virtual int SP_CopyCompany(Nullable<int> companyID)
+        {
+            var companyIDParameter = companyID.HasValue ?
+                new ObjectParameter("companyID", companyID) :
+                new ObjectParameter("companyID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_CopyCompany", companyIDParameter);
+        }
+    
+        public virtual int Sp_DeleteCompanyHistory(Nullable<int> companyID)
+        {
+            var companyIDParameter = companyID.HasValue ?
+                new ObjectParameter("companyID", companyID) :
+                new ObjectParameter("companyID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Sp_DeleteCompanyHistory", companyIDParameter);
         }
     }
 }

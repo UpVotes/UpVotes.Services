@@ -56,9 +56,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AverageHourlyRate.cs">
-      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="CategoryBasedMetaTags.cs">
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>
@@ -97,9 +94,6 @@
     </Compile>
     <Compile Include="DependencyResolver.cs" />
     <Compile Include="Email.cs">
-      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EmployeeRange.cs">
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="FocusArea.cs">

@@ -56,11 +56,16 @@ namespace UpVotes.BusinessServices.Service
                     else
                     {
                         isAdd = false;
-                        companyObj = _context.Company.Where(c => c.CompanyID == companyEntity.CompanyID).FirstOrDefault();
+                        companyObj = _context.Company.Where(c => c.CompanyID == companyEntity.CompanyID).FirstOrDefault();                        
                         CompanyInitialization(companyEntity, companyObj);
                         companyObj.ModifiedBy = companyEntity.UserID;
                         companyObj.ModifiedDate = DateTime.Now;
                         companyID = companyEntity.CompanyID;
+
+                        if (!companyEntity.IsAdminUser)
+                        {
+                            _context.SP_CopyCompany(companyEntity.CompanyID);
+                        }
                     }
 
                     _context.SaveChanges();
@@ -164,6 +169,7 @@ namespace UpVotes.BusinessServices.Service
                         companyObj.AdminApprovedDate = DateTime.Now;                        
                         User newUserObj = AddUserByWorkEmailID(companyObj, _context);
                         SendCompanyApprovedEmail(companyObj.CompanyName, companyObj.WorkEmail, newUserObj);
+                        _context.Sp_DeleteCompanyHistory(companyEntity.CompanyID);
                     }
 
                     _context.SaveChanges();

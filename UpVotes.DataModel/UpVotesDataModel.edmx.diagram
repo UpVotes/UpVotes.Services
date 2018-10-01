@@ -44,9 +44,6 @@
         <EntityTypeShape EntityType="UpVotesModel.CompanyFocus" Width="1.5" PointX="3" PointY="10.25" />
         <AssociationConnector Association="UpVotesModel.FK_CompanyFocus_Company" />
         <AssociationConnector Association="UpVotesModel.FK_CompanySubFocus_CompanyFocus_CompanyFocusID" />
-        <EntityTypeShape EntityType="UpVotesModel.AverageHourlyRate" Width="1.5" PointX="8" PointY="10.125" />
-        <EntityTypeShape EntityType="UpVotesModel.EmployeeRange" Width="1.5" PointX="12.375" PointY="0.75" />
-        <AssociationConnector Association="UpVotesModel.FK_AverageHourlyRate_Currency" />
         <EntityTypeShape EntityType="UpVotesModel.Email" Width="1.5" PointX="12.375" PointY="3.75" />
         </Diagram>
     </edmx:Diagrams>
