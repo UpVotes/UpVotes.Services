@@ -637,8 +637,8 @@ namespace UpVotes.BusinessServices.Service
                 sb.Append("<p>Hello,</p><p> Your claimed company profile " + CompanyName + " has been approved at upvotes.co. Click on the below link to verify the contents.</p>");
                 sb.Append("<p><em><strong><a href='" + System.Configuration.ConfigurationManager.AppSettings["WebClientURL"] + "profile/" + CompanyName.Replace(" ", "-").Trim().ToLower() + "' target='_blank' rel='noopener'>" + System.Configuration.ConfigurationManager.AppSettings["WebClientURL"] + "profile/" + CompanyName.Replace(" ", "-").Trim().ToLower() + "</a></strong></em><p>");
                 sb.Append("<p>Please use below credentials to login to the upvotes portal.</p>");
-                sb.Append("<p> User Name:-" + Email + "</p>");
-                sb.Append("<p> Password:-" + EncryptionAndDecryption.Decrypt(password) + "</p>");
+                sb.Append("<p> User Name:<br/>" + Email + "</p>");
+                sb.Append("<p> Password:<br/>" + EncryptionAndDecryption.Decrypt(password) + "</p>");
             }
             else
             {
@@ -658,8 +658,8 @@ namespace UpVotes.BusinessServices.Service
             if (newUserObj != null)
             {
                 sb.Append("<p>Please use below credentials to login to the upvotes portal.</p>");
-                sb.Append("<p> User Name:-" + newUserObj.UserName + "</p>");
-                sb.Append("<p> Password:-" + EncryptionAndDecryption.Decrypt(newUserObj.UserPassword) + "</p>");
+                sb.Append("<p> User Name:<br/>" + newUserObj.UserName + "</p>");
+                sb.Append("<p> Password:<br/>" + EncryptionAndDecryption.Decrypt(newUserObj.UserPassword) + "</p>");
             }
 
             EmailHelper.GetEmailSignature(sb);
@@ -1023,7 +1023,7 @@ namespace UpVotes.BusinessServices.Service
                     Company companyObj = _context.Company.Where(a => a.CompanyID == companyRejectComments.CompanyID).FirstOrDefault();
                     if (companyObj != null)
                     {
-                        companyObj.Remarks += "Rejected By :- " + companyRejectComments.RejectedBy + " on " + DateTime.Now.ToLongDateString() + " Commets :-" + companyRejectComments.RejectComments + "\n";
+                        companyObj.Remarks += "Rejected By : " + companyRejectComments.RejectedBy + " on " + DateTime.Now.ToLongDateString() + " Comments : " + companyRejectComments.RejectComments + "\n";
                         companyObj.IsAdminApproved = false;
                         companyObj.AdminApprovedDate = null;
                         _context.SaveChanges();

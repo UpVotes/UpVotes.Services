@@ -227,7 +227,7 @@ namespace UpVotes.BusinessServices.Service
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             sb.Append("<p>Hello,</p><p>As you requested password has been reset successfully</p>");
              sb.Append("<p> Below is your new password</p>");
-            sb.Append("<p> Password:-" + pwd + "</p>");
+            sb.Append("<p> Password:<br/>" + pwd + "</p>");
             EmailHelper.GetEmailSignature(sb);
             return sb.ToString();
         }
