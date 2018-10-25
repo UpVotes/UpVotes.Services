@@ -186,16 +186,17 @@ namespace UpVotes.BusinessServices.Service
 
         private User AddUserByWorkEmailID(Company companyObj, UpVotesEntities _upvotesContext)
         {
-            bool isUserExists = _upvotesContext.Users.Where(a => a.UserName.Trim().ToUpper() == companyObj.WorkEmail.Trim().ToUpper()).FirstOrDefault() == null ? false : true;
-            if (!isUserExists)
+            User dbUser = _upvotesContext.Users.Where(a => a.UserName.Trim().ToUpper() == companyObj.WorkEmail.Trim().ToUpper()).FirstOrDefault();            
+
+            if (dbUser == null)
             {
-                User dbUser = _upvotesContext.Users.Where(a => a.UserID == companyObj.CreatedBy).FirstOrDefault();
+                dbUser = _upvotesContext.Users.Where(a => a.UserID == companyObj.CreatedBy).FirstOrDefault();
                 if (dbUser != null)
                 {
-                    User newUserObj = new User()
+                    User dbNewUser = new User()
                     {
-                        UserName = companyObj.WorkEmail,
-                        UserPassword = EncryptionAndDecryption.Encrypt(dbUser.FirstName + EncryptionAndDecryption.GenRandomAlphaNum(6)),
+                        UserName = companyObj.WorkEmail.Trim(),
+                        UserPassword = EncryptionAndDecryption.Encrypt((dbUser.FirstName ?? "!Upvotes") + EncryptionAndDecryption.GenRandomAlphaNum(6)),
                         FirstName = dbUser.FirstName,
                         LastName = dbUser.LastName,
                         UserEmail = dbUser.UserEmail,
@@ -213,14 +214,16 @@ namespace UpVotes.BusinessServices.Service
                         CreatedBy = dbUser.UserID,
                         CreatedDate = DateTime.Now
                     };
-                    _upvotesContext.Users.Add(newUserObj);
-                    _upvotesContext.SaveChanges();
-
-                    return newUserObj;
+                    _upvotesContext.Users.Add(dbNewUser);
+                    _upvotesContext.SaveChanges();                    
                 }
             }
 
-            return null;
+            dbUser = _upvotesContext.Users.Where(a => a.UserName.Trim().ToUpper() == companyObj.WorkEmail.Trim().ToUpper()).FirstOrDefault();
+
+            companyObj.CreatedBy = dbUser.UserID;
+
+            return dbUser;            
         }
 
         private void CompanyInitialization(CompanyEntity companyEntity, Company companyObj)

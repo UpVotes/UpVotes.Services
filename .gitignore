@@ -17,3 +17,7 @@
 /UpVotes.Services/obj/Debug
 /UpVotes.Services.Tests/obj/Debug
 /UpVotes.WebAPI.Tests/obj/Debug
+*.pdb
+*.dll
+*.dll
+*.pdb
