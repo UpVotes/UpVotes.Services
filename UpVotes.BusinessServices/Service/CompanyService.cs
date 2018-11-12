@@ -170,6 +170,7 @@ namespace UpVotes.BusinessServices.Service
                         User newUserObj = AddUserByWorkEmailID(companyObj, _context);
                         SendCompanyApprovedEmail(companyObj.CompanyName, companyObj.WorkEmail, newUserObj);
                         _context.Sp_DeleteCompanyHistory(companyEntity.CompanyID);
+                        companyObj.CreatedBy = newUserObj.UserID;
                     }
 
                     _context.SaveChanges();
