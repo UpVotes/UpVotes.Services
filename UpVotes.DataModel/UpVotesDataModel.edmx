@@ -922,7 +922,7 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Parameter Name="companyID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="Sp_DeleteCompanyHistory">
-            <Parameter Name="companyID" Mode="In" Type="Int32" />
+          <Parameter Name="companyID" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="Sp_GetCompanyFocus_Result">

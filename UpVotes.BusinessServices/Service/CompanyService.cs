@@ -62,7 +62,7 @@ namespace UpVotes.BusinessServices.Service
                         companyObj.ModifiedDate = DateTime.Now;
                         companyID = companyEntity.CompanyID;
 
-                        if (!companyEntity.IsAdminUser)
+                        if (!companyEntity.IsAdminUser && companyObj.IsAdminApproved == true && companyObj.IsUserApproved == true)
                         {
                             _context.SP_CopyCompany(companyEntity.CompanyID);
                         }
@@ -159,7 +159,7 @@ namespace UpVotes.BusinessServices.Service
                     {
                         string insertQuery = "IF NOT EXISTS (SELECT * FROM dbo.CompanyPendingForApproval WHERE CompanyID = " + companyEntity.CompanyID + ") BEGIN INSERT INTO CompanyPendingForApproval (CompanyID) VALUES (" + companyEntity.CompanyID + ") END";
                         _context.Database.ExecuteSqlCommand(insertQuery, companyID);
-                        companyObj.IsAdminApproved = false;
+                        //companyObj.IsAdminApproved = false;
                     }
                     else
                     {
@@ -839,7 +839,7 @@ namespace UpVotes.BusinessServices.Service
                         isAdminUser = _context.Users.Where(a => a.UserID == userID && a.UserType == 4).Count() > 0 ? true : false;
                         if (isAdminUser)
                         {
-                            companyListDb = (from a in _context.Company join b in _context.CompanyPendingForApproval on a.CompanyID equals b.CompanyID where a.IsUserApproved == true && a.IsAdminApproved == false select a).Distinct().ToList();
+                            companyListDb = (from a in _context.Company join b in _context.CompanyPendingForApproval on a.CompanyID equals b.CompanyID where a.IsUserApproved == true  select a).Distinct().ToList();
                         }
                         else
                         {
