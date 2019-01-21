@@ -46,7 +46,9 @@ namespace UpVotes.BusinessEntities.Entities
 
         public int TotalCount { get; set; }
 
-        public int UserID { get; set; }
+        public int CreatedBy { get; set; }        
+
+        public int LoggedInUser { get; set; }
 
         public string AveragHourlyRate { get; set; }
 

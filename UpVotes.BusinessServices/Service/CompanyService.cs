@@ -32,22 +32,24 @@ namespace UpVotes.BusinessServices.Service
                 {
                     Company companyObj = null; int companyID = 0;
                     bool isAdd = false; string companyOTP = string.Empty;
+                    Sp_CheckForCompanyAndAdminUser_Result checkForCompanyAndAdminUserObj = _context.Sp_CheckForCompanyAndAdminUser(companyEntity.CompanyName, companyEntity.LoggedInUser).FirstOrDefault();
+                    companyEntity.IsAdminUser = Convert.ToBoolean(checkForCompanyAndAdminUserObj.IsAdmin);
+
                     if (companyEntity.CompanyID == 0)
-                    {
-                        bool isCompanyExists = _context.Company.Where(a => a.CompanyName.Trim().ToUpper() == companyEntity.CompanyName.Trim().ToUpper()).Count() > 0 ? true : false;
-                        if (isCompanyExists)
+                    {                              
+                        if (Convert.ToBoolean(checkForCompanyAndAdminUserObj.IsCompanyExists))
                         {
                             return 0;
                         }
 
                         isAdd = true;
-                        companyID = _context.Company.OrderByDescending(a => a.CompanyID).Take(1).Select(a => a.CompanyID).FirstOrDefault();
+                        companyID = Convert.ToInt32(checkForCompanyAndAdminUserObj.PreviousCompanyID);
                         companyID = companyID + 1;
                         companyEntity.CompanyID = companyID;
 
                         companyObj = new Company();
-                        CompanyInitialization(companyEntity, companyObj);
-                        companyObj.CreatedBy = companyEntity.UserID;
+                        CompanyInitialization(companyEntity, companyObj, isAdd);
+                        companyObj.CreatedBy = companyEntity.CreatedBy;
                         companyObj.CreatedDate = DateTime.Now;
                         companyObj.CompanyOTP = new Random().Next(100000, 999999).ToString("D6");
                         companyObj.IsActive = true;
@@ -57,8 +59,8 @@ namespace UpVotes.BusinessServices.Service
                     {
                         isAdd = false;
                         companyObj = _context.Company.Where(c => c.CompanyID == companyEntity.CompanyID).FirstOrDefault();                        
-                        CompanyInitialization(companyEntity, companyObj);
-                        companyObj.ModifiedBy = companyEntity.UserID;
+                        CompanyInitialization(companyEntity, companyObj, isAdd);
+                        companyObj.ModifiedBy = companyEntity.LoggedInUser;
                         companyObj.ModifiedDate = DateTime.Now;
                         companyID = companyEntity.CompanyID;
 
@@ -72,87 +74,20 @@ namespace UpVotes.BusinessServices.Service
 
                     if (companyEntity.CompanyFocus.Any())
                     {
-                        CompanyFocus companyFocusObj = null;
-                        string deleteFocusQuery = "DELETE A FROM dbo.CompanySubFocus A JOIN dbo.CompanyFocus B ON A.CompanyFocusID = B.CompanyFocusID WHERE B.CompanyID =" + companyEntity.CompanyID + "  DELETE FROM dbo.CompanyFocus WHERE CompanyID=" + companyEntity.CompanyID;
-                        _context.Database.ExecuteSqlCommand(deleteFocusQuery);
-
-                        int companyFocusID = _context.CompanyFocus.OrderByDescending(a => a.CompanyFocusID).Select(a => a.CompanyFocusID).FirstOrDefault();
-                        int i = 0;
-                        foreach (CompanyFocusEntity companyFocusEntityObj in companyEntity.CompanyFocus)
-                        {
-                            i = i + 1;
-                            companyFocusObj = new CompanyFocus();
-                            companyFocusObj.CompanyID = companyEntity.CompanyID;
-                            companyFocusObj.CompanyFocusID = companyFocusID + i;
-                            companyFocusObj.FocusAreaID = companyFocusEntityObj.FocusAreaID;
-                            companyFocusObj.FocusAreaPercentage = companyFocusEntityObj.FocusAreaPercentage;
-                            companyFocusObj.IsActive = true;
-                            companyFocusObj.CreatedBy = companyEntity.UserID;
-                            companyFocusObj.CreatedDate = DateTime.Now;
-                            _context.CompanyFocus.Add(companyFocusObj);
-                            //_context.SaveChanges();
-
-                            CompanySubFocus dbCompanySubFocusObj = null;
-                            foreach (CompanySubFocusEntity companySubFocusEntityObj in companyFocusEntityObj.CompanySubFocus)
-                            {
-                                dbCompanySubFocusObj = new CompanySubFocus();
-                                dbCompanySubFocusObj.CompanyFocusID = companyFocusID + i;
-                                dbCompanySubFocusObj.SubFocusAreaID = companySubFocusEntityObj.SubFocusAreaID;
-                                dbCompanySubFocusObj.SubFocusAreaPercentage = companySubFocusEntityObj.SubFocusAreaPercentage;
-                                dbCompanySubFocusObj.IsActive = true;
-                                dbCompanySubFocusObj.CreatedBy = companyEntity.UserID;
-                                dbCompanySubFocusObj.CreatedDate = DateTime.Now;
-                                _context.CompanySubFocus.Add(dbCompanySubFocusObj);
-                                // _context.SaveChanges();
-                            }
-                        }
-
-                        _context.SaveChanges();
+                        AddCompanyFocusAreas(companyEntity);
                     }
 
                     if (companyEntity.CompanyBranches.Any())
                     {
-                        CompanyBranch companyBranchObj = null;
-                        string deleteBranchQuery = "DELETE FROM dbo.CompanyBranch WHERE CompanyID = " + companyEntity.CompanyID;
-                        _context.Database.ExecuteSqlCommand(deleteBranchQuery);
-
-                        int companyBranchID = _context.CompanyBranches.OrderByDescending(a => a.BranchID).Select(a => a.BranchID).FirstOrDefault();
-                        int j = 0;
-                        foreach (CompanyBranchEntity companyBranchEntityObj in companyEntity.CompanyBranches)
-                        {
-                            j = j + 1;
-                            companyBranchObj = new CompanyBranch();
-                            companyBranchObj.BranchID = companyBranchID + j;
-                            companyBranchObj.BranchName = companyBranchEntityObj.BranchName;
-                            companyBranchObj.CompanyID = companyEntity.CompanyID;
-                            companyBranchObj.CountryID = companyBranchEntityObj.CountryID;
-                            companyBranchObj.StateID = companyBranchEntityObj.StateID;
-                            companyBranchObj.Address = companyBranchEntityObj.Address;
-                            companyBranchObj.City = companyBranchEntityObj.City;
-                            companyBranchObj.PostalCode = companyBranchEntityObj.PostalCode;
-                            companyBranchObj.PhoneNumber = companyBranchEntityObj.PhoneNumber;
-                            companyBranchObj.Email = companyBranchEntityObj.Email;
-                            companyBranchObj.IsHeadQuarters = companyBranchEntityObj.IsHeadQuarters;
-                            companyBranchObj.IsActive = true;
-                            companyBranchObj.CreatedBy = companyEntity.UserID;
-                            companyBranchObj.CreatedDate = DateTime.Now;
-                            _context.CompanyBranches.Add(companyBranchObj);
-                        }
-
-                        _context.SaveChanges();
+                        AddCompanyBranches(companyEntity);
                     }
 
                     if (isAdd)
                     {
                         if (!companyEntity.IsAdminUser)
                         {
-                            SendEmailForUserVerification(companyEntity.UserID, companyObj.CompanyName, companyID, companyObj.CompanyOTP, companyObj.WorkEmail,false);
-                        }
-                        else
-                        {
-                            companyObj.IsUserApproved = true;
-                            companyObj.UserApprovedDate = DateTime.Now;
-                        }
+                            SendEmailForUserVerification(companyEntity.LoggedInUser, companyObj.CompanyName, companyID, companyObj.CompanyOTP, companyObj.WorkEmail,false);
+                        }                        
                     }
 
                     if (!companyEntity.IsAdminUser)
@@ -163,14 +98,26 @@ namespace UpVotes.BusinessServices.Service
                     }
                     else
                     {
-                        string deleteQuery = "DELETE FROM dbo.CompanyPendingForApproval WHERE CompanyID =" + companyEntity.CompanyID;
-                        _context.Database.ExecuteSqlCommand(deleteQuery, companyID);
-                        companyObj.IsAdminApproved = true;
-                        companyObj.AdminApprovedDate = DateTime.Now;                        
-                        User newUserObj = AddUserByWorkEmailID(companyObj, _context);
-                        SendCompanyApprovedEmail(companyObj.CompanyName, companyObj.WorkEmail, newUserObj);
-                        _context.Sp_DeleteCompanyHistory(companyEntity.CompanyID);
-                        companyObj.CreatedBy = newUserObj.UserID;
+                        if (!isAdd && companyObj.IsUserApproved)
+                        {
+                            string deleteQuery = "DELETE FROM dbo.CompanyPendingForApproval WHERE CompanyID =" + companyEntity.CompanyID;
+                            _context.Database.ExecuteSqlCommand(deleteQuery, companyID);
+                            if (!companyObj.IsAdminApproved)
+                            {
+                                User newUserObj = AddUserByWorkEmailID(companyObj, _context);
+                                SendCompanyApprovedEmail(companyObj.CompanyName, companyObj.WorkEmail, newUserObj);
+                                companyObj.CreatedBy = newUserObj.UserID;
+                            }
+                            companyObj.IsAdminApproved = true;
+                            companyObj.AdminApprovedDate = DateTime.Now;
+                            
+                            _context.Sp_DeleteCompanyHistory(companyEntity.CompanyID);                            
+                        }
+                        //else
+                        //{
+                        //    companyObj.IsAdminApproved = true;
+                        //    companyObj.AdminApprovedDate = DateTime.Now;
+                        //}
                     }
 
                     _context.SaveChanges();
@@ -183,6 +130,78 @@ namespace UpVotes.BusinessServices.Service
             {
                 throw ex;
             }
+        }
+
+        private void AddCompanyBranches(CompanyEntity companyEntity)
+        {
+            CompanyBranch companyBranchObj = null;
+            string deleteBranchQuery = "DELETE FROM dbo.CompanyBranch WHERE CompanyID = " + companyEntity.CompanyID;
+            _context.Database.ExecuteSqlCommand(deleteBranchQuery);
+
+            int companyBranchID = _context.CompanyBranches.OrderByDescending(a => a.BranchID).Select(a => a.BranchID).FirstOrDefault();
+            int j = 0;
+            foreach (CompanyBranchEntity companyBranchEntityObj in companyEntity.CompanyBranches)
+            {
+                j = j + 1;
+                companyBranchObj = new CompanyBranch();
+                companyBranchObj.BranchID = companyBranchID + j;
+                companyBranchObj.BranchName = companyBranchEntityObj.BranchName;
+                companyBranchObj.CompanyID = companyEntity.CompanyID;
+                companyBranchObj.CountryID = companyBranchEntityObj.CountryID;
+                companyBranchObj.StateID = companyBranchEntityObj.StateID;
+                companyBranchObj.Address = companyBranchEntityObj.Address;
+                companyBranchObj.City = companyBranchEntityObj.City;
+                companyBranchObj.PostalCode = companyBranchEntityObj.PostalCode;
+                companyBranchObj.PhoneNumber = companyBranchEntityObj.PhoneNumber;
+                companyBranchObj.Email = companyBranchEntityObj.Email;
+                companyBranchObj.IsHeadQuarters = companyBranchEntityObj.IsHeadQuarters;
+                companyBranchObj.IsActive = true;
+                companyBranchObj.CreatedBy = companyEntity.LoggedInUser;
+                companyBranchObj.CreatedDate = DateTime.Now;
+                _context.CompanyBranches.Add(companyBranchObj);
+            }
+
+            _context.SaveChanges();
+        }
+
+        private void AddCompanyFocusAreas(CompanyEntity companyEntity)
+        {
+            CompanyFocus companyFocusObj = null;
+            string deleteFocusQuery = "DELETE A FROM dbo.CompanySubFocus A JOIN dbo.CompanyFocus B ON A.CompanyFocusID = B.CompanyFocusID WHERE B.CompanyID =" + companyEntity.CompanyID + "  DELETE FROM dbo.CompanyFocus WHERE CompanyID=" + companyEntity.CompanyID;
+            _context.Database.ExecuteSqlCommand(deleteFocusQuery);
+
+            int companyFocusID = _context.CompanyFocus.OrderByDescending(a => a.CompanyFocusID).Select(a => a.CompanyFocusID).FirstOrDefault();
+            int i = 0;
+            foreach (CompanyFocusEntity companyFocusEntityObj in companyEntity.CompanyFocus)
+            {
+                i = i + 1;
+                companyFocusObj = new CompanyFocus();
+                companyFocusObj.CompanyID = companyEntity.CompanyID;
+                companyFocusObj.CompanyFocusID = companyFocusID + i;
+                companyFocusObj.FocusAreaID = companyFocusEntityObj.FocusAreaID;
+                companyFocusObj.FocusAreaPercentage = companyFocusEntityObj.FocusAreaPercentage;
+                companyFocusObj.IsActive = true;
+                companyFocusObj.CreatedBy = companyEntity.LoggedInUser;
+                companyFocusObj.CreatedDate = DateTime.Now;
+                _context.CompanyFocus.Add(companyFocusObj);
+                //_context.SaveChanges();
+
+                CompanySubFocus dbCompanySubFocusObj = null;
+                foreach (CompanySubFocusEntity companySubFocusEntityObj in companyFocusEntityObj.CompanySubFocus)
+                {
+                    dbCompanySubFocusObj = new CompanySubFocus();
+                    dbCompanySubFocusObj.CompanyFocusID = companyFocusID + i;
+                    dbCompanySubFocusObj.SubFocusAreaID = companySubFocusEntityObj.SubFocusAreaID;
+                    dbCompanySubFocusObj.SubFocusAreaPercentage = companySubFocusEntityObj.SubFocusAreaPercentage;
+                    dbCompanySubFocusObj.IsActive = true;
+                    dbCompanySubFocusObj.CreatedBy = companyEntity.LoggedInUser;
+                    dbCompanySubFocusObj.CreatedDate = DateTime.Now;
+                    _context.CompanySubFocus.Add(dbCompanySubFocusObj);
+                    // _context.SaveChanges();
+                }
+            }
+
+            _context.SaveChanges();
         }
 
         private User AddUserByWorkEmailID(Company companyObj, UpVotesEntities _upvotesContext)
@@ -227,7 +246,7 @@ namespace UpVotes.BusinessServices.Service
             return dbUser;            
         }
 
-        private void CompanyInitialization(CompanyEntity companyEntity, Company companyObj)
+        private void CompanyInitialization(CompanyEntity companyEntity, Company companyObj, bool isAdd)
         {
             companyObj.CompanyID = companyEntity.CompanyID;
             companyObj.CompanyName = companyEntity.CompanyName;
@@ -248,7 +267,14 @@ namespace UpVotes.BusinessServices.Service
             companyObj.GooglePlusProfileURL = companyEntity.GooglePlusProfileURL;
             companyObj.Summary = companyEntity.Summary;
             companyObj.KeyClients = companyEntity.KeyClients;
-            companyObj.WorkEmail = companyEntity.WorkEmail;
+            if (companyEntity.IsAdminUser && companyEntity.CreatedBy == companyEntity.LoggedInUser)
+            {
+                companyObj.CompanyDomain = companyEntity.CompanyDomain;
+            }
+            else
+            {
+                companyObj.WorkEmail = companyEntity.WorkEmail;
+            }
         }
 
         public bool DeleteCompany(int companyID)
@@ -521,7 +547,7 @@ namespace UpVotes.BusinessServices.Service
 
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             sb.Append("<p>Hello,</p>");
-            sb.Append("<p>Click the below link to verify your company profile at upvotes.co</p>");
+            sb.Append("<p>Click the below link to verify your company profile " + companyName + " at upvotes.co</p>");
             sb.Append("<p><em><strong><a href = '" + url + "' target = '_blank' rel = 'noopener'>" + url + "</a> &nbsp;</strong></em></p>");
             EmailHelper.GetEmailSignature(sb);
             return sb.ToString();
@@ -818,11 +844,16 @@ namespace UpVotes.BusinessServices.Service
                                 FacebookProfileURL = companyDb.FacebookProfileURL,
                                 GooglePlusProfileURL = companyDb.GooglePlusProfileURL,
                                 Summary = companyDb.Summary,
+                                Summary1 = companyDb.Summary1 == null ? string.Empty : companyDb.Summary1,
+                                Summary2 = companyDb.Summary2 == null ? string.Empty : companyDb.Summary2,
+                                Summary3 = companyDb.Summary3 == null ? string.Empty : companyDb.Summary3,
                                 KeyClients = companyDb.KeyClients,
                                 WorkEmail = companyDb.WorkEmail,
                                 IsUserVerified = companyDb.IsUserApproved == true ? "Yes" : "No",
                                 IsAdminApproved = companyDb.IsAdminApproved == true ? "Yes" : "No",
                                 Remarks = companyDb.Remarks,
+                                CreatedBy = Convert.ToInt32(companyDb.CreatedBy),
+                                CompanyDomain = companyDb.CompanyDomain,
 
                                 CompanyBranches = GetCompanyBranches(companyDb.CompanyID).ToList(),
                                 CompanyFocus = GetCompanyFocus(companyDb.CompanyID).ToList(),
@@ -839,7 +870,8 @@ namespace UpVotes.BusinessServices.Service
                         isAdminUser = _context.Users.Where(a => a.UserID == userID && a.UserType == 4).Count() > 0 ? true : false;
                         if (isAdminUser)
                         {
-                            companyListDb = (from a in _context.Company join b in _context.CompanyPendingForApproval on a.CompanyID equals b.CompanyID where a.IsUserApproved == true  select a).Distinct().ToList();
+                            //companyListDb = (from a in _context.Company join b in _context.CompanyPendingForApproval on a.CompanyID equals b.CompanyID where a.IsUserApproved == true  select a).Distinct().ToList();
+                            companyListDb = _context.Database.SqlQuery(typeof(Company), "SELECT A.* FROM dbo.Company A LEFT OUTER JOIN dbo.CompanyPendingForApproval B ON A.CompanyID = B.CompanyID WHERE A.IsUserApproved=1 OR A.CreatedBy = " + userID).Cast<Company>().ToList();
                         }
                         else
                         {
@@ -854,6 +886,7 @@ namespace UpVotes.BusinessServices.Service
                                 CompanyName = companyDb.CompanyName,
                                 FoundedYear = companyDb.FoundedYear,
                                 URL = companyDb.URL,
+                                CreatedBy = Convert.ToInt32(companyDb.CreatedBy),
                                 IsUserVerified = companyDb.IsUserApproved == true ? "Yes" : "No",
                                 UserVerifiedDate = companyDb.UserApprovedDate == null || companyDb.UserApprovedDate == DateTime.MinValue ? string.Empty : Convert.ToDateTime(companyDb.UserApprovedDate).ToString("dd-MMM-yyyy"),
                                 IsAdminApproved = companyDb.IsAdminApproved == true ? "Yes" : "No",
@@ -896,7 +929,6 @@ namespace UpVotes.BusinessServices.Service
                 throw ex;
             }
         }
-
 
         public QuotationResponse GetQuotationData(QuotationRequest request)
         {
@@ -1006,6 +1038,7 @@ namespace UpVotes.BusinessServices.Service
                         userVerifiedCompany.IsUserApproved = true;
                         userVerifiedCompany.UserApprovedDate = DateTime.Now;
                         _context.SaveChanges();
+                        SendUserApprovedEmail(userVerifiedCompany.CompanyName);
                         return true;
                     }
 
@@ -1016,6 +1049,27 @@ namespace UpVotes.BusinessServices.Service
             {
                 throw ex;
             }
+        }
+
+        private void SendUserApprovedEmail(string companyName)
+        {
+            Email emailProperties = new Email();
+            emailProperties.EmailFrom = System.Configuration.ConfigurationManager.AppSettings["AdminEmail"];
+            emailProperties.DomainDisplayName = System.Configuration.ConfigurationManager.AppSettings["DomainDisplayName"];
+            emailProperties.EmailTo = System.Configuration.ConfigurationManager.AppSettings["AdminEmail"];
+            emailProperties.EmailBCC = "upvotes7@gmail.com; puneethm@hotmail.com";
+            emailProperties.EmailSubject = companyName + " is approved by user.";
+            emailProperties.EmailBody = GetUserApprovedEmailContent(companyName);
+            EmailHelper.SendEmail(emailProperties);
+        }
+
+        private string GetUserApprovedEmailContent(string companyName)
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.Append("<p>Hello,</p><p>Hello Admin, <br/> <b>" + companyName + "<b/> has been approved from User.</p>");            
+
+            EmailHelper.GetEmailSignature(sb);
+            return sb.ToString();
         }
 
         public bool UpdateRejectionComments(CompanyRejectComments companyRejectComments)

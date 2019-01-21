@@ -536,6 +536,10 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Parameter Name="FocusAreaName" Type="nvarchar" Mode="In" />
           <Parameter Name="SubFocusAreaName" Type="nvarchar" Mode="In" />
         </Function>
+        <Function Name="Sp_CheckForCompanyAndAdminUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="companyName" Type="nvarchar" Mode="In" />
+          <Parameter Name="userID" Type="int" Mode="In" />
+        </Function>
         <Function Name="SP_CopyCompany" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="companyID" Type="int" Mode="In" />
         </Function>
@@ -918,11 +922,15 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
             <Parameter Name="IsAdminApproved" Mode="In" Type="Boolean" />
             <Parameter Name="userPassword" Mode="In" Type="String" />
           </FunctionImport>
-          <FunctionImport Name="SP_CopyCompany">
-          <Parameter Name="companyID" Mode="In" Type="Int32" />
-          </FunctionImport>
           <FunctionImport Name="Sp_DeleteCompanyHistory">
           <Parameter Name="companyID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_CheckForCompanyAndAdminUser" ReturnType="Collection(UpVotesModel.Sp_CheckForCompanyAndAdminUser_Result)">
+            <Parameter Name="companyName" Mode="In" Type="String" />
+            <Parameter Name="userID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SP_CopyCompany">
+            <Parameter Name="companyID" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="Sp_GetCompanyFocus_Result">
@@ -1628,6 +1636,11 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Property Type="String" Name="UpvotesURL" Nullable="true" MaxLength="4000" />
           <Property Type="String" Name="UserApprovedDate" Nullable="true" MaxLength="150" />
         </ComplexType>
+        <ComplexType Name="Sp_CheckForCompanyAndAdminUser_Result">
+          <Property Type="Boolean" Name="IsCompanyExists" Nullable="true" />
+          <Property Type="Int32" Name="PreviousCompanyID" Nullable="true" />
+          <Property Type="Boolean" Name="IsAdmin" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2164,8 +2177,17 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Sp_AdminApproveRejectForClaiming" FunctionName="UpVotesModel.Store.Sp_AdminApproveRejectForClaiming" />
-          <FunctionImportMapping FunctionImportName="SP_CopyCompany" FunctionName="UpVotesModel.Store.SP_CopyCompany" />
           <FunctionImportMapping FunctionImportName="Sp_DeleteCompanyHistory" FunctionName="UpVotesModel.Store.Sp_DeleteCompanyHistory" />
+          <FunctionImportMapping FunctionImportName="Sp_CheckForCompanyAndAdminUser" FunctionName="UpVotesModel.Store.Sp_CheckForCompanyAndAdminUser">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_CheckForCompanyAndAdminUser_Result">
+                <ScalarProperty Name="IsCompanyExists" ColumnName="IsCompanyExists" />
+                <ScalarProperty Name="PreviousCompanyID" ColumnName="PreviousCompanyID" />
+                <ScalarProperty Name="IsAdmin" ColumnName="IsAdmin" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_CopyCompany" FunctionName="UpVotesModel.Store.SP_CopyCompany" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -376,15 +376,6 @@ namespace UpVotes.DataModel
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Sp_AdminApproveRejectForClaiming", claimListingIDParameter, userIDParameter, companyIDParameter, isAdminApprovedParameter, userPasswordParameter);
         }
     
-        public virtual int SP_CopyCompany(Nullable<int> companyID)
-        {
-            var companyIDParameter = companyID.HasValue ?
-                new ObjectParameter("companyID", companyID) :
-                new ObjectParameter("companyID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_CopyCompany", companyIDParameter);
-        }
-    
         public virtual int Sp_DeleteCompanyHistory(Nullable<int> companyID)
         {
             var companyIDParameter = companyID.HasValue ?
@@ -392,6 +383,28 @@ namespace UpVotes.DataModel
                 new ObjectParameter("companyID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Sp_DeleteCompanyHistory", companyIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_CheckForCompanyAndAdminUser_Result> Sp_CheckForCompanyAndAdminUser(string companyName, Nullable<int> userID)
+        {
+            var companyNameParameter = companyName != null ?
+                new ObjectParameter("companyName", companyName) :
+                new ObjectParameter("companyName", typeof(string));
+    
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("userID", userID) :
+                new ObjectParameter("userID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_CheckForCompanyAndAdminUser_Result>("Sp_CheckForCompanyAndAdminUser", companyNameParameter, userIDParameter);
+        }
+    
+        public virtual int SP_CopyCompany(Nullable<int> companyID)
+        {
+            var companyIDParameter = companyID.HasValue ?
+                new ObjectParameter("companyID", companyID) :
+                new ObjectParameter("companyID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_CopyCompany", companyIDParameter);
         }
     }
 }
