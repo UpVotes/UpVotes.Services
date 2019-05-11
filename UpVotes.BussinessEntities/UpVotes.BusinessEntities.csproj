@@ -66,7 +66,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\OverviewNewsEntity.cs" />
     <Compile Include="Entities\ClaimListing.cs" />
+    <Compile Include="Entities\CompanySoftwareReviews.cs" />
+    <Compile Include="Entities\SubmitReviewEntity.cs" />
+    <Compile Include="Entities\SoftwareReviewThankNoteEntity.cs" />
+    <Compile Include="Entities\SoftwareReviewsEntity.cs" />
+    <Compile Include="Entities\SoftwareVoteEntity.cs" />
+    <Compile Include="Entities\SoftwareEntity.cs" />
+    <Compile Include="Entities\SoftwareDetail.cs" />
+    <Compile Include="Entities\SoftwareFilterEntity.cs" />
     <Compile Include="Entities\Quotation.cs" />
     <Compile Include="Entities\CompanyDetail.cs" />
     <Compile Include="Entities\CompanyEntity.cs" />
@@ -87,6 +96,7 @@
     <Compile Include="Entities\UserRegistrationEntity.cs" />
     <Compile Include="Entities\ChangePasswordEntity.cs" />
     <Compile Include="Entities\UsersEntity.cs" />
+    <Compile Include="Entities\UserDashboardEntity.cs" />
     <Compile Include="Entities\UserTokensEntity.cs" />
     <Compile Include="Entities\UserTypeEntity.cs" />
     <Compile Include="Helper\EncryptionAndDecryption.cs" />

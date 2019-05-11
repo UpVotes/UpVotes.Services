@@ -23,5 +23,6 @@ namespace UpVotes.DataModel
         public string ProfileURL { get; set; }
         public string UpvotesURL { get; set; }
         public string UserApprovedDate { get; set; }
+        public bool IsSoftware { get; set; }
     }
 }

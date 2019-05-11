@@ -17,12 +17,12 @@ namespace UpVotes.WebAPI.Controllers
     public class CompanyController : ApiController
     {
         private readonly ICompanyService _companyServices;
-        private readonly ICompanyReviewsService _companyReviewsServices;
+        private readonly IReviewsService _ReviewsServices;
 
-        public CompanyController(ICompanyService companyService, ICompanyReviewsService companyReviewsService)
+        public CompanyController(ICompanyService companyService, IReviewsService companyReviewsService)
         {
             _companyServices = companyService;
-            _companyReviewsServices = companyReviewsService;
+            _ReviewsServices = companyReviewsService;
         }
 
         [HttpPost]
@@ -49,17 +49,25 @@ namespace UpVotes.WebAPI.Controllers
         }
 
         [HttpPost]
-        [Route("api/SaveCompanyReview")]
-        public HttpResponseMessage SaveCompanyReview(CompanyReviewsEntity companyReviewsEntity)
+        [Route("api/GetCompanyReviewsForListingPage")]
+        public HttpResponseMessage GetUserReviewsForCompanyListingPage(CompanyFilterEntity companyFilter)
         {
             try
             {
-                bool isSuccess = _companyReviewsServices.AddCompanyReview(companyReviewsEntity);
-                return Request.CreateResponse(HttpStatusCode.OK, isSuccess);
+                CompanySoftwareReviews companyReviews = _companyServices.GetReviewsForCompanyListingPage(companyFilter);
+
+                if (companyReviews != null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, companyReviews);
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Companies not found");
+                }
             }
             catch (Exception ex)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
             }
         }
 
@@ -114,13 +122,28 @@ namespace UpVotes.WebAPI.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("api/GetUserReviews/{companyName}")]
-        public HttpResponseMessage GetUserReviews(string companyName)
+        [HttpPost]
+        [Route("api/GetUserReviews")]
+        public HttpResponseMessage GetUserReviews(CompanyFilterEntity filter)
         {
             try
             {
-                CompanyDetail company = _companyServices.GetUserReviews(companyName);
+                CompanyDetail company = _companyServices.GetUserReviews(filter.CompanyName, filter.Rows);
+                return Request.CreateResponse(HttpStatusCode.OK, company);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
+
+        [HttpPost]
+        [Route("api/GetAllCompanyPortfolio")]
+        public HttpResponseMessage GetCompanyPortfolio(CompanyFilterEntity filter)
+        {
+            try
+            {
+                CompanyDetail company = _companyServices.GetAllCompanyPortfolioByName(filter.CompanyName, filter.Rows);
                 return Request.CreateResponse(HttpStatusCode.OK, company);
             }
             catch (Exception ex)

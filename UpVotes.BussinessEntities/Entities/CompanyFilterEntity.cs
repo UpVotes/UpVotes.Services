@@ -31,5 +31,6 @@ namespace UpVotes.BusinessEntities.Entities
         public int PageNo { get; set; }
 
         public int PageSize { get; set; }
+        public int Rows { get; set; }
     }
 }

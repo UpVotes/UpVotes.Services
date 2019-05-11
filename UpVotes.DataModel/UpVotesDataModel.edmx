@@ -15,6 +15,7 @@
           <Property Name="Title" Type="nvarchar" MaxLength="250" />
           <Property Name="TwitterTitle" Type="nvarchar" MaxLength="250" />
           <Property Name="Descriptions" Type="nvarchar(max)" />
+          <Property Name="IsService" Type="bit" />
         </EntityType>
         <EntityType Name="Company">
           <Key>
@@ -89,7 +90,7 @@
           <Property Name="ModifiedDate" Type="datetime" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="CompanyPendingForApproval">
           <Key>
             <PropertyRef Name="CompanyID" />
@@ -102,9 +103,9 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           </Key>
           <Property Name="CompanyPortFolioID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CompanyID" Type="int" Nullable="false" />
-          <Property Name="Title" Type="nvarchar" MaxLength="50" />
-          <Property Name="ImageURL" Type="nvarchar" MaxLength="50" />
-          <Property Name="VideoURL" Type="nvarchar" MaxLength="50" />
+          <Property Name="Title" Type="nvarchar" MaxLength="150" />
+          <Property Name="ImageURL" Type="nvarchar(max)" />
+          <Property Name="VideoURL" Type="nvarchar(max)" />
           <Property Name="Description" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="CompanyReviews">
@@ -123,6 +124,8 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Property Name="ReviewDate" Type="datetime" Nullable="false" />
           <Property Name="Email" Type="nvarchar" MaxLength="100" />
           <Property Name="Phone" Type="nvarchar" MaxLength="20" />
+          <Property Name="IsApproved" Type="bit" />
+          <Property Name="ReviewerUserName" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="CompanyReviewThankNote">
           <Key>
@@ -160,7 +163,7 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Key>
             <PropertyRef Name="CountryID" />
           </Key>
-          <Property Name="CountryID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CountryID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="CountryName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="CountryCode" Type="nvarchar" MaxLength="5" Nullable="false" />
           <Property Name="CurrencyID" Type="int" />
@@ -221,7 +224,7 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Key>
             <PropertyRef Name="StateID" />
           </Key>
-          <Property Name="StateID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StateID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="StateName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="CountryID" Type="int" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
@@ -535,10 +538,25 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
         <Function Name="Sp_CategoryMetaTags" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="FocusAreaName" Type="nvarchar" Mode="In" />
           <Parameter Name="SubFocusAreaName" Type="nvarchar" Mode="In" />
+          <Parameter Name="IsService" Type="bit" Mode="In" />
+        </Function>
+        <Function Name="Sp_ChangeForgetPassword" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserName" Type="nvarchar" Mode="In" />
+          <Parameter Name="userID" Type="int" Mode="In" />
+          <Parameter Name="OldPassword" Type="nvarchar" Mode="In" />
+          <Parameter Name="NewPassword" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="Sp_CheckForCompanyAndAdminUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="companyName" Type="nvarchar" Mode="In" />
           <Parameter Name="userID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_CompanyVote" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserID" Type="int" Mode="In" />
+          <Parameter Name="CompanyID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_CompanyVoteUserInformation" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserID" Type="int" Mode="In" />
+          <Parameter Name="CompanyID" Type="int" Mode="In" />
         </Function>
         <Function Name="SP_CopyCompany" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="companyID" Type="int" Mode="In" />
@@ -572,6 +590,11 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
         <Function Name="Sp_GetCompanyFocus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyID" Type="int" Mode="In" />
         </Function>
+        <Function Name="Sp_GetCompanyListFocus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CompanyID" Type="int" Mode="In" />
+          <Parameter Name="focusAreaID" Type="int" Mode="In" />
+          <Parameter Name="subFocusArea" Type="nvarchar" Mode="In" />
+        </Function>
         <Function Name="Sp_GetCompanyNames" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="type" Type="int" Mode="In" />
           <Parameter Name="focusAreaID" Type="int" Mode="In" />
@@ -580,12 +603,32 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
         <Function Name="Sp_GetCompanyPortFolio" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyID" Type="int" Mode="In" />
         </Function>
+        <Function Name="Sp_GetCompanyPortFolioByName" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CompanyName" Type="nvarchar" Mode="In" />
+          <Parameter Name="Rows" Type="int" Mode="In" />
+        </Function>
         <Function Name="Sp_GetCompanyReviews" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="companyName" Type="nvarchar" Mode="In" />
+          <Parameter Name="NoOfRows" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_GetCompanyReviewsForListingPage" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="companyName" Type="nvarchar" Mode="In" />
+          <Parameter Name="focusAreaId" Type="int" Mode="In" />
+          <Parameter Name="noOfReviews" Type="int" Mode="In" />
+          <Parameter Name="pageNumber" Type="int" Mode="In" />
+          <Parameter Name="pageSize" Type="int" Mode="In" />
         </Function>
         <Function Name="Sp_GetCompanyReviewThankNotedUsers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyID" Type="int" Mode="In" />
           <Parameter Name="CompanyReviewID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_GetCompanySoftwareNamesForAutoComplete" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Type" Type="int" Mode="In" />
+          <Parameter Name="Search" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="Sp_GetCountry" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="Sp_GetDashboardInfoForUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserID" Type="int" Mode="In" />
         </Function>
         <Function Name="Sp_GetDistinctSubFocusNames" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyID" Type="int" Mode="In" />
@@ -605,8 +648,82 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Parameter Name="databaseType" Type="nvarchar" Mode="In" />
           <Parameter Name="featuresType" Type="nvarchar(max)" Mode="In" />
         </Function>
+        <Function Name="Sp_GetSoftware" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="servicecategoryid" Type="int" Mode="In" />
+          <Parameter Name="softwarename" Type="nvarchar" Mode="In" />
+          <Parameter Name="userID" Type="int" Mode="In" />
+          <Parameter Name="PageNo" Type="int" Mode="In" />
+          <Parameter Name="PageSize" Type="int" Mode="In" />
+          <Parameter Name="sortByVotes" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="Sp_GetSoftwareCompanyNews" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="categoryID" Type="int" Mode="In" />
+          <Parameter Name="subcategory" Type="nvarchar" Mode="In" />
+          <Parameter Name="location" Type="nvarchar" Mode="In" />
+          <Parameter Name="isCompanySoftware" Type="int" Mode="In" />
+          <Parameter Name="Title" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="CompanySoftwareID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_GetSoftwareCompanyNewsByName" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="isCompanySoftware" Type="int" Mode="In" />
+          <Parameter Name="CompanySoftwareName" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="Sp_GetSoftwareReviews" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="softwareName" Type="nvarchar" Mode="In" />
+          <Parameter Name="NoOfRows" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_GetSoftwareReviewsForListingPage" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="softwareName" Type="nvarchar" Mode="In" />
+          <Parameter Name="serviceCategoryID" Type="int" Mode="In" />
+          <Parameter Name="noOfReviews" Type="int" Mode="In" />
+          <Parameter Name="pageNumber" Type="int" Mode="In" />
+          <Parameter Name="pageSize" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_GetSoftwareReviewThankNotedUsers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="SoftwareID" Type="int" Mode="In" />
+          <Parameter Name="SoftwareReviewID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_GetStateByCountryID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CountryID" Type="int" Mode="In" />
+        </Function>
         <Function Name="Sp_GetSubFocus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_GetSubFocusAreaByFocusID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="FocusAreaID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_GetTopVotesCompany" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="Sp_InsAdminNews" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IsCompanySoftware" Type="int" Mode="In" />
+          <Parameter Name="CategoryID" Type="int" Mode="In" />
+          <Parameter Name="SubCategoryID" Type="int" Mode="In" />
+          <Parameter Name="CountryID" Type="int" Mode="In" />
+          <Parameter Name="StateID" Type="int" Mode="In" />
+          <Parameter Name="City" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="CompanyOrSoftwareID" Type="int" Mode="In" />
+          <Parameter Name="WebsiteURL" Type="nvarchar" Mode="In" />
+          <Parameter Name="NewsTitle" Type="nvarchar" Mode="In" />
+          <Parameter Name="NewsDescription" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="ImageName" Type="nvarchar" Mode="In" />
+          <Parameter Name="YoutubeURL" Type="nvarchar" Mode="In" />
+          <Parameter Name="CreatedBy" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_InsCompanyReview" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CompanyID" Type="int" Mode="In" />
+          <Parameter Name="FocusAreaID" Type="int" Mode="In" />
+          <Parameter Name="UserID" Type="int" Mode="In" />
+          <Parameter Name="ReviewerCompanyName" Type="nvarchar" Mode="In" />
+          <Parameter Name="Designation" Type="nvarchar" Mode="In" />
+          <Parameter Name="ProjectName" Type="nvarchar" Mode="In" />
+          <Parameter Name="FeedBack" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="Rating" Type="int" Mode="In" />
+          <Parameter Name="Email" Type="nvarchar" Mode="In" />
+          <Parameter Name="Phone" Type="nvarchar" Mode="In" />
+          <Parameter Name="ReviewerUserName" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="Sp_InsCompanyReviewForThanksNote" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserID" Type="int" Mode="In" />
+          <Parameter Name="CompanyReviewID" Type="int" Mode="In" />
         </Function>
         <Function Name="Sp_InsertUpdateClaimListing" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ClaimListingID" Type="int" Mode="In" />
@@ -614,6 +731,58 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Parameter Name="userID" Type="int" Mode="In" />
           <Parameter Name="IsUserApproved" Type="bit" Mode="In" />
           <Parameter Name="WorkEmail" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="Sp_InsertUpdateClaimSoftwareListing" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ClaimSoftwareListingID" Type="int" Mode="In" />
+          <Parameter Name="softwareID" Type="int" Mode="In" />
+          <Parameter Name="userID" Type="int" Mode="In" />
+          <Parameter Name="IsUserApproved" Type="bit" Mode="In" />
+          <Parameter Name="WorkEmail" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="Sp_InsertUpdateUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserName" Type="nvarchar" Mode="In" />
+          <Parameter Name="UserPassword" Type="nvarchar" Mode="In" />
+          <Parameter Name="FirstName" Type="nvarchar" Mode="In" />
+          <Parameter Name="LastName" Type="nvarchar" Mode="In" />
+          <Parameter Name="UserEmail" Type="nvarchar" Mode="In" />
+          <Parameter Name="UserMobile" Type="nvarchar" Mode="In" />
+          <Parameter Name="IsActive" Type="bit" Mode="In" />
+          <Parameter Name="IsBlocked" Type="bit" Mode="In" />
+          <Parameter Name="UserActivatedDateTime" Type="datetime" Mode="In" />
+          <Parameter Name="UserLastLoginDateTime" Type="datetime" Mode="In" />
+          <Parameter Name="Remarks" Type="nvarchar" Mode="In" />
+          <Parameter Name="DateOfBirth" Type="datetime" Mode="In" />
+          <Parameter Name="ProfilePictureURL" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="ProfileID" Type="nvarchar" Mode="In" />
+          <Parameter Name="ProfileURL" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="UserType" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_InsSoftwareReview" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="SoftwareID" Type="int" Mode="In" />
+          <Parameter Name="ServiceCategoryID" Type="int" Mode="In" />
+          <Parameter Name="UserID" Type="int" Mode="In" />
+          <Parameter Name="ReviewerSoftwareName" Type="nvarchar" Mode="In" />
+          <Parameter Name="Designation" Type="nvarchar" Mode="In" />
+          <Parameter Name="FeedBack" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="Rating" Type="int" Mode="In" />
+          <Parameter Name="Email" Type="nvarchar" Mode="In" />
+          <Parameter Name="Phone" Type="nvarchar" Mode="In" />
+          <Parameter Name="ReviewerUserName" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="Sp_InsSoftwareReviewForThanksNote" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserID" Type="int" Mode="In" />
+          <Parameter Name="SoftwareReviewID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_InsUserNews" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IsCompanySoftware" Type="int" Mode="In" />
+          <Parameter Name="CategoryID" Type="int" Mode="In" />
+          <Parameter Name="CompanyOrSoftwareID" Type="int" Mode="In" />
+          <Parameter Name="WebsiteURL" Type="nvarchar" Mode="In" />
+          <Parameter Name="NewsTitle" Type="nvarchar" Mode="In" />
+          <Parameter Name="NewsDescription" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="ImageName" Type="nvarchar" Mode="In" />
+          <Parameter Name="YoutubeURL" Type="nvarchar" Mode="In" />
+          <Parameter Name="CreatedBy" Type="int" Mode="In" />
         </Function>
         <Function Name="Sp_InsUserQuotation" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="platformType" Type="nvarchar" Mode="In" />
@@ -628,6 +797,22 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Parameter Name="emailID" Type="nvarchar" Mode="In" />
           <Parameter Name="name" Type="nvarchar" Mode="In" />
           <Parameter Name="companyName" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="Sp_IsNewsExists" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Title" Type="nvarchar" Mode="In" />
+          <Parameter Name="URL" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="Sp_LoginRegisteredUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserName" Type="nvarchar" Mode="In" />
+          <Parameter Name="UserPassword" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="Sp_SoftwareVote" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserID" Type="int" Mode="In" />
+          <Parameter Name="SoftwareID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_SoftwareVoteUserInformation" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserID" Type="int" Mode="In" />
+          <Parameter Name="SoftwareID" Type="int" Mode="In" />
         </Function>
         <EntityContainer Name="UpVotesModelStoreContainer">
           <EntitySet Name="CategoryBasedMetaTags" EntityType="Self.CategoryBasedMetaTags" Schema="dbo" store:Type="Tables" />
@@ -803,7 +988,8 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           </AssociationSet>
           <EntitySet Name="CompanyVotes" EntityType="UpVotesModel.CompanyVote" />
           <FunctionImport Name="Sp_GetCompanyReviews" ReturnType="Collection(UpVotesModel.Sp_GetCompanyReviews_Result)">
-          <Parameter Name="companyName" Mode="In" Type="String" />
+            <Parameter Name="companyName" Mode="In" Type="String" />
+            <Parameter Name="NoOfRows" Mode="In" Type="Int32" />
           </FunctionImport>
           <EntitySet Name="Company" EntityType="UpVotesModel.Company" />
           <AssociationSet Name="FK_CompanyBranch_Company" Association="UpVotesModel.FK_CompanyBranch_Company">
@@ -881,6 +1067,7 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <FunctionImport Name="Sp_CategoryMetaTags" ReturnType="Collection(UpVotesModel.Sp_CategoryMetaTags_Result)">
             <Parameter Name="FocusAreaName" Mode="In" Type="String" />
             <Parameter Name="SubFocusAreaName" Mode="In" Type="String" />
+            <Parameter Name="IsService" Mode="In" Type="Boolean" />
           </FunctionImport>
           <EntitySet Name="CategoryBasedMetaTags" EntityType="UpVotesModel.CategoryBasedMetaTags" />
           <EntitySet Name="CompanySubFocus" EntityType="UpVotesModel.CompanySubFocus" />
@@ -930,7 +1117,187 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
             <Parameter Name="userID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CopyCompany">
-            <Parameter Name="companyID" Mode="In" Type="Int32" />
+          <Parameter Name="companyID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetCompanyListFocus" ReturnType="Collection(UpVotesModel.Sp_GetCompanyListFocus_Result)">
+            <Parameter Name="CompanyID" Mode="In" Type="Int32" />
+            <Parameter Name="focusAreaID" Mode="In" Type="Int32" />
+            <Parameter Name="subFocusArea" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_InsertUpdateUser" ReturnType="Collection(UpVotesModel.Sp_InsertUpdateUser_Result)">
+            <Parameter Name="UserName" Mode="In" Type="String" />
+            <Parameter Name="UserPassword" Mode="In" Type="String" />
+            <Parameter Name="FirstName" Mode="In" Type="String" />
+            <Parameter Name="LastName" Mode="In" Type="String" />
+            <Parameter Name="UserEmail" Mode="In" Type="String" />
+            <Parameter Name="UserMobile" Mode="In" Type="String" />
+            <Parameter Name="IsActive" Mode="In" Type="Boolean" />
+            <Parameter Name="IsBlocked" Mode="In" Type="Boolean" />
+            <Parameter Name="UserActivatedDateTime" Mode="In" Type="DateTime" />
+            <Parameter Name="UserLastLoginDateTime" Mode="In" Type="DateTime" />
+            <Parameter Name="Remarks" Mode="In" Type="String" />
+            <Parameter Name="DateOfBirth" Mode="In" Type="DateTime" />
+            <Parameter Name="ProfilePictureURL" Mode="In" Type="String" />
+            <Parameter Name="ProfileID" Mode="In" Type="String" />
+            <Parameter Name="ProfileURL" Mode="In" Type="String" />
+            <Parameter Name="UserType" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_ChangeForgetPassword" ReturnType="Collection(UpVotesModel.Sp_ChangeForgetPassword_Result)">
+            <Parameter Name="UserName" Mode="In" Type="String" />
+            <Parameter Name="userID" Mode="In" Type="Int32" />
+            <Parameter Name="OldPassword" Mode="In" Type="String" />
+            <Parameter Name="NewPassword" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_LoginRegisteredUser" ReturnType="Collection(UpVotesModel.Sp_LoginRegisteredUser_Result)">
+            <Parameter Name="UserName" Mode="In" Type="String" />
+            <Parameter Name="UserPassword" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetTopVotesCompany" ReturnType="Collection(UpVotesModel.Sp_GetTopVotesCompany_Result)" />
+          <FunctionImport Name="Sp_GetSoftware" ReturnType="Collection(UpVotesModel.Sp_GetSoftware_Result)">
+            <Parameter Name="servicecategoryid" Mode="In" Type="Int32" />
+            <Parameter Name="softwarename" Mode="In" Type="String" />
+            <Parameter Name="userID" Mode="In" Type="Int32" />
+            <Parameter Name="PageNo" Mode="In" Type="Int32" />
+            <Parameter Name="PageSize" Mode="In" Type="Int32" />
+            <Parameter Name="sortByVotes" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_SoftwareVote" ReturnType="Collection(Decimal)">
+            <Parameter Name="UserID" Mode="In" Type="Int32" />
+            <Parameter Name="SoftwareID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_SoftwareVoteUserInformation" ReturnType="Collection(UpVotesModel.Sp_SoftwareVoteUserInformation_Result)">
+            <Parameter Name="UserID" Mode="In" Type="Int32" />
+            <Parameter Name="SoftwareID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetSoftwareReviews" ReturnType="Collection(UpVotesModel.Sp_GetSoftwareReviews_Result)">
+            <Parameter Name="softwareName" Mode="In" Type="String" />
+            <Parameter Name="NoOfRows" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetSoftwareReviewThankNotedUsers" ReturnType="Collection(UpVotesModel.Sp_GetSoftwareReviewThankNotedUsers_Result)">
+            <Parameter Name="SoftwareID" Mode="In" Type="Int32" />
+            <Parameter Name="SoftwareReviewID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_InsSoftwareReviewForThanksNote" ReturnType="Collection(Decimal)">
+            <Parameter Name="UserID" Mode="In" Type="Int32" />
+            <Parameter Name="SoftwareReviewID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_InsCompanyReviewForThanksNote" ReturnType="Collection(Decimal)">
+            <Parameter Name="UserID" Mode="In" Type="Int32" />
+            <Parameter Name="CompanyReviewID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_CompanyVote" ReturnType="Collection(Decimal)">
+            <Parameter Name="UserID" Mode="In" Type="Int32" />
+            <Parameter Name="CompanyID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_CompanyVoteUserInformation" ReturnType="Collection(UpVotesModel.Sp_CompanyVoteUserInformation_Result)">
+            <Parameter Name="UserID" Mode="In" Type="Int32" />
+            <Parameter Name="CompanyID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_InsertUpdateClaimSoftwareListing" ReturnType="Collection(Int32)">
+            <Parameter Name="ClaimSoftwareListingID" Mode="In" Type="Int32" />
+            <Parameter Name="softwareID" Mode="In" Type="Int32" />
+            <Parameter Name="userID" Mode="In" Type="Int32" />
+            <Parameter Name="IsUserApproved" Mode="In" Type="Boolean" />
+            <Parameter Name="WorkEmail" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetCompanySoftwareNamesForAutoComplete" ReturnType="Collection(UpVotesModel.Sp_GetCompanySoftwareNamesForAutoComplete_Result)">
+            <Parameter Name="Type" Mode="In" Type="Int32" />
+            <Parameter Name="Search" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_InsCompanyReview" ReturnType="Collection(Decimal)">
+            <Parameter Name="CompanyID" Mode="In" Type="Int32" />
+            <Parameter Name="FocusAreaID" Mode="In" Type="Int32" />
+            <Parameter Name="UserID" Mode="In" Type="Int32" />
+            <Parameter Name="ReviewerCompanyName" Mode="In" Type="String" />
+            <Parameter Name="Designation" Mode="In" Type="String" />
+            <Parameter Name="ProjectName" Mode="In" Type="String" />
+            <Parameter Name="FeedBack" Mode="In" Type="String" />
+            <Parameter Name="Rating" Mode="In" Type="Int32" />
+            <Parameter Name="Email" Mode="In" Type="String" />
+            <Parameter Name="Phone" Mode="In" Type="String" />
+            <Parameter Name="ReviewerUserName" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_InsSoftwareReview" ReturnType="Collection(Decimal)">
+            <Parameter Name="SoftwareID" Mode="In" Type="Int32" />
+            <Parameter Name="ServiceCategoryID" Mode="In" Type="Int32" />
+            <Parameter Name="UserID" Mode="In" Type="Int32" />
+            <Parameter Name="ReviewerSoftwareName" Mode="In" Type="String" />
+            <Parameter Name="Designation" Mode="In" Type="String" />
+            <Parameter Name="FeedBack" Mode="In" Type="String" />
+            <Parameter Name="Rating" Mode="In" Type="Int32" />
+            <Parameter Name="Email" Mode="In" Type="String" />
+            <Parameter Name="Phone" Mode="In" Type="String" />
+            <Parameter Name="ReviewerUserName" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetCompanyReviewsForListingPage" ReturnType="Collection(UpVotesModel.Sp_GetCompanyReviewsForListingPage_Result)">
+            <Parameter Name="companyName" Mode="In" Type="String" />
+            <Parameter Name="focusAreaId" Mode="In" Type="Int32" />
+            <Parameter Name="noOfReviews" Mode="In" Type="Int32" />
+            <Parameter Name="pageNumber" Mode="In" Type="Int32" />
+            <Parameter Name="pageSize" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetSoftwareReviewsForListingPage" ReturnType="Collection(UpVotesModel.Sp_GetSoftwareReviewsForListingPage_Result)">
+            <Parameter Name="softwareName" Mode="In" Type="String" />
+            <Parameter Name="serviceCategoryID" Mode="In" Type="Int32" />
+            <Parameter Name="noOfReviews" Mode="In" Type="Int32" />
+            <Parameter Name="pageNumber" Mode="In" Type="Int32" />
+            <Parameter Name="pageSize" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetSoftwareCompanyNews" ReturnType="Collection(UpVotesModel.Sp_GetSoftwareCompanyNews_Result)">
+            <Parameter Name="categoryID" Mode="In" Type="Int32" />
+            <Parameter Name="subcategory" Mode="In" Type="String" />
+            <Parameter Name="location" Mode="In" Type="String" />
+            <Parameter Name="isCompanySoftware" Mode="In" Type="Int32" />
+            <Parameter Name="Title" Mode="In" Type="String" />
+            <Parameter Name="CompanySoftwareID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetSoftwareCompanyNewsByName" ReturnType="Collection(UpVotesModel.Sp_GetSoftwareCompanyNewsByName_Result)">
+            <Parameter Name="isCompanySoftware" Mode="In" Type="Int32" />
+            <Parameter Name="CompanySoftwareName" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetCompanyPortFolioByName" ReturnType="Collection(UpVotesModel.Sp_GetCompanyPortFolioByName_Result)">
+            <Parameter Name="CompanyName" Mode="In" Type="String" />
+            <Parameter Name="Rows" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetCountry" ReturnType="Collection(UpVotesModel.Sp_GetCountry_Result)" />
+          <FunctionImport Name="Sp_GetStateByCountryID" ReturnType="Collection(UpVotesModel.Sp_GetStateByCountryID_Result)">
+          <Parameter Name="CountryID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetSubFocusAreaByFocusID" ReturnType="Collection(UpVotesModel.Sp_GetSubFocusAreaByFocusID_Result)">
+          <Parameter Name="FocusAreaID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_IsNewsExists" ReturnType="Collection(UpVotesModel.Sp_IsNewsExists_Result)">
+            <Parameter Name="Title" Mode="In" Type="String" />
+            <Parameter Name="URL" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_InsAdminNews" ReturnType="Collection(Decimal)">
+            <Parameter Name="IsCompanySoftware" Mode="In" Type="Int32" />
+            <Parameter Name="CategoryID" Mode="In" Type="Int32" />
+            <Parameter Name="SubCategoryID" Mode="In" Type="Int32" />
+            <Parameter Name="CountryID" Mode="In" Type="Int32" />
+            <Parameter Name="StateID" Mode="In" Type="Int32" />
+            <Parameter Name="City" Mode="In" Type="String" />
+            <Parameter Name="CompanyOrSoftwareID" Mode="In" Type="Int32" />
+            <Parameter Name="WebsiteURL" Mode="In" Type="String" />
+            <Parameter Name="NewsTitle" Mode="In" Type="String" />
+            <Parameter Name="NewsDescription" Mode="In" Type="String" />
+            <Parameter Name="ImageName" Mode="In" Type="String" />
+            <Parameter Name="YoutubeURL" Mode="In" Type="String" />
+            <Parameter Name="CreatedBy" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetDashboardInfoForUser" ReturnType="Collection(UpVotesModel.Sp_GetDashboardInfoForUser_Result)">
+          <Parameter Name="UserID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_InsUserNews" ReturnType="Collection(Decimal)">
+            <Parameter Name="IsCompanySoftware" Mode="In" Type="Int32" />
+            <Parameter Name="CategoryID" Mode="In" Type="Int32" />
+            <Parameter Name="CompanyOrSoftwareID" Mode="In" Type="Int32" />
+            <Parameter Name="WebsiteURL" Mode="In" Type="String" />
+            <Parameter Name="NewsTitle" Mode="In" Type="String" />
+            <Parameter Name="NewsDescription" Mode="In" Type="String" />
+            <Parameter Name="ImageName" Mode="In" Type="String" />
+            <Parameter Name="YoutubeURL" Mode="In" Type="String" />
+            <Parameter Name="CreatedBy" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="Sp_GetCompanyFocus_Result">
@@ -992,9 +1359,9 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           </Key>
           <Property Name="CompanyPortFolioID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CompanyID" Type="Int32" Nullable="false" />
-          <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ImageURL" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="VideoURL" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Title" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="ImageURL" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="VideoURL" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Company" Relationship="UpVotesModel.FK_CompanyPortFolio_Company_CompanyID" FromRole="CompanyPortFolio" ToRole="Company" />
         </EntityType>
@@ -1018,6 +1385,8 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <NavigationProperty Name="FocusArea" Relationship="UpVotesModel.FK_FocusArea_CompanyReviews_FocusAreaID" FromRole="CompanyReview" ToRole="FocusArea" />
           <NavigationProperty Name="User" Relationship="UpVotesModel.FK_Users_CompanyReviews_UserID" FromRole="CompanyReview" ToRole="User" />
           <NavigationProperty Name="Company" Relationship="UpVotesModel.FK_CompanyReviews_Company_CompanyID" FromRole="CompanyReview" ToRole="Company" />
+          <Property Name="IsApproved" Type="Boolean" />
+          <Property Name="ReviewerUserName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="CompanyReviewThankNote">
           <Key>
@@ -1284,6 +1653,7 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
         </EntityType>
         <ComplexType Name="Sp_GetCompanyReviews_Result">
           <Property Type="Int32" Name="CompanyID" Nullable="false" />
+          <Property Type="String" Name="CompanyName" Nullable="false" MaxLength="100" />
           <Property Type="Int32" Name="CompanyReviewID" Nullable="false" />
           <Property Type="String" Name="ReviewerFullName" Nullable="false" MaxLength="101" />
           <Property Type="String" Name="ReviewerCompanyName" Nullable="true" MaxLength="100" />
@@ -1294,6 +1664,7 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Property Type="Int16" Name="Rating" Nullable="false" />
           <Property Type="DateTime" Name="ReviewDate" Nullable="false" Precision="23" />
           <Property Type="String" Name="UserProfilePicture" Nullable="false" />
+          <Property Type="Int32" Name="NoOfThankNotes" Nullable="true" />
         </ComplexType>
         <EntityType Name="Company">
           <Key>
@@ -1456,6 +1827,7 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Property Type="String" Name="FocusAreaName" Nullable="false" MaxLength="50" />
           <Property Type="String" Name="SubFocusAreaName" Nullable="false" MaxLength="100" />
           <Property Type="Double" Name="SubFocusAreaPercentage" Nullable="true" />
+          <Property Type="Int32" Name="FocusAreaID" Nullable="false" />
         </ComplexType>
         <ComplexType Name="Sp_CategoryMetaTags_Result">
           <Property Type="Int32" Name="CategoryBasedMetaTagsID" Nullable="false" />
@@ -1475,6 +1847,7 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Property Name="Title" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="TwitterTitle" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="Descriptions" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsService" Type="Boolean" />
         </EntityType>
         <EntityType Name="CompanySubFocus">
           <Key>
@@ -1635,11 +2008,256 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Property Type="String" Name="ProfileURL" Nullable="false" />
           <Property Type="String" Name="UpvotesURL" Nullable="true" MaxLength="4000" />
           <Property Type="String" Name="UserApprovedDate" Nullable="true" MaxLength="150" />
+          <Property Type="Boolean" Name="IsSoftware" Nullable="false" />
         </ComplexType>
         <ComplexType Name="Sp_CheckForCompanyAndAdminUser_Result">
           <Property Type="Boolean" Name="IsCompanyExists" Nullable="true" />
           <Property Type="Int32" Name="PreviousCompanyID" Nullable="true" />
           <Property Type="Boolean" Name="IsAdmin" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="Sp_GetCompanyListFocus_Result">
+          <Property Type="Int32" Name="CompanyFocusID" Nullable="false" />
+          <Property Type="Int32" Name="CompanyID" Nullable="false" />
+          <Property Type="Int32" Name="FocusAreaID" Nullable="false" />
+          <Property Type="String" Name="FocusAreaName" Nullable="false" MaxLength="50" />
+          <Property Type="Double" Name="FocusAreaPercentage" Nullable="false" />
+          <Property Type="String" Name="SubFocusAreaName" Nullable="false" MaxLength="50" />
+          <Property Type="Double" Name="SubFocusAreaPercentage" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="Sp_InsertUpdateUser_Result">
+          <Property Type="String" Name="ProfilePictureURL" Nullable="true" />
+          <Property Type="String" Name="FirstName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="LastName" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="UserID" Nullable="false" />
+          <Property Type="Int32" Name="UserType" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="Sp_ChangeForgetPassword_Result">
+          <Property Type="String" Name="ProfilePictureURL" Nullable="true" />
+          <Property Type="String" Name="FirstName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="LastName" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="UserID" Nullable="false" />
+          <Property Type="Int32" Name="UserType" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="Sp_LoginRegisteredUser_Result">
+          <Property Type="String" Name="ProfilePictureURL" Nullable="true" />
+          <Property Type="String" Name="FirstName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="LastName" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="UserID" Nullable="false" />
+          <Property Type="Int32" Name="UserType" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="Sp_GetTopVotesCompany_Result">
+          <Property Type="Int32" Name="vote" Nullable="true" />
+          <Property Type="Int32" Name="CompanyID" Nullable="false" />
+          <Property Type="String" Name="CompanyName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="LogoName" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="Sp_GetSoftware_Result">
+          <Property Type="Int32" Name="SoftwareID" Nullable="true" />
+          <Property Type="String" Name="SoftwareName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="LogoName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="TagLine" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="UserRating" Nullable="true" />
+          <Property Type="Int32" Name="NoOfUsersRated" Nullable="true" />
+          <Property Type="Int32" Name="NoOfVotes" Nullable="true" />
+          <Property Type="Boolean" Name="IsVoted" Nullable="true" />
+          <Property Type="String" Name="PriceRange" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="SoftwareTrail" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="DemoURL" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="DomainID" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="WebSiteURL" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="LinkedInURL" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="FaceBookURL" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="TwitterURL" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="InstagramURL" Nullable="true" MaxLength="250" />
+          <Property Type="Int32" Name="FoundedYear" Nullable="true" />
+          <Property Type="String" Name="SoftwareDescription" Nullable="true" />
+          <Property Type="Int32" Name="CreatedBy" Nullable="true" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="ServiceCategoryName" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="ModifiedBy" Nullable="true" />
+          <Property Type="DateTime" Name="ModifiedDate" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="ServiceCategoryID" Nullable="true" />
+          <Property Type="Boolean" Name="IsActive" Nullable="true" />
+          <Property Type="Int32" Name="Ranks" Nullable="true" />
+          <Property Type="Int32" Name="TotalCount" Nullable="true" />
+          <Property Type="Boolean" Name="IsClaim" Nullable="true" />
+          <Property Type="Int32" Name="RowNumber" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="Sp_SoftwareVoteUserInformation_Result">
+          <Property Type="String" Name="FirstName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="LastName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ProfileURL" Nullable="false" />
+          <Property Type="String" Name="ProfilePictureURL" Nullable="false" />
+          <Property Type="String" Name="SoftwareName" Nullable="true" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="Sp_GetSoftwareReviews_Result">
+          <Property Type="Int32" Name="SoftwareID" Nullable="false" />
+          <Property Type="String" Name="SoftwareName" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="SoftwareReviewID" Nullable="false" />
+          <Property Type="String" Name="ReviewerFullName" Nullable="false" MaxLength="101" />
+          <Property Type="String" Name="ReviewerSoftwareName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="ReviewerDesignation" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="ReviewerProjectName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="ServiceCategoryName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="FeedBack" Nullable="false" />
+          <Property Type="Int16" Name="Rating" Nullable="false" />
+          <Property Type="DateTime" Name="ReviewDate" Nullable="false" Precision="23" />
+          <Property Type="String" Name="UserProfilePicture" Nullable="false" />
+          <Property Type="Int32" Name="NoOfThankNotes" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="Sp_GetSoftwareReviewThankNotedUsers_Result">
+          <Property Type="Int32" Name="SoftwareID" Nullable="false" />
+          <Property Type="Int32" Name="SoftwareReviewID" Nullable="false" />
+          <Property Type="Int32" Name="SoftwareReviewThankNoteID" Nullable="false" />
+          <Property Type="Int32" Name="UserID" Nullable="false" />
+          <Property Type="String" Name="ThankNotedFullName" Nullable="false" MaxLength="101" />
+          <Property Type="DateTime" Name="ThankNoteDate" Nullable="false" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="Sp_CompanyVoteUserInformation_Result">
+          <Property Type="String" Name="FirstName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="LastName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ProfileURL" Nullable="false" />
+          <Property Type="String" Name="ProfilePictureURL" Nullable="false" />
+          <Property Type="String" Name="CompanyName" Nullable="true" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="Sp_GetCompanySoftwareNamesForAutoComplete_Result">
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="Sp_GetCompanyReviewsForListingPage_Result">
+          <Property Type="Int32" Name="CompanyReviewID" Nullable="false" />
+          <Property Type="Int32" Name="CompanyId" Nullable="false" />
+          <Property Type="String" Name="CompanyName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="ReviewerFullName" Nullable="false" MaxLength="101" />
+          <Property Type="String" Name="ReviewerCompanyName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="ReviewerDesignation" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="ReviewerProjectName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="FocusAreaName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="FeedBack" Nullable="false" MaxLength="Max" />
+          <Property Type="Int16" Name="Rating" Nullable="false" />
+          <Property Type="DateTime" Name="ReviewDate" Nullable="false" Precision="23" />
+          <Property Type="String" Name="UserProfilePicture" Nullable="false" MaxLength="250" />
+          <Property Type="Int32" Name="NoOfReviews" Nullable="false" />
+          <Property Type="Int32" Name="ThankYouCount" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="Sp_GetSoftwareReviewsForListingPage_Result">
+          <Property Type="Int32" Name="SoftwareReviewID" Nullable="false" />
+          <Property Type="Int32" Name="SoftwareId" Nullable="false" />
+          <Property Type="String" Name="SoftwareName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="ReviewerFullName" Nullable="false" MaxLength="101" />
+          <Property Type="String" Name="ReviewerSoftwareName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="ReviewerDesignation" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="ReviewerProjectName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="ServiceCategoryName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="FeedBack" Nullable="false" MaxLength="Max" />
+          <Property Type="Int16" Name="Rating" Nullable="false" />
+          <Property Type="DateTime" Name="ReviewDate" Nullable="false" Precision="23" />
+          <Property Type="String" Name="UserProfilePicture" Nullable="false" MaxLength="250" />
+          <Property Type="Int32" Name="NoOfReviews" Nullable="false" />
+          <Property Type="Int32" Name="ThankYouCount" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="Sp_GetSoftwareCompanyNews_Result">
+          <Property Type="Int32" Name="CompanySoftwareNewsID" Nullable="false" />
+          <Property Type="Int32" Name="IsCompanySoftware" Nullable="true" />
+          <Property Type="Int32" Name="CategoryID" Nullable="true" />
+          <Property Type="Int32" Name="SubCategoryID" Nullable="true" />
+          <Property Type="Int32" Name="CountryID" Nullable="true" />
+          <Property Type="Int32" Name="StateID" Nullable="true" />
+          <Property Type="String" Name="City" Nullable="true" />
+          <Property Type="Int32" Name="CompanyOrSoftwareID" Nullable="true" />
+          <Property Type="String" Name="WebsiteURL" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="NewsTitle" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="NewsDescription" Nullable="true" />
+          <Property Type="String" Name="ImageName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="YoutubeURL" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="CreatedDate" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="categoryname" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="subcategoryname" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="CountryName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="StateName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="SoftwareCompanyName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="LogoName" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="isRelated" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="Sp_GetSoftwareCompanyNewsByName_Result">
+          <Property Type="Int32" Name="CompanySoftwareNewsID" Nullable="false" />
+          <Property Type="Int32" Name="IsCompanySoftware" Nullable="true" />
+          <Property Type="Int32" Name="CategoryID" Nullable="true" />
+          <Property Type="Int32" Name="SubCategoryID" Nullable="true" />
+          <Property Type="Int32" Name="CountryID" Nullable="true" />
+          <Property Type="Int32" Name="StateID" Nullable="true" />
+          <Property Type="String" Name="City" Nullable="true" />
+          <Property Type="Int32" Name="CompanyOrSoftwareID" Nullable="true" />
+          <Property Type="String" Name="WebsiteURL" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="NewsTitle" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="NewsDescription" Nullable="true" />
+          <Property Type="String" Name="ImageName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="YoutubeURL" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="CreatedDate" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="categoryname" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="subcategoryname" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="CountryName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="StateName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="SoftwareCompanyName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="LogoName" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="isRelated" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="Sp_GetCompanyPortFolioByName_Result">
+          <Property Type="Int32" Name="CompanyPortFolioID" Nullable="false" />
+          <Property Type="Int32" Name="CompanyID" Nullable="false" />
+          <Property Type="String" Name="Title" Nullable="true" MaxLength="150" />
+          <Property Type="String" Name="ImageURL" Nullable="true" />
+          <Property Type="String" Name="VideoURL" Nullable="true" />
+          <Property Type="String" Name="Description" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="Sp_GetCountry_Result">
+          <Property Type="Int32" Name="CountryID" Nullable="false" />
+          <Property Type="String" Name="CountryName" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="Sp_GetStateByCountryID_Result">
+          <Property Type="Int32" Name="StateID" Nullable="false" />
+          <Property Type="String" Name="StateName" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="Sp_GetSubFocusAreaByFocusID_Result">
+          <Property Type="Int32" Name="SubFocusAreaID" Nullable="false" />
+          <Property Type="String" Name="SubFocusAreaName" Nullable="false" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="Sp_IsNewsExists_Result">
+          <Property Type="Int32" Name="CompanySoftwareNewsID" Nullable="false" />
+          <Property Type="Int32" Name="IsCompanySoftware" Nullable="true" />
+          <Property Type="Int32" Name="CategoryID" Nullable="true" />
+          <Property Type="Int32" Name="SubCategoryID" Nullable="true" />
+          <Property Type="Int32" Name="CountryID" Nullable="true" />
+          <Property Type="Int32" Name="StateID" Nullable="true" />
+          <Property Type="String" Name="City" Nullable="true" />
+          <Property Type="Int32" Name="CompanyOrSoftwareID" Nullable="true" />
+          <Property Type="String" Name="WebsiteURL" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="NewsTitle" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="NewsDescription" Nullable="true" />
+          <Property Type="String" Name="ImageName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="YoutubeURL" Nullable="true" MaxLength="250" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="CreatedBy" Nullable="true" />
+          <Property Type="Boolean" Name="IsAdmin" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="Sp_GetDashboardInfoForUser_Result">
+          <Property Type="String" Name="CompanySoftwareName" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="CompanySoftwareID" Nullable="true" />
+          <Property Type="Boolean" Name="IsAdmin" Nullable="true" />
+          <Property Type="Boolean" Name="IsCompany" Nullable="true" />
+          <Property Type="Boolean" Name="IsAdminApproved" Nullable="true" />
+          <Property Type="Boolean" Name="IsUserApproved" Nullable="true" />
+          <Property Type="Int32" Name="UserType" Nullable="true" />
+          <Property Type="Boolean" Name="IsDashboard" Nullable="true" />
+          <Property Type="Boolean" Name="IsService" Nullable="true" />
+          <Property Type="Boolean" Name="IsSoftware" Nullable="true" />
+          <Property Type="Boolean" Name="IsJobListing" Nullable="true" />
+          <Property Type="Boolean" Name="IsEmployees" Nullable="true" />
+          <Property Type="Boolean" Name="IsNews" Nullable="true" />
+          <Property Type="Boolean" Name="IsPortFolio" Nullable="true" />
+          <Property Type="Boolean" Name="IsReview" Nullable="true" />
+          <Property Type="Boolean" Name="IsPricing" Nullable="true" />
+          <Property Type="Boolean" Name="IsBadges" Nullable="true" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -1729,6 +2347,8 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <EntitySetMapping Name="CompanyReviews">
             <EntityTypeMapping TypeName="UpVotesModel.CompanyReview">
               <MappingFragment StoreEntitySet="CompanyReviews">
+                <ScalarProperty Name="ReviewerUserName" ColumnName="ReviewerUserName" />
+                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
                 <ScalarProperty Name="Phone" ColumnName="Phone" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="ReviewDate" ColumnName="ReviewDate" />
@@ -1870,6 +2490,7 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
             <ResultMapping>
               <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetCompanyReviews_Result">
                 <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
                 <ScalarProperty Name="CompanyReviewID" ColumnName="CompanyReviewID" />
                 <ScalarProperty Name="ReviewerFullName" ColumnName="ReviewerFullName" />
                 <ScalarProperty Name="ReviewerCompanyName" ColumnName="ReviewerCompanyName" />
@@ -1880,6 +2501,7 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
                 <ScalarProperty Name="Rating" ColumnName="Rating" />
                 <ScalarProperty Name="ReviewDate" ColumnName="ReviewDate" />
                 <ScalarProperty Name="UserProfilePicture" ColumnName="UserProfilePicture" />
+                <ScalarProperty Name="NoOfThankNotes" ColumnName="NoOfThankNotes" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -2012,6 +2634,7 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
                 <ScalarProperty Name="FocusAreaName" ColumnName="FocusAreaName" />
                 <ScalarProperty Name="SubFocusAreaName" ColumnName="SubFocusAreaName" />
                 <ScalarProperty Name="SubFocusAreaPercentage" ColumnName="SubFocusAreaPercentage" />
+              <ScalarProperty Name="FocusAreaID" ColumnName="FocusAreaID" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -2031,6 +2654,7 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <EntitySetMapping Name="CategoryBasedMetaTags">
             <EntityTypeMapping TypeName="UpVotesModel.CategoryBasedMetaTags">
               <MappingFragment StoreEntitySet="CategoryBasedMetaTags">
+                <ScalarProperty Name="IsService" ColumnName="IsService" />
                 <ScalarProperty Name="Descriptions" ColumnName="Descriptions" />
                 <ScalarProperty Name="TwitterTitle" ColumnName="TwitterTitle" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
@@ -2173,6 +2797,7 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
                 <ScalarProperty Name="ProfileURL" ColumnName="ProfileURL" />
                 <ScalarProperty Name="UpvotesURL" ColumnName="UpvotesURL" />
                 <ScalarProperty Name="UserApprovedDate" ColumnName="UserApprovedDate" />
+                <ScalarProperty Name="IsSoftware" ColumnName="IsSoftware" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -2188,6 +2813,343 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_CopyCompany" FunctionName="UpVotesModel.Store.SP_CopyCompany" />
+          <FunctionImportMapping FunctionImportName="Sp_GetCompanyListFocus" FunctionName="UpVotesModel.Store.Sp_GetCompanyListFocus">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetCompanyListFocus_Result">
+                <ScalarProperty Name="CompanyFocusID" ColumnName="CompanyFocusID" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="FocusAreaID" ColumnName="FocusAreaID" />
+                <ScalarProperty Name="FocusAreaName" ColumnName="FocusAreaName" />
+                <ScalarProperty Name="FocusAreaPercentage" ColumnName="FocusAreaPercentage" />
+                <ScalarProperty Name="SubFocusAreaName" ColumnName="SubFocusAreaName" />
+                <ScalarProperty Name="SubFocusAreaPercentage" ColumnName="SubFocusAreaPercentage" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_InsertUpdateUser" FunctionName="UpVotesModel.Store.Sp_InsertUpdateUser">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_InsertUpdateUser_Result">
+                <ScalarProperty Name="ProfilePictureURL" ColumnName="ProfilePictureURL" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="UserType" ColumnName="UserType" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_ChangeForgetPassword" FunctionName="UpVotesModel.Store.Sp_ChangeForgetPassword">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_ChangeForgetPassword_Result">
+                <ScalarProperty Name="ProfilePictureURL" ColumnName="ProfilePictureURL" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="UserType" ColumnName="UserType" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_LoginRegisteredUser" FunctionName="UpVotesModel.Store.Sp_LoginRegisteredUser">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_LoginRegisteredUser_Result">
+                <ScalarProperty Name="ProfilePictureURL" ColumnName="ProfilePictureURL" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="UserType" ColumnName="UserType" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_GetTopVotesCompany" FunctionName="UpVotesModel.Store.Sp_GetTopVotesCompany">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetTopVotesCompany_Result">
+                <ScalarProperty Name="vote" ColumnName="vote" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="LogoName" ColumnName="LogoName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_GetSoftware" FunctionName="UpVotesModel.Store.Sp_GetSoftware">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetSoftware_Result">
+                <ScalarProperty Name="SoftwareID" ColumnName="SoftwareID" />
+                <ScalarProperty Name="SoftwareName" ColumnName="SoftwareName" />
+                <ScalarProperty Name="LogoName" ColumnName="LogoName" />
+                <ScalarProperty Name="TagLine" ColumnName="TagLine" />
+                <ScalarProperty Name="UserRating" ColumnName="UserRating" />
+                <ScalarProperty Name="NoOfUsersRated" ColumnName="NoOfUsersRated" />
+                <ScalarProperty Name="NoOfVotes" ColumnName="NoOfVotes" />
+                <ScalarProperty Name="IsVoted" ColumnName="IsVoted" />
+                <ScalarProperty Name="PriceRange" ColumnName="PriceRange" />
+                <ScalarProperty Name="SoftwareTrail" ColumnName="SoftwareTrail" />
+                <ScalarProperty Name="DemoURL" ColumnName="DemoURL" />
+                <ScalarProperty Name="DomainID" ColumnName="DomainID" />
+                <ScalarProperty Name="WebSiteURL" ColumnName="WebSiteURL" />
+                <ScalarProperty Name="LinkedInURL" ColumnName="LinkedInURL" />
+                <ScalarProperty Name="FaceBookURL" ColumnName="FaceBookURL" />
+                <ScalarProperty Name="TwitterURL" ColumnName="TwitterURL" />
+                <ScalarProperty Name="InstagramURL" ColumnName="InstagramURL" />
+                <ScalarProperty Name="FoundedYear" ColumnName="FoundedYear" />
+                <ScalarProperty Name="SoftwareDescription" ColumnName="SoftwareDescription" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ServiceCategoryName" ColumnName="ServiceCategoryName" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ServiceCategoryID" ColumnName="ServiceCategoryID" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Ranks" ColumnName="Ranks" />
+                <ScalarProperty Name="TotalCount" ColumnName="TotalCount" />
+                <ScalarProperty Name="IsClaim" ColumnName="IsClaim" />
+                <ScalarProperty Name="RowNumber" ColumnName="RowNumber" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_SoftwareVote" FunctionName="UpVotesModel.Store.Sp_SoftwareVote" />
+          <FunctionImportMapping FunctionImportName="Sp_SoftwareVoteUserInformation" FunctionName="UpVotesModel.Store.Sp_SoftwareVoteUserInformation">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_SoftwareVoteUserInformation_Result">
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="ProfileURL" ColumnName="ProfileURL" />
+                <ScalarProperty Name="ProfilePictureURL" ColumnName="ProfilePictureURL" />
+                <ScalarProperty Name="SoftwareName" ColumnName="SoftwareName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_GetSoftwareReviews" FunctionName="UpVotesModel.Store.Sp_GetSoftwareReviews">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetSoftwareReviews_Result">
+                <ScalarProperty Name="SoftwareID" ColumnName="SoftwareID" />
+                <ScalarProperty Name="SoftwareName" ColumnName="SoftwareName" />
+                <ScalarProperty Name="SoftwareReviewID" ColumnName="SoftwareReviewID" />
+                <ScalarProperty Name="ReviewerFullName" ColumnName="ReviewerFullName" />
+                <ScalarProperty Name="ReviewerSoftwareName" ColumnName="ReviewerSoftwareName" />
+                <ScalarProperty Name="ReviewerDesignation" ColumnName="ReviewerDesignation" />
+                <ScalarProperty Name="ReviewerProjectName" ColumnName="ReviewerProjectName" />
+                <ScalarProperty Name="ServiceCategoryName" ColumnName="ServiceCategoryName" />
+                <ScalarProperty Name="FeedBack" ColumnName="FeedBack" />
+                <ScalarProperty Name="Rating" ColumnName="Rating" />
+                <ScalarProperty Name="ReviewDate" ColumnName="ReviewDate" />
+                <ScalarProperty Name="UserProfilePicture" ColumnName="UserProfilePicture" />
+                <ScalarProperty Name="NoOfThankNotes" ColumnName="NoOfThankNotes" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_GetSoftwareReviewThankNotedUsers" FunctionName="UpVotesModel.Store.Sp_GetSoftwareReviewThankNotedUsers">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetSoftwareReviewThankNotedUsers_Result">
+                <ScalarProperty Name="SoftwareID" ColumnName="SoftwareID" />
+                <ScalarProperty Name="SoftwareReviewID" ColumnName="SoftwareReviewID" />
+                <ScalarProperty Name="SoftwareReviewThankNoteID" ColumnName="SoftwareReviewThankNoteID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="ThankNotedFullName" ColumnName="ThankNotedFullName" />
+                <ScalarProperty Name="ThankNoteDate" ColumnName="ThankNoteDate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_InsSoftwareReviewForThanksNote" FunctionName="UpVotesModel.Store.Sp_InsSoftwareReviewForThanksNote" />
+          <FunctionImportMapping FunctionImportName="Sp_InsCompanyReviewForThanksNote" FunctionName="UpVotesModel.Store.Sp_InsCompanyReviewForThanksNote" />
+          <FunctionImportMapping FunctionImportName="Sp_CompanyVote" FunctionName="UpVotesModel.Store.Sp_CompanyVote" />
+          <FunctionImportMapping FunctionImportName="Sp_CompanyVoteUserInformation" FunctionName="UpVotesModel.Store.Sp_CompanyVoteUserInformation">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_CompanyVoteUserInformation_Result">
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="ProfileURL" ColumnName="ProfileURL" />
+                <ScalarProperty Name="ProfilePictureURL" ColumnName="ProfilePictureURL" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_InsertUpdateClaimSoftwareListing" FunctionName="UpVotesModel.Store.Sp_InsertUpdateClaimSoftwareListing" />
+          <FunctionImportMapping FunctionImportName="Sp_GetCompanySoftwareNamesForAutoComplete" FunctionName="UpVotesModel.Store.Sp_GetCompanySoftwareNamesForAutoComplete">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetCompanySoftwareNamesForAutoComplete_Result">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_InsCompanyReview" FunctionName="UpVotesModel.Store.Sp_InsCompanyReview" />
+          <FunctionImportMapping FunctionImportName="Sp_InsSoftwareReview" FunctionName="UpVotesModel.Store.Sp_InsSoftwareReview" />
+          <FunctionImportMapping FunctionImportName="Sp_GetCompanyReviewsForListingPage" FunctionName="UpVotesModel.Store.Sp_GetCompanyReviewsForListingPage">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetCompanyReviewsForListingPage_Result">
+                <ScalarProperty Name="CompanyReviewID" ColumnName="CompanyReviewID" />
+                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="ReviewerFullName" ColumnName="ReviewerFullName" />
+                <ScalarProperty Name="ReviewerCompanyName" ColumnName="ReviewerCompanyName" />
+                <ScalarProperty Name="ReviewerDesignation" ColumnName="ReviewerDesignation" />
+                <ScalarProperty Name="ReviewerProjectName" ColumnName="ReviewerProjectName" />
+                <ScalarProperty Name="FocusAreaName" ColumnName="FocusAreaName" />
+                <ScalarProperty Name="FeedBack" ColumnName="FeedBack" />
+                <ScalarProperty Name="Rating" ColumnName="Rating" />
+                <ScalarProperty Name="ReviewDate" ColumnName="ReviewDate" />
+                <ScalarProperty Name="UserProfilePicture" ColumnName="UserProfilePicture" />
+                <ScalarProperty Name="NoOfReviews" ColumnName="NoOfReviews" />
+                <ScalarProperty Name="ThankYouCount" ColumnName="ThankYouCount" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_GetSoftwareReviewsForListingPage" FunctionName="UpVotesModel.Store.Sp_GetSoftwareReviewsForListingPage">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetSoftwareReviewsForListingPage_Result">
+                <ScalarProperty Name="SoftwareReviewID" ColumnName="SoftwareReviewID" />
+                <ScalarProperty Name="SoftwareId" ColumnName="SoftwareId" />
+                <ScalarProperty Name="SoftwareName" ColumnName="SoftwareName" />
+                <ScalarProperty Name="ReviewerFullName" ColumnName="ReviewerFullName" />
+                <ScalarProperty Name="ReviewerSoftwareName" ColumnName="ReviewerSoftwareName" />
+                <ScalarProperty Name="ReviewerDesignation" ColumnName="ReviewerDesignation" />
+                <ScalarProperty Name="ReviewerProjectName" ColumnName="ReviewerProjectName" />
+                <ScalarProperty Name="ServiceCategoryName" ColumnName="ServiceCategoryName" />
+                <ScalarProperty Name="FeedBack" ColumnName="FeedBack" />
+                <ScalarProperty Name="Rating" ColumnName="Rating" />
+                <ScalarProperty Name="ReviewDate" ColumnName="ReviewDate" />
+                <ScalarProperty Name="UserProfilePicture" ColumnName="UserProfilePicture" />
+                <ScalarProperty Name="NoOfReviews" ColumnName="NoOfReviews" />
+                <ScalarProperty Name="ThankYouCount" ColumnName="ThankYouCount" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_GetSoftwareCompanyNews" FunctionName="UpVotesModel.Store.Sp_GetSoftwareCompanyNews">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetSoftwareCompanyNews_Result">
+                <ScalarProperty Name="CompanySoftwareNewsID" ColumnName="CompanySoftwareNewsID" />
+                <ScalarProperty Name="IsCompanySoftware" ColumnName="IsCompanySoftware" />
+                <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
+                <ScalarProperty Name="SubCategoryID" ColumnName="SubCategoryID" />
+                <ScalarProperty Name="CountryID" ColumnName="CountryID" />
+                <ScalarProperty Name="StateID" ColumnName="StateID" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="CompanyOrSoftwareID" ColumnName="CompanyOrSoftwareID" />
+                <ScalarProperty Name="WebsiteURL" ColumnName="WebsiteURL" />
+                <ScalarProperty Name="NewsTitle" ColumnName="NewsTitle" />
+                <ScalarProperty Name="NewsDescription" ColumnName="NewsDescription" />
+                <ScalarProperty Name="ImageName" ColumnName="ImageName" />
+                <ScalarProperty Name="YoutubeURL" ColumnName="YoutubeURL" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="categoryname" ColumnName="categoryname" />
+                <ScalarProperty Name="subcategoryname" ColumnName="subcategoryname" />
+                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+                <ScalarProperty Name="StateName" ColumnName="StateName" />
+                <ScalarProperty Name="SoftwareCompanyName" ColumnName="SoftwareCompanyName" />
+                <ScalarProperty Name="LogoName" ColumnName="LogoName" />
+                <ScalarProperty Name="isRelated" ColumnName="isRelated" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_GetSoftwareCompanyNewsByName" FunctionName="UpVotesModel.Store.Sp_GetSoftwareCompanyNewsByName">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetSoftwareCompanyNewsByName_Result">
+                <ScalarProperty Name="CompanySoftwareNewsID" ColumnName="CompanySoftwareNewsID" />
+                <ScalarProperty Name="IsCompanySoftware" ColumnName="IsCompanySoftware" />
+                <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
+                <ScalarProperty Name="SubCategoryID" ColumnName="SubCategoryID" />
+                <ScalarProperty Name="CountryID" ColumnName="CountryID" />
+                <ScalarProperty Name="StateID" ColumnName="StateID" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="CompanyOrSoftwareID" ColumnName="CompanyOrSoftwareID" />
+                <ScalarProperty Name="WebsiteURL" ColumnName="WebsiteURL" />
+                <ScalarProperty Name="NewsTitle" ColumnName="NewsTitle" />
+                <ScalarProperty Name="NewsDescription" ColumnName="NewsDescription" />
+                <ScalarProperty Name="ImageName" ColumnName="ImageName" />
+                <ScalarProperty Name="YoutubeURL" ColumnName="YoutubeURL" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="categoryname" ColumnName="categoryname" />
+                <ScalarProperty Name="subcategoryname" ColumnName="subcategoryname" />
+                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+                <ScalarProperty Name="StateName" ColumnName="StateName" />
+                <ScalarProperty Name="SoftwareCompanyName" ColumnName="SoftwareCompanyName" />
+                <ScalarProperty Name="LogoName" ColumnName="LogoName" />
+                <ScalarProperty Name="isRelated" ColumnName="isRelated" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_GetCompanyPortFolioByName" FunctionName="UpVotesModel.Store.Sp_GetCompanyPortFolioByName">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetCompanyPortFolioByName_Result">
+                <ScalarProperty Name="CompanyPortFolioID" ColumnName="CompanyPortFolioID" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="ImageURL" ColumnName="ImageURL" />
+                <ScalarProperty Name="VideoURL" ColumnName="VideoURL" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_GetCountry" FunctionName="UpVotesModel.Store.Sp_GetCountry">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetCountry_Result">
+                <ScalarProperty Name="CountryID" ColumnName="CountryID" />
+                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_GetStateByCountryID" FunctionName="UpVotesModel.Store.Sp_GetStateByCountryID">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetStateByCountryID_Result">
+                <ScalarProperty Name="StateID" ColumnName="StateID" />
+                <ScalarProperty Name="StateName" ColumnName="StateName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_GetSubFocusAreaByFocusID" FunctionName="UpVotesModel.Store.Sp_GetSubFocusAreaByFocusID">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetSubFocusAreaByFocusID_Result">
+                <ScalarProperty Name="SubFocusAreaID" ColumnName="SubFocusAreaID" />
+                <ScalarProperty Name="SubFocusAreaName" ColumnName="SubFocusAreaName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_IsNewsExists" FunctionName="UpVotesModel.Store.Sp_IsNewsExists">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_IsNewsExists_Result">
+                <ScalarProperty Name="CompanySoftwareNewsID" ColumnName="CompanySoftwareNewsID" />
+                <ScalarProperty Name="IsCompanySoftware" ColumnName="IsCompanySoftware" />
+                <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
+                <ScalarProperty Name="SubCategoryID" ColumnName="SubCategoryID" />
+                <ScalarProperty Name="CountryID" ColumnName="CountryID" />
+                <ScalarProperty Name="StateID" ColumnName="StateID" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="CompanyOrSoftwareID" ColumnName="CompanyOrSoftwareID" />
+                <ScalarProperty Name="WebsiteURL" ColumnName="WebsiteURL" />
+                <ScalarProperty Name="NewsTitle" ColumnName="NewsTitle" />
+                <ScalarProperty Name="NewsDescription" ColumnName="NewsDescription" />
+                <ScalarProperty Name="ImageName" ColumnName="ImageName" />
+                <ScalarProperty Name="YoutubeURL" ColumnName="YoutubeURL" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="IsAdmin" ColumnName="IsAdmin" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_InsAdminNews" FunctionName="UpVotesModel.Store.Sp_InsAdminNews" />
+          <FunctionImportMapping FunctionImportName="Sp_GetDashboardInfoForUser" FunctionName="UpVotesModel.Store.Sp_GetDashboardInfoForUser">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetDashboardInfoForUser_Result">
+                <ScalarProperty Name="CompanySoftwareName" ColumnName="CompanySoftwareName" />
+                <ScalarProperty Name="CompanySoftwareID" ColumnName="CompanySoftwareID" />
+                <ScalarProperty Name="IsAdmin" ColumnName="IsAdmin" />
+                <ScalarProperty Name="IsCompany" ColumnName="IsCompany" />
+                <ScalarProperty Name="IsAdminApproved" ColumnName="IsAdminApproved" />
+                <ScalarProperty Name="IsUserApproved" ColumnName="IsUserApproved" />
+                <ScalarProperty Name="UserType" ColumnName="UserType" />
+                <ScalarProperty Name="IsDashboard" ColumnName="IsDashboard" />
+                <ScalarProperty Name="IsService" ColumnName="IsService" />
+                <ScalarProperty Name="IsSoftware" ColumnName="IsSoftware" />
+                <ScalarProperty Name="IsJobListing" ColumnName="IsJobListing" />
+                <ScalarProperty Name="IsEmployees" ColumnName="IsEmployees" />
+                <ScalarProperty Name="IsNews" ColumnName="IsNews" />
+                <ScalarProperty Name="IsPortFolio" ColumnName="IsPortFolio" />
+                <ScalarProperty Name="IsReview" ColumnName="IsReview" />
+                <ScalarProperty Name="IsPricing" ColumnName="IsPricing" />
+                <ScalarProperty Name="IsBadges" ColumnName="IsBadges" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_InsUserNews" FunctionName="UpVotesModel.Store.Sp_InsUserNews" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

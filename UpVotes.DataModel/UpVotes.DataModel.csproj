@@ -108,7 +108,13 @@
     <Compile Include="Sp_CategoryMetaTags_Result.cs">
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Sp_ChangeForgetPassword_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Sp_CheckForCompanyAndAdminUser_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_CompanyVoteUserInformation_Result.cs">
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Sp_GetClaimListingsForApproval_Result.cs">
@@ -123,7 +129,16 @@
     <Compile Include="Sp_GetCompanyFocus_Result.cs">
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Sp_GetCompanyListFocus_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_GetCompanyPortFolioByName_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Sp_GetCompanyPortFolio_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_GetCompanyReviewsForListingPage_Result.cs">
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Sp_GetCompanyReviews_Result.cs">
@@ -132,7 +147,16 @@
     <Compile Include="Sp_GetCompanyReviewThankNotedUsers_Result.cs">
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Sp_GetCompanySoftwareNamesForAutoComplete_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Sp_GetCompany_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_GetCountry_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_GetDashboardInfoForUser_Result.cs">
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Sp_GetFocusArea_Result.cs">
@@ -144,7 +168,46 @@
     <Compile Include="Sp_GetQuoteForMobileApp_Result.cs">
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Sp_GetSoftwareCompanyNewsByName_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_GetSoftwareCompanyNews_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_GetSoftwareReviewsForListingPage_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_GetSoftwareReviews_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_GetSoftwareReviewThankNotedUsers_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_GetSoftware_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_GetStateByCountryID_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_GetSubFocusAreaByFocusID_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Sp_GetSubFocus_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_GetTopVotesCompany_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_InsertUpdateUser_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_IsNewsExists_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_LoginRegisteredUser_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_SoftwareVoteUserInformation_Result.cs">
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="State.cs">

@@ -86,13 +86,17 @@ namespace UpVotes.DataModel
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetFocusArea_Result>("Sp_GetFocusArea");
         }
     
-        public virtual ObjectResult<Sp_GetCompanyReviews_Result> Sp_GetCompanyReviews(string companyName)
+        public virtual ObjectResult<Sp_GetCompanyReviews_Result> Sp_GetCompanyReviews(string companyName, Nullable<int> noOfRows)
         {
             var companyNameParameter = companyName != null ?
                 new ObjectParameter("companyName", companyName) :
                 new ObjectParameter("companyName", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetCompanyReviews_Result>("Sp_GetCompanyReviews", companyNameParameter);
+            var noOfRowsParameter = noOfRows.HasValue ?
+                new ObjectParameter("NoOfRows", noOfRows) :
+                new ObjectParameter("NoOfRows", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetCompanyReviews_Result>("Sp_GetCompanyReviews", companyNameParameter, noOfRowsParameter);
         }
     
         public virtual ObjectResult<Sp_GetCompany_Result> Sp_GetCompany(string companyName, Nullable<decimal> minRate, Nullable<decimal> maxRate, Nullable<int> minEmployee, Nullable<int> maxEmployee, string sortByVotes, Nullable<int> focusAreaID, Nullable<int> userID, string location, Nullable<int> pageNo, Nullable<int> pageSize, string subFocusArea)
@@ -295,7 +299,7 @@ namespace UpVotes.DataModel
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("Sp_GetDistinctSubFocusNames", companyIDParameter);
         }
     
-        public virtual ObjectResult<Sp_CategoryMetaTags_Result> Sp_CategoryMetaTags(string focusAreaName, string subFocusAreaName)
+        public virtual ObjectResult<Sp_CategoryMetaTags_Result> Sp_CategoryMetaTags(string focusAreaName, string subFocusAreaName, Nullable<bool> isService)
         {
             var focusAreaNameParameter = focusAreaName != null ?
                 new ObjectParameter("FocusAreaName", focusAreaName) :
@@ -305,7 +309,11 @@ namespace UpVotes.DataModel
                 new ObjectParameter("SubFocusAreaName", subFocusAreaName) :
                 new ObjectParameter("SubFocusAreaName", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_CategoryMetaTags_Result>("Sp_CategoryMetaTags", focusAreaNameParameter, subFocusAreaNameParameter);
+            var isServiceParameter = isService.HasValue ?
+                new ObjectParameter("IsService", isService) :
+                new ObjectParameter("IsService", typeof(bool));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_CategoryMetaTags_Result>("Sp_CategoryMetaTags", focusAreaNameParameter, subFocusAreaNameParameter, isServiceParameter);
         }
     
         public virtual ObjectResult<Sp_GetCompanyBranches_Result> Sp_GetCompanyBranches(Nullable<int> companyID)
@@ -405,6 +413,644 @@ namespace UpVotes.DataModel
                 new ObjectParameter("companyID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_CopyCompany", companyIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_GetCompanyListFocus_Result> Sp_GetCompanyListFocus(Nullable<int> companyID, Nullable<int> focusAreaID, string subFocusArea)
+        {
+            var companyIDParameter = companyID.HasValue ?
+                new ObjectParameter("CompanyID", companyID) :
+                new ObjectParameter("CompanyID", typeof(int));
+    
+            var focusAreaIDParameter = focusAreaID.HasValue ?
+                new ObjectParameter("focusAreaID", focusAreaID) :
+                new ObjectParameter("focusAreaID", typeof(int));
+    
+            var subFocusAreaParameter = subFocusArea != null ?
+                new ObjectParameter("subFocusArea", subFocusArea) :
+                new ObjectParameter("subFocusArea", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetCompanyListFocus_Result>("Sp_GetCompanyListFocus", companyIDParameter, focusAreaIDParameter, subFocusAreaParameter);
+        }
+    
+        public virtual ObjectResult<Sp_InsertUpdateUser_Result> Sp_InsertUpdateUser(string userName, string userPassword, string firstName, string lastName, string userEmail, string userMobile, Nullable<bool> isActive, Nullable<bool> isBlocked, Nullable<System.DateTime> userActivatedDateTime, Nullable<System.DateTime> userLastLoginDateTime, string remarks, Nullable<System.DateTime> dateOfBirth, string profilePictureURL, string profileID, string profileURL, Nullable<int> userType)
+        {
+            var userNameParameter = userName != null ?
+                new ObjectParameter("UserName", userName) :
+                new ObjectParameter("UserName", typeof(string));
+    
+            var userPasswordParameter = userPassword != null ?
+                new ObjectParameter("UserPassword", userPassword) :
+                new ObjectParameter("UserPassword", typeof(string));
+    
+            var firstNameParameter = firstName != null ?
+                new ObjectParameter("FirstName", firstName) :
+                new ObjectParameter("FirstName", typeof(string));
+    
+            var lastNameParameter = lastName != null ?
+                new ObjectParameter("LastName", lastName) :
+                new ObjectParameter("LastName", typeof(string));
+    
+            var userEmailParameter = userEmail != null ?
+                new ObjectParameter("UserEmail", userEmail) :
+                new ObjectParameter("UserEmail", typeof(string));
+    
+            var userMobileParameter = userMobile != null ?
+                new ObjectParameter("UserMobile", userMobile) :
+                new ObjectParameter("UserMobile", typeof(string));
+    
+            var isActiveParameter = isActive.HasValue ?
+                new ObjectParameter("IsActive", isActive) :
+                new ObjectParameter("IsActive", typeof(bool));
+    
+            var isBlockedParameter = isBlocked.HasValue ?
+                new ObjectParameter("IsBlocked", isBlocked) :
+                new ObjectParameter("IsBlocked", typeof(bool));
+    
+            var userActivatedDateTimeParameter = userActivatedDateTime.HasValue ?
+                new ObjectParameter("UserActivatedDateTime", userActivatedDateTime) :
+                new ObjectParameter("UserActivatedDateTime", typeof(System.DateTime));
+    
+            var userLastLoginDateTimeParameter = userLastLoginDateTime.HasValue ?
+                new ObjectParameter("UserLastLoginDateTime", userLastLoginDateTime) :
+                new ObjectParameter("UserLastLoginDateTime", typeof(System.DateTime));
+    
+            var remarksParameter = remarks != null ?
+                new ObjectParameter("Remarks", remarks) :
+                new ObjectParameter("Remarks", typeof(string));
+    
+            var dateOfBirthParameter = dateOfBirth.HasValue ?
+                new ObjectParameter("DateOfBirth", dateOfBirth) :
+                new ObjectParameter("DateOfBirth", typeof(System.DateTime));
+    
+            var profilePictureURLParameter = profilePictureURL != null ?
+                new ObjectParameter("ProfilePictureURL", profilePictureURL) :
+                new ObjectParameter("ProfilePictureURL", typeof(string));
+    
+            var profileIDParameter = profileID != null ?
+                new ObjectParameter("ProfileID", profileID) :
+                new ObjectParameter("ProfileID", typeof(string));
+    
+            var profileURLParameter = profileURL != null ?
+                new ObjectParameter("ProfileURL", profileURL) :
+                new ObjectParameter("ProfileURL", typeof(string));
+    
+            var userTypeParameter = userType.HasValue ?
+                new ObjectParameter("UserType", userType) :
+                new ObjectParameter("UserType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_InsertUpdateUser_Result>("Sp_InsertUpdateUser", userNameParameter, userPasswordParameter, firstNameParameter, lastNameParameter, userEmailParameter, userMobileParameter, isActiveParameter, isBlockedParameter, userActivatedDateTimeParameter, userLastLoginDateTimeParameter, remarksParameter, dateOfBirthParameter, profilePictureURLParameter, profileIDParameter, profileURLParameter, userTypeParameter);
+        }
+    
+        public virtual ObjectResult<Sp_ChangeForgetPassword_Result> Sp_ChangeForgetPassword(string userName, Nullable<int> userID, string oldPassword, string newPassword)
+        {
+            var userNameParameter = userName != null ?
+                new ObjectParameter("UserName", userName) :
+                new ObjectParameter("UserName", typeof(string));
+    
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("userID", userID) :
+                new ObjectParameter("userID", typeof(int));
+    
+            var oldPasswordParameter = oldPassword != null ?
+                new ObjectParameter("OldPassword", oldPassword) :
+                new ObjectParameter("OldPassword", typeof(string));
+    
+            var newPasswordParameter = newPassword != null ?
+                new ObjectParameter("NewPassword", newPassword) :
+                new ObjectParameter("NewPassword", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_ChangeForgetPassword_Result>("Sp_ChangeForgetPassword", userNameParameter, userIDParameter, oldPasswordParameter, newPasswordParameter);
+        }
+    
+        public virtual ObjectResult<Sp_LoginRegisteredUser_Result> Sp_LoginRegisteredUser(string userName, string userPassword)
+        {
+            var userNameParameter = userName != null ?
+                new ObjectParameter("UserName", userName) :
+                new ObjectParameter("UserName", typeof(string));
+    
+            var userPasswordParameter = userPassword != null ?
+                new ObjectParameter("UserPassword", userPassword) :
+                new ObjectParameter("UserPassword", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_LoginRegisteredUser_Result>("Sp_LoginRegisteredUser", userNameParameter, userPasswordParameter);
+        }
+    
+        public virtual ObjectResult<Sp_GetTopVotesCompany_Result> Sp_GetTopVotesCompany()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetTopVotesCompany_Result>("Sp_GetTopVotesCompany");
+        }
+    
+        public virtual ObjectResult<Sp_GetSoftware_Result> Sp_GetSoftware(Nullable<int> servicecategoryid, string softwarename, Nullable<int> userID, Nullable<int> pageNo, Nullable<int> pageSize, string sortByVotes)
+        {
+            var servicecategoryidParameter = servicecategoryid.HasValue ?
+                new ObjectParameter("servicecategoryid", servicecategoryid) :
+                new ObjectParameter("servicecategoryid", typeof(int));
+    
+            var softwarenameParameter = softwarename != null ?
+                new ObjectParameter("softwarename", softwarename) :
+                new ObjectParameter("softwarename", typeof(string));
+    
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("userID", userID) :
+                new ObjectParameter("userID", typeof(int));
+    
+            var pageNoParameter = pageNo.HasValue ?
+                new ObjectParameter("PageNo", pageNo) :
+                new ObjectParameter("PageNo", typeof(int));
+    
+            var pageSizeParameter = pageSize.HasValue ?
+                new ObjectParameter("PageSize", pageSize) :
+                new ObjectParameter("PageSize", typeof(int));
+    
+            var sortByVotesParameter = sortByVotes != null ?
+                new ObjectParameter("sortByVotes", sortByVotes) :
+                new ObjectParameter("sortByVotes", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetSoftware_Result>("Sp_GetSoftware", servicecategoryidParameter, softwarenameParameter, userIDParameter, pageNoParameter, pageSizeParameter, sortByVotesParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<decimal>> Sp_SoftwareVote(Nullable<int> userID, Nullable<int> softwareID)
+        {
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(int));
+    
+            var softwareIDParameter = softwareID.HasValue ?
+                new ObjectParameter("SoftwareID", softwareID) :
+                new ObjectParameter("SoftwareID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("Sp_SoftwareVote", userIDParameter, softwareIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_SoftwareVoteUserInformation_Result> Sp_SoftwareVoteUserInformation(Nullable<int> userID, Nullable<int> softwareID)
+        {
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(int));
+    
+            var softwareIDParameter = softwareID.HasValue ?
+                new ObjectParameter("SoftwareID", softwareID) :
+                new ObjectParameter("SoftwareID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_SoftwareVoteUserInformation_Result>("Sp_SoftwareVoteUserInformation", userIDParameter, softwareIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_GetSoftwareReviews_Result> Sp_GetSoftwareReviews(string softwareName, Nullable<int> noOfRows)
+        {
+            var softwareNameParameter = softwareName != null ?
+                new ObjectParameter("softwareName", softwareName) :
+                new ObjectParameter("softwareName", typeof(string));
+    
+            var noOfRowsParameter = noOfRows.HasValue ?
+                new ObjectParameter("NoOfRows", noOfRows) :
+                new ObjectParameter("NoOfRows", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetSoftwareReviews_Result>("Sp_GetSoftwareReviews", softwareNameParameter, noOfRowsParameter);
+        }
+    
+        public virtual ObjectResult<Sp_GetSoftwareReviewThankNotedUsers_Result> Sp_GetSoftwareReviewThankNotedUsers(Nullable<int> softwareID, Nullable<int> softwareReviewID)
+        {
+            var softwareIDParameter = softwareID.HasValue ?
+                new ObjectParameter("SoftwareID", softwareID) :
+                new ObjectParameter("SoftwareID", typeof(int));
+    
+            var softwareReviewIDParameter = softwareReviewID.HasValue ?
+                new ObjectParameter("SoftwareReviewID", softwareReviewID) :
+                new ObjectParameter("SoftwareReviewID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetSoftwareReviewThankNotedUsers_Result>("Sp_GetSoftwareReviewThankNotedUsers", softwareIDParameter, softwareReviewIDParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<decimal>> Sp_InsSoftwareReviewForThanksNote(Nullable<int> userID, Nullable<int> softwareReviewID)
+        {
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(int));
+    
+            var softwareReviewIDParameter = softwareReviewID.HasValue ?
+                new ObjectParameter("SoftwareReviewID", softwareReviewID) :
+                new ObjectParameter("SoftwareReviewID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("Sp_InsSoftwareReviewForThanksNote", userIDParameter, softwareReviewIDParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<decimal>> Sp_InsCompanyReviewForThanksNote(Nullable<int> userID, Nullable<int> companyReviewID)
+        {
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(int));
+    
+            var companyReviewIDParameter = companyReviewID.HasValue ?
+                new ObjectParameter("CompanyReviewID", companyReviewID) :
+                new ObjectParameter("CompanyReviewID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("Sp_InsCompanyReviewForThanksNote", userIDParameter, companyReviewIDParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<decimal>> Sp_CompanyVote(Nullable<int> userID, Nullable<int> companyID)
+        {
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(int));
+    
+            var companyIDParameter = companyID.HasValue ?
+                new ObjectParameter("CompanyID", companyID) :
+                new ObjectParameter("CompanyID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("Sp_CompanyVote", userIDParameter, companyIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_CompanyVoteUserInformation_Result> Sp_CompanyVoteUserInformation(Nullable<int> userID, Nullable<int> companyID)
+        {
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(int));
+    
+            var companyIDParameter = companyID.HasValue ?
+                new ObjectParameter("CompanyID", companyID) :
+                new ObjectParameter("CompanyID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_CompanyVoteUserInformation_Result>("Sp_CompanyVoteUserInformation", userIDParameter, companyIDParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<int>> Sp_InsertUpdateClaimSoftwareListing(Nullable<int> claimSoftwareListingID, Nullable<int> softwareID, Nullable<int> userID, Nullable<bool> isUserApproved, string workEmail)
+        {
+            var claimSoftwareListingIDParameter = claimSoftwareListingID.HasValue ?
+                new ObjectParameter("ClaimSoftwareListingID", claimSoftwareListingID) :
+                new ObjectParameter("ClaimSoftwareListingID", typeof(int));
+    
+            var softwareIDParameter = softwareID.HasValue ?
+                new ObjectParameter("softwareID", softwareID) :
+                new ObjectParameter("softwareID", typeof(int));
+    
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("userID", userID) :
+                new ObjectParameter("userID", typeof(int));
+    
+            var isUserApprovedParameter = isUserApproved.HasValue ?
+                new ObjectParameter("IsUserApproved", isUserApproved) :
+                new ObjectParameter("IsUserApproved", typeof(bool));
+    
+            var workEmailParameter = workEmail != null ?
+                new ObjectParameter("WorkEmail", workEmail) :
+                new ObjectParameter("WorkEmail", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("Sp_InsertUpdateClaimSoftwareListing", claimSoftwareListingIDParameter, softwareIDParameter, userIDParameter, isUserApprovedParameter, workEmailParameter);
+        }
+    
+        public virtual ObjectResult<Sp_GetCompanySoftwareNamesForAutoComplete_Result> Sp_GetCompanySoftwareNamesForAutoComplete(Nullable<int> type, string search)
+        {
+            var typeParameter = type.HasValue ?
+                new ObjectParameter("Type", type) :
+                new ObjectParameter("Type", typeof(int));
+    
+            var searchParameter = search != null ?
+                new ObjectParameter("Search", search) :
+                new ObjectParameter("Search", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetCompanySoftwareNamesForAutoComplete_Result>("Sp_GetCompanySoftwareNamesForAutoComplete", typeParameter, searchParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<decimal>> Sp_InsCompanyReview(Nullable<int> companyID, Nullable<int> focusAreaID, Nullable<int> userID, string reviewerCompanyName, string designation, string projectName, string feedBack, Nullable<int> rating, string email, string phone, string reviewerUserName)
+        {
+            var companyIDParameter = companyID.HasValue ?
+                new ObjectParameter("CompanyID", companyID) :
+                new ObjectParameter("CompanyID", typeof(int));
+    
+            var focusAreaIDParameter = focusAreaID.HasValue ?
+                new ObjectParameter("FocusAreaID", focusAreaID) :
+                new ObjectParameter("FocusAreaID", typeof(int));
+    
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(int));
+    
+            var reviewerCompanyNameParameter = reviewerCompanyName != null ?
+                new ObjectParameter("ReviewerCompanyName", reviewerCompanyName) :
+                new ObjectParameter("ReviewerCompanyName", typeof(string));
+    
+            var designationParameter = designation != null ?
+                new ObjectParameter("Designation", designation) :
+                new ObjectParameter("Designation", typeof(string));
+    
+            var projectNameParameter = projectName != null ?
+                new ObjectParameter("ProjectName", projectName) :
+                new ObjectParameter("ProjectName", typeof(string));
+    
+            var feedBackParameter = feedBack != null ?
+                new ObjectParameter("FeedBack", feedBack) :
+                new ObjectParameter("FeedBack", typeof(string));
+    
+            var ratingParameter = rating.HasValue ?
+                new ObjectParameter("Rating", rating) :
+                new ObjectParameter("Rating", typeof(int));
+    
+            var emailParameter = email != null ?
+                new ObjectParameter("Email", email) :
+                new ObjectParameter("Email", typeof(string));
+    
+            var phoneParameter = phone != null ?
+                new ObjectParameter("Phone", phone) :
+                new ObjectParameter("Phone", typeof(string));
+    
+            var reviewerUserNameParameter = reviewerUserName != null ?
+                new ObjectParameter("ReviewerUserName", reviewerUserName) :
+                new ObjectParameter("ReviewerUserName", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("Sp_InsCompanyReview", companyIDParameter, focusAreaIDParameter, userIDParameter, reviewerCompanyNameParameter, designationParameter, projectNameParameter, feedBackParameter, ratingParameter, emailParameter, phoneParameter, reviewerUserNameParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<decimal>> Sp_InsSoftwareReview(Nullable<int> softwareID, Nullable<int> serviceCategoryID, Nullable<int> userID, string reviewerSoftwareName, string designation, string feedBack, Nullable<int> rating, string email, string phone, string reviewerUserName)
+        {
+            var softwareIDParameter = softwareID.HasValue ?
+                new ObjectParameter("SoftwareID", softwareID) :
+                new ObjectParameter("SoftwareID", typeof(int));
+    
+            var serviceCategoryIDParameter = serviceCategoryID.HasValue ?
+                new ObjectParameter("ServiceCategoryID", serviceCategoryID) :
+                new ObjectParameter("ServiceCategoryID", typeof(int));
+    
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(int));
+    
+            var reviewerSoftwareNameParameter = reviewerSoftwareName != null ?
+                new ObjectParameter("ReviewerSoftwareName", reviewerSoftwareName) :
+                new ObjectParameter("ReviewerSoftwareName", typeof(string));
+    
+            var designationParameter = designation != null ?
+                new ObjectParameter("Designation", designation) :
+                new ObjectParameter("Designation", typeof(string));
+    
+            var feedBackParameter = feedBack != null ?
+                new ObjectParameter("FeedBack", feedBack) :
+                new ObjectParameter("FeedBack", typeof(string));
+    
+            var ratingParameter = rating.HasValue ?
+                new ObjectParameter("Rating", rating) :
+                new ObjectParameter("Rating", typeof(int));
+    
+            var emailParameter = email != null ?
+                new ObjectParameter("Email", email) :
+                new ObjectParameter("Email", typeof(string));
+    
+            var phoneParameter = phone != null ?
+                new ObjectParameter("Phone", phone) :
+                new ObjectParameter("Phone", typeof(string));
+    
+            var reviewerUserNameParameter = reviewerUserName != null ?
+                new ObjectParameter("ReviewerUserName", reviewerUserName) :
+                new ObjectParameter("ReviewerUserName", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("Sp_InsSoftwareReview", softwareIDParameter, serviceCategoryIDParameter, userIDParameter, reviewerSoftwareNameParameter, designationParameter, feedBackParameter, ratingParameter, emailParameter, phoneParameter, reviewerUserNameParameter);
+        }
+    
+        public virtual ObjectResult<Sp_GetCompanyReviewsForListingPage_Result> Sp_GetCompanyReviewsForListingPage(string companyName, Nullable<int> focusAreaId, Nullable<int> noOfReviews, Nullable<int> pageNumber, Nullable<int> pageSize)
+        {
+            var companyNameParameter = companyName != null ?
+                new ObjectParameter("companyName", companyName) :
+                new ObjectParameter("companyName", typeof(string));
+    
+            var focusAreaIdParameter = focusAreaId.HasValue ?
+                new ObjectParameter("focusAreaId", focusAreaId) :
+                new ObjectParameter("focusAreaId", typeof(int));
+    
+            var noOfReviewsParameter = noOfReviews.HasValue ?
+                new ObjectParameter("noOfReviews", noOfReviews) :
+                new ObjectParameter("noOfReviews", typeof(int));
+    
+            var pageNumberParameter = pageNumber.HasValue ?
+                new ObjectParameter("pageNumber", pageNumber) :
+                new ObjectParameter("pageNumber", typeof(int));
+    
+            var pageSizeParameter = pageSize.HasValue ?
+                new ObjectParameter("pageSize", pageSize) :
+                new ObjectParameter("pageSize", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetCompanyReviewsForListingPage_Result>("Sp_GetCompanyReviewsForListingPage", companyNameParameter, focusAreaIdParameter, noOfReviewsParameter, pageNumberParameter, pageSizeParameter);
+        }
+    
+        public virtual ObjectResult<Sp_GetSoftwareReviewsForListingPage_Result> Sp_GetSoftwareReviewsForListingPage(string softwareName, Nullable<int> serviceCategoryID, Nullable<int> noOfReviews, Nullable<int> pageNumber, Nullable<int> pageSize)
+        {
+            var softwareNameParameter = softwareName != null ?
+                new ObjectParameter("softwareName", softwareName) :
+                new ObjectParameter("softwareName", typeof(string));
+    
+            var serviceCategoryIDParameter = serviceCategoryID.HasValue ?
+                new ObjectParameter("serviceCategoryID", serviceCategoryID) :
+                new ObjectParameter("serviceCategoryID", typeof(int));
+    
+            var noOfReviewsParameter = noOfReviews.HasValue ?
+                new ObjectParameter("noOfReviews", noOfReviews) :
+                new ObjectParameter("noOfReviews", typeof(int));
+    
+            var pageNumberParameter = pageNumber.HasValue ?
+                new ObjectParameter("pageNumber", pageNumber) :
+                new ObjectParameter("pageNumber", typeof(int));
+    
+            var pageSizeParameter = pageSize.HasValue ?
+                new ObjectParameter("pageSize", pageSize) :
+                new ObjectParameter("pageSize", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetSoftwareReviewsForListingPage_Result>("Sp_GetSoftwareReviewsForListingPage", softwareNameParameter, serviceCategoryIDParameter, noOfReviewsParameter, pageNumberParameter, pageSizeParameter);
+        }
+    
+        public virtual ObjectResult<Sp_GetSoftwareCompanyNews_Result> Sp_GetSoftwareCompanyNews(Nullable<int> categoryID, string subcategory, string location, Nullable<int> isCompanySoftware, string title, Nullable<int> companySoftwareID)
+        {
+            var categoryIDParameter = categoryID.HasValue ?
+                new ObjectParameter("categoryID", categoryID) :
+                new ObjectParameter("categoryID", typeof(int));
+    
+            var subcategoryParameter = subcategory != null ?
+                new ObjectParameter("subcategory", subcategory) :
+                new ObjectParameter("subcategory", typeof(string));
+    
+            var locationParameter = location != null ?
+                new ObjectParameter("location", location) :
+                new ObjectParameter("location", typeof(string));
+    
+            var isCompanySoftwareParameter = isCompanySoftware.HasValue ?
+                new ObjectParameter("isCompanySoftware", isCompanySoftware) :
+                new ObjectParameter("isCompanySoftware", typeof(int));
+    
+            var titleParameter = title != null ?
+                new ObjectParameter("Title", title) :
+                new ObjectParameter("Title", typeof(string));
+    
+            var companySoftwareIDParameter = companySoftwareID.HasValue ?
+                new ObjectParameter("CompanySoftwareID", companySoftwareID) :
+                new ObjectParameter("CompanySoftwareID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetSoftwareCompanyNews_Result>("Sp_GetSoftwareCompanyNews", categoryIDParameter, subcategoryParameter, locationParameter, isCompanySoftwareParameter, titleParameter, companySoftwareIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_GetSoftwareCompanyNewsByName_Result> Sp_GetSoftwareCompanyNewsByName(Nullable<int> isCompanySoftware, string companySoftwareName)
+        {
+            var isCompanySoftwareParameter = isCompanySoftware.HasValue ?
+                new ObjectParameter("isCompanySoftware", isCompanySoftware) :
+                new ObjectParameter("isCompanySoftware", typeof(int));
+    
+            var companySoftwareNameParameter = companySoftwareName != null ?
+                new ObjectParameter("CompanySoftwareName", companySoftwareName) :
+                new ObjectParameter("CompanySoftwareName", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetSoftwareCompanyNewsByName_Result>("Sp_GetSoftwareCompanyNewsByName", isCompanySoftwareParameter, companySoftwareNameParameter);
+        }
+    
+        public virtual ObjectResult<Sp_GetCompanyPortFolioByName_Result> Sp_GetCompanyPortFolioByName(string companyName, Nullable<int> rows)
+        {
+            var companyNameParameter = companyName != null ?
+                new ObjectParameter("CompanyName", companyName) :
+                new ObjectParameter("CompanyName", typeof(string));
+    
+            var rowsParameter = rows.HasValue ?
+                new ObjectParameter("Rows", rows) :
+                new ObjectParameter("Rows", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetCompanyPortFolioByName_Result>("Sp_GetCompanyPortFolioByName", companyNameParameter, rowsParameter);
+        }
+    
+        public virtual ObjectResult<Sp_GetCountry_Result> Sp_GetCountry()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetCountry_Result>("Sp_GetCountry");
+        }
+    
+        public virtual ObjectResult<Sp_GetStateByCountryID_Result> Sp_GetStateByCountryID(Nullable<int> countryID)
+        {
+            var countryIDParameter = countryID.HasValue ?
+                new ObjectParameter("CountryID", countryID) :
+                new ObjectParameter("CountryID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetStateByCountryID_Result>("Sp_GetStateByCountryID", countryIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_GetSubFocusAreaByFocusID_Result> Sp_GetSubFocusAreaByFocusID(Nullable<int> focusAreaID)
+        {
+            var focusAreaIDParameter = focusAreaID.HasValue ?
+                new ObjectParameter("FocusAreaID", focusAreaID) :
+                new ObjectParameter("FocusAreaID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetSubFocusAreaByFocusID_Result>("Sp_GetSubFocusAreaByFocusID", focusAreaIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_IsNewsExists_Result> Sp_IsNewsExists(string title, string uRL)
+        {
+            var titleParameter = title != null ?
+                new ObjectParameter("Title", title) :
+                new ObjectParameter("Title", typeof(string));
+    
+            var uRLParameter = uRL != null ?
+                new ObjectParameter("URL", uRL) :
+                new ObjectParameter("URL", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_IsNewsExists_Result>("Sp_IsNewsExists", titleParameter, uRLParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<decimal>> Sp_InsAdminNews(Nullable<int> isCompanySoftware, Nullable<int> categoryID, Nullable<int> subCategoryID, Nullable<int> countryID, Nullable<int> stateID, string city, Nullable<int> companyOrSoftwareID, string websiteURL, string newsTitle, string newsDescription, string imageName, string youtubeURL, Nullable<int> createdBy)
+        {
+            var isCompanySoftwareParameter = isCompanySoftware.HasValue ?
+                new ObjectParameter("IsCompanySoftware", isCompanySoftware) :
+                new ObjectParameter("IsCompanySoftware", typeof(int));
+    
+            var categoryIDParameter = categoryID.HasValue ?
+                new ObjectParameter("CategoryID", categoryID) :
+                new ObjectParameter("CategoryID", typeof(int));
+    
+            var subCategoryIDParameter = subCategoryID.HasValue ?
+                new ObjectParameter("SubCategoryID", subCategoryID) :
+                new ObjectParameter("SubCategoryID", typeof(int));
+    
+            var countryIDParameter = countryID.HasValue ?
+                new ObjectParameter("CountryID", countryID) :
+                new ObjectParameter("CountryID", typeof(int));
+    
+            var stateIDParameter = stateID.HasValue ?
+                new ObjectParameter("StateID", stateID) :
+                new ObjectParameter("StateID", typeof(int));
+    
+            var cityParameter = city != null ?
+                new ObjectParameter("City", city) :
+                new ObjectParameter("City", typeof(string));
+    
+            var companyOrSoftwareIDParameter = companyOrSoftwareID.HasValue ?
+                new ObjectParameter("CompanyOrSoftwareID", companyOrSoftwareID) :
+                new ObjectParameter("CompanyOrSoftwareID", typeof(int));
+    
+            var websiteURLParameter = websiteURL != null ?
+                new ObjectParameter("WebsiteURL", websiteURL) :
+                new ObjectParameter("WebsiteURL", typeof(string));
+    
+            var newsTitleParameter = newsTitle != null ?
+                new ObjectParameter("NewsTitle", newsTitle) :
+                new ObjectParameter("NewsTitle", typeof(string));
+    
+            var newsDescriptionParameter = newsDescription != null ?
+                new ObjectParameter("NewsDescription", newsDescription) :
+                new ObjectParameter("NewsDescription", typeof(string));
+    
+            var imageNameParameter = imageName != null ?
+                new ObjectParameter("ImageName", imageName) :
+                new ObjectParameter("ImageName", typeof(string));
+    
+            var youtubeURLParameter = youtubeURL != null ?
+                new ObjectParameter("YoutubeURL", youtubeURL) :
+                new ObjectParameter("YoutubeURL", typeof(string));
+    
+            var createdByParameter = createdBy.HasValue ?
+                new ObjectParameter("CreatedBy", createdBy) :
+                new ObjectParameter("CreatedBy", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("Sp_InsAdminNews", isCompanySoftwareParameter, categoryIDParameter, subCategoryIDParameter, countryIDParameter, stateIDParameter, cityParameter, companyOrSoftwareIDParameter, websiteURLParameter, newsTitleParameter, newsDescriptionParameter, imageNameParameter, youtubeURLParameter, createdByParameter);
+        }
+    
+        public virtual ObjectResult<Sp_GetDashboardInfoForUser_Result> Sp_GetDashboardInfoForUser(Nullable<int> userID)
+        {
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetDashboardInfoForUser_Result>("Sp_GetDashboardInfoForUser", userIDParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<decimal>> Sp_InsUserNews(Nullable<int> isCompanySoftware, Nullable<int> categoryID, Nullable<int> companyOrSoftwareID, string websiteURL, string newsTitle, string newsDescription, string imageName, string youtubeURL, Nullable<int> createdBy)
+        {
+            var isCompanySoftwareParameter = isCompanySoftware.HasValue ?
+                new ObjectParameter("IsCompanySoftware", isCompanySoftware) :
+                new ObjectParameter("IsCompanySoftware", typeof(int));
+    
+            var categoryIDParameter = categoryID.HasValue ?
+                new ObjectParameter("CategoryID", categoryID) :
+                new ObjectParameter("CategoryID", typeof(int));
+    
+            var companyOrSoftwareIDParameter = companyOrSoftwareID.HasValue ?
+                new ObjectParameter("CompanyOrSoftwareID", companyOrSoftwareID) :
+                new ObjectParameter("CompanyOrSoftwareID", typeof(int));
+    
+            var websiteURLParameter = websiteURL != null ?
+                new ObjectParameter("WebsiteURL", websiteURL) :
+                new ObjectParameter("WebsiteURL", typeof(string));
+    
+            var newsTitleParameter = newsTitle != null ?
+                new ObjectParameter("NewsTitle", newsTitle) :
+                new ObjectParameter("NewsTitle", typeof(string));
+    
+            var newsDescriptionParameter = newsDescription != null ?
+                new ObjectParameter("NewsDescription", newsDescription) :
+                new ObjectParameter("NewsDescription", typeof(string));
+    
+            var imageNameParameter = imageName != null ?
+                new ObjectParameter("ImageName", imageName) :
+                new ObjectParameter("ImageName", typeof(string));
+    
+            var youtubeURLParameter = youtubeURL != null ?
+                new ObjectParameter("YoutubeURL", youtubeURL) :
+                new ObjectParameter("YoutubeURL", typeof(string));
+    
+            var createdByParameter = createdBy.HasValue ?
+                new ObjectParameter("CreatedBy", createdBy) :
+                new ObjectParameter("CreatedBy", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("Sp_InsUserNews", isCompanySoftwareParameter, categoryIDParameter, companyOrSoftwareIDParameter, websiteURLParameter, newsTitleParameter, newsDescriptionParameter, imageNameParameter, youtubeURLParameter, createdByParameter);
         }
     }
 }

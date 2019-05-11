@@ -20,5 +20,6 @@ namespace UpVotes.DataModel
         public string Title { get; set; }
         public string TwitterTitle { get; set; }
         public string Descriptions { get; set; }
+        public Nullable<bool> IsService { get; set; }
     }
 }

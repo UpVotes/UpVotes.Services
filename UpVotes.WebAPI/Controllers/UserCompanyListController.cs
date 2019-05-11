@@ -40,6 +40,27 @@ namespace UpVotes.WebAPI.Controllers
             }
         }
 
+        [Route("api/GetClaimListingsForApproval/{userID}")]
+        public HttpResponseMessage GetClaimListingsForApproval(int userID)
+        {
+            try
+            {
+                CompanyDetail company = _companyServices.GetClaimListingsForApproval(userID);
+                if (company != null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, company);
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "Companies not found");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }        
+
         [HttpGet]
         [Route("api/GetCountry")]
         public HttpResponseMessage GetCountry()
@@ -55,12 +76,40 @@ namespace UpVotes.WebAPI.Controllers
         }
 
         [HttpGet]
+        [Route("api/GetTopVoteCompanies")]
+        public HttpResponseMessage GetTopVoteCompanies()
+        {
+            try
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, _companyServices.GetTopVoteCompanies());
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }        
+
+        [HttpGet]
         [Route("api/GetStates/{countryID}")]
         public HttpResponseMessage GetStates(int countryID)
         {
             try
             {
                 return Request.CreateResponse(HttpStatusCode.OK, _companyServices.GetStates(countryID));
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
+
+        [HttpGet]
+        [Route("api/GetSubFocusAreaByFocusID/{FocusAreaID}")]
+        public HttpResponseMessage GetSubFocusAreaByFocusID(int FocusAreaID)
+        {
+            try
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, _companyServices.GetSubFocusAreaByFocusID(FocusAreaID));
             }
             catch (Exception ex)
             {

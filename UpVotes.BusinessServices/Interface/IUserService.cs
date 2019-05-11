@@ -7,9 +7,11 @@ namespace UpVotes.BusinessServices.Interface
     {
         int Authenticate(string userName, string password);
 
-        UserEntity InsertUser(UserEntity userEntity, UpVotesEntities _upvotesContex);
+        //UserEntity InsertUser(UserEntity userEntity, UpVotesEntities _upvotesContex);
 
-        UserEntity UpdateUser(UserEntity userEntity, User currentUse, UpVotesEntities _upvotesContex);
+        //UserEntity UpdateUser(UserEntity userEntity, User currentUse, UpVotesEntities _upvotesContex);
+
+        UserEntity InsertUpdateUser(UserEntity userEntity, UpVotesEntities _upvotesContex);
 
         bool DeleteUser(int userID);
 
@@ -21,5 +23,6 @@ namespace UpVotes.BusinessServices.Interface
         UserEntity LoginRegisteredUser(UserEntity userObj);
         UserEntity ForgotPassword(UserEntity userObj);
         UserEntity ChangePassword(ChangePassword userObj);
+        UserDashboardEntity UserDashboardInfo(int userID);
     }
 }

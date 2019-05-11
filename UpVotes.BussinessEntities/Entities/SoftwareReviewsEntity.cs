@@ -2,16 +2,16 @@
 
 namespace UpVotes.BusinessEntities.Entities
 {
-    public class CompanyReviewsEntity
+    public class SoftwareReviewsEntity
     {
-        public int CompanyReviewID { get; set; }
+        public int SoftwareReviewID { get; set; }
 
-        public int CompanyID { get; set; }
-        public string CompanyName { get; set; }
-
-        public int FocusAreaID { get; set; }
-
+        public int SoftwareID { get; set; }
+        public string SoftwareName { get; set; }
+        public int ServiceCategoryID { get; set; }
         public string ReviewerProjectName { get; set; }
+
+        public string ReviewerSoftwareName { get; set; }
 
         public string FeedBack { get; set; }
 
@@ -25,7 +25,7 @@ namespace UpVotes.BusinessEntities.Entities
 
         public string ReviewerDesignation { get; set; }
 
-        public string FocusAreaName { get; set; }
+        public string ServiceCategoryName { get; set; }
 
         public DateTime ReviewDate { get; set; }
 

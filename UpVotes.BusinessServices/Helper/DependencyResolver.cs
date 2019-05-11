@@ -14,7 +14,9 @@ namespace UpVotes.BusinessServices
             registerComponent.RegisterType<IUserService, UserService>();
             registerComponent.RegisterType<IUserTokenService, UserTokenService>();
             registerComponent.RegisterType<IFocusAreaService, FocusAreaService>();
-            registerComponent.RegisterType<ICompanyReviewsService, CompanyReviewsService>();
+            registerComponent.RegisterType<IReviewsService, ReviewsService>();
+            registerComponent.RegisterType<ISoftwareService, SoftwareService>();
+            registerComponent.RegisterType<IOverviewAndNewsService, OverviewNewsService>();
         }
     }
 }

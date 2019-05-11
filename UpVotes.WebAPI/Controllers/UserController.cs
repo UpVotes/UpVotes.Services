@@ -78,5 +78,20 @@ namespace UpVotes.WebAPI.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
             }
         }
+
+        [HttpPost]
+        [Route("api/UserDashboardInfo")]
+        public HttpResponseMessage UserDashboardInfo(UserEntity userObj)
+        {
+            try
+            {
+                UserDashboardEntity updatedUserObj = _userService.UserDashboardInfo(userObj.UserID);
+                return Request.CreateResponse(HttpStatusCode.OK, updatedUserObj);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
     }
 }

@@ -12,12 +12,15 @@ namespace UpVotes.BusinessEntities.Entities
         public int ClaimListingID { get; set; }
         public int companyID { get; set; }
         public string CompanyName { get; set; }
+        public int softwareID { get; set; }
+        public string SoftwareName { get; set; }
         public string Email { get; set; }
         public string Domain { get; set; }
         public int userID { get; set; }
         public bool IsUserVerify { get; set; }
         public bool IsAdminApproved { get; set; }
         public string RejectionComment { get; set; }
+        public string Type { get; set; }
     }
 
     public class ClaimInfoDetail
@@ -32,6 +35,7 @@ namespace UpVotes.BusinessEntities.Entities
         public string ProfileURL { get; set; }
         public string UpvotesURL { get; set; }
         public string UserApprovedDate { get; set; }
+        public bool IsSoftware { get; set; }
     }
 
     public class ServiceResponseClaim<T>

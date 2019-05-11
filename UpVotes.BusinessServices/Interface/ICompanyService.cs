@@ -16,16 +16,23 @@ namespace UpVotes.BusinessServices.Interface
         string ThanksNoteForReview(CompanyReviewThankNoteEntity companyReviewThanksNoteEntity);
 
         CompanyDetail GetUserCompanies(int userID, string companyName);
+        CompanyDetail GetClaimListingsForApproval(int userID);
 
         List<string> GetDataForAutoComplete(int type, int focusAreaID, string searchTerm);
 
-        CompanyDetail GetUserReviews(string companyName);
+        CompanyDetail GetUserReviews(string companyName, int noOfRows);
+        CompanyDetail GetAllCompanyPortfolioByName(string companyName, int noOfRows);
+
+        CompanySoftwareReviews GetReviewsForCompanyListingPage(CompanyFilterEntity filter);
 
         QuotationResponse GetQuotationData(QuotationRequest Quotationobj);
 
         List<CountryEntity> GetCountry();
 
+        List<CompanyEntity> GetTopVoteCompanies();
+
         List<StateEntity> GetStates(int countryID);
+        List<SubFocusAreaEntity> GetSubFocusAreaByFocusID(int FocusID);
 
         CategoryMetaTags GetCategoryMetaTags(string FocusAreaName, string SubFocusAreaName);
 

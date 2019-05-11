@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Net.Mail;
+using System.Threading;
 using UpVotes.BusinessEntities.Entities;
 using UpVotes.BusinessEntities.Helper;
 using UpVotes.BusinessServices.Interface;
@@ -304,6 +305,7 @@ namespace UpVotes.BusinessServices.Service
         public CompanyDetail GetAllCompanyDetails(string companyName, decimal? minRate, decimal? maxRate, int? minEmployee, int? maxEmployee, string sortby, int? focusAreaID, string location, string subFocusArea = "0", int userID = 0, int PageNo = 1, int PageSize = 10)
         {
             CompanyDetail companyDetail = new CompanyDetail();
+            OverviewNewsService newsObj = new OverviewNewsService();
             companyDetail.CompanyList = new List<CompanyEntity>();
             companyName = Helper.BasicDecryptString(companyName);
 
@@ -317,21 +319,27 @@ namespace UpVotes.BusinessServices.Service
                         if (companyName != "0")
                         {
                             company.CompanyName = System.Web.HttpUtility.HtmlEncode(company.CompanyName);
-                            company.CompanyFocus = GetCompanyFocus(company.CompanyID).ToList();
+                            company.CompanyFocus = GetCompanyListFocus(company.CompanyID, Convert.ToInt32(focusAreaID), "0").ToList();
+                            //company.CompanyFocus = GetCompanyFocus(company.CompanyID).ToList();
                             company.IndustialCompanyFocus = GetIndustrialFocus(company.CompanyID).ToList();
                             company.CompanyClientFocus = GetClientFocus(company.CompanyID).ToList();
                             company.SubfocusNames = GetDistinctSubFocusNames(company.CompanyID).ToList();
                             company.CompanySubFocus = GetCompanySubFocus(company.CompanyID).ToList();
                             company.CompanyBranches = GetCompanyBranches(company.CompanyID).ToList();
                             company.CompanyPortFolio = GetCompanyPortFolio(company.CompanyID).ToList();
-                            company.CompanyReviews = GetCompanyReviews(company.CompanyName).ToList();
-                            if (company.CompanyReviews.Count() > 0)
-                            {
-                                foreach (CompanyReviewsEntity companyReviewsEntity in company.CompanyReviews)
-                                {
-                                    companyReviewsEntity.NoOfThankNotes = GetCompanyReviewThankNotes(company.CompanyID, companyReviewsEntity.CompanyReviewID).Count();
-                                }
-                            }
+                            company.CompanyReviews = GetCompanyReviews(company.CompanyName,5).ToList();
+                            company.OverviewNewsData = newsObj.GetCompanySoftwareNewsByID(1, company.CompanyID);
+                            //if (company.CompanyReviews.Count() > 0)
+                            //{
+                            //    foreach (CompanyReviewsEntity companyReviewsEntity in company.CompanyReviews)
+                            //    {
+                            //        companyReviewsEntity.NoOfThankNotes = GetCompanyReviewThankNotes(company.CompanyID, companyReviewsEntity.CompanyReviewID).Count();
+                            //    }
+                            //}
+                        }
+                        else
+                        {
+                            company.CompanyFocus = GetCompanyListFocus(company.CompanyID, Convert.ToInt32(focusAreaID), subFocusArea).ToList();                            
                         }
 
                         companyDetail.CompanyList.Add(company);
@@ -369,6 +377,17 @@ namespace UpVotes.BusinessServices.Service
             }
         }
 
+        private IEnumerable<CompanyPortFolioEntity> GetCompanyPortFolioByName(string companyName, int rows)
+        {
+            using (_context = new UpVotesEntities())
+            {
+                IEnumerable<Sp_GetCompanyPortFolioByName_Result> companyPortFolio = _context.Database.SqlQuery(typeof(Sp_GetCompanyPortFolioByName_Result), "EXEC Sp_GetCompanyPortFolioByName '" + companyName + "',"+ rows).Cast<Sp_GetCompanyPortFolioByName_Result>().AsEnumerable();
+                Mapper.Initialize(cfg => { cfg.CreateMap<Sp_GetCompanyPortFolioByName_Result, CompanyPortFolioEntity>(); });
+                IEnumerable<CompanyPortFolioEntity> companyPortFolioEntity = Mapper.Map<IEnumerable<Sp_GetCompanyPortFolioByName_Result>, IEnumerable<CompanyPortFolioEntity>>(companyPortFolio);
+                return companyPortFolioEntity;
+            }
+        }
+
         private IEnumerable<CompanyFocusEntity> GetCompanyFocus(int companyID)
         {
             using (_context = new UpVotesEntities())
@@ -380,11 +399,23 @@ namespace UpVotes.BusinessServices.Service
             }
         }
 
+        private IEnumerable<CompanyFocusEntity> GetCompanyListFocus(int companyID, int focusAreaID, string subfocusArea)
+        {
+            using (_context = new UpVotesEntities())
+            {
+                IEnumerable<Sp_GetCompanyListFocus_Result> companyFocus = _context.Database.SqlQuery(typeof(Sp_GetCompanyListFocus_Result), "EXEC Sp_GetCompanyListFocus " + companyID + "," + focusAreaID+ ",'" + subfocusArea + "'").Cast<Sp_GetCompanyListFocus_Result>().AsEnumerable();
+                Mapper.Initialize(cfg => { cfg.CreateMap<Sp_GetCompanyListFocus_Result, CompanyFocusEntity>(); });
+                IEnumerable<CompanyFocusEntity> companyFocusEntity = Mapper.Map<IEnumerable<Sp_GetCompanyListFocus_Result>, IEnumerable<CompanyFocusEntity>>(companyFocus);
+                return companyFocusEntity;
+            }
+        }
+
         private IEnumerable<CategoryMetaTags> CategoryMetaTags(string FocusAreaName, string SubFocusAreaName)
         {
             using (_context = new UpVotesEntities())
             {
-                IEnumerable<Sp_CategoryMetaTags_Result> metaTag = _context.Database.SqlQuery(typeof(Sp_CategoryMetaTags_Result), "EXEC Sp_CategoryMetaTags '" + FocusAreaName + "','" + SubFocusAreaName + "'").Cast<Sp_CategoryMetaTags_Result>().AsEnumerable();
+                bool IsService = true;
+                IEnumerable<Sp_CategoryMetaTags_Result> metaTag = _context.Database.SqlQuery(typeof(Sp_CategoryMetaTags_Result), "EXEC Sp_CategoryMetaTags '" + FocusAreaName + "','" + SubFocusAreaName + "'," + IsService).Cast<Sp_CategoryMetaTags_Result>().AsEnumerable();
                 Mapper.Initialize(cfg => { cfg.CreateMap<Sp_CategoryMetaTags_Result, CategoryMetaTags>(); });
                 IEnumerable<CategoryMetaTags> CategoryMetaTags = Mapper.Map<IEnumerable<Sp_CategoryMetaTags_Result>, IEnumerable<CategoryMetaTags>>(metaTag);
                 return CategoryMetaTags;
@@ -446,11 +477,11 @@ namespace UpVotes.BusinessServices.Service
             }
         }
 
-        private IEnumerable<CompanyReviewsEntity> GetCompanyReviews(string companyName)
+        private IEnumerable<CompanyReviewsEntity> GetCompanyReviews(string companyName, int noOfRows)
         {
             using (_context = new UpVotesEntities())
             {
-                IEnumerable<Sp_GetCompanyReviews_Result> companyReviews = _context.Database.SqlQuery(typeof(Sp_GetCompanyReviews_Result), "EXEC Sp_GetCompanyReviews " + "'" + companyName + "'").Cast<Sp_GetCompanyReviews_Result>().AsEnumerable();
+                IEnumerable<Sp_GetCompanyReviews_Result> companyReviews = _context.Database.SqlQuery(typeof(Sp_GetCompanyReviews_Result), "EXEC Sp_GetCompanyReviews " + "'" + companyName + "',"+ noOfRows).Cast<Sp_GetCompanyReviews_Result>().AsEnumerable();
                 Mapper.Initialize(cfg => { cfg.CreateMap<Sp_GetCompanyReviews_Result, CompanyReviewsEntity>(); });
                 IEnumerable<CompanyReviewsEntity> companyReviewEntity = Mapper.Map<IEnumerable<Sp_GetCompanyReviews_Result>, IEnumerable<CompanyReviewsEntity>>(companyReviews);
                 return companyReviewEntity;
@@ -474,27 +505,20 @@ namespace UpVotes.BusinessServices.Service
             {
                 using (_context = new UpVotesEntities())
                 {
-                    bool isVoted = _context.CompanyVotes.Where(e => e.CompanyID == companyVote.CompanyID && e.UserID == companyVote.UserID).Count() > 0 ? true : false;
-
-                    if (isVoted)
+                    var isVoted = _context.Sp_CompanyVote(companyVote.UserID, companyVote.CompanyID).FirstOrDefault();
+                    if (isVoted == -1)
                     {
                         return "You already voted for this company.";
                     }
                     else
                     {
-                        CompanyVote companyVoteAdd = new CompanyVote
-                        {
-                            CompanyID = companyVote.CompanyID,
-                            UserID = companyVote.UserID,
-                            VotedDate = DateTime.Now,
-                        };
+                        Sp_CompanyVoteUserInformation_Result user = _context.Sp_CompanyVoteUserInformation(companyVote.UserID, companyVote.CompanyID).FirstOrDefault();
+                        Thread thread = new Thread(() => SendEmailForVoting(user, user.CompanyName));
+                        thread.Start();
 
-                        _context.CompanyVotes.Add(companyVoteAdd);
-                        _context.SaveChanges();
-
-                        User user = _context.Users.Where(u => u.UserID == companyVote.UserID).FirstOrDefault();
-                        string companyName = _context.Company.Where(c => c.CompanyID == companyVote.CompanyID).Select(c => c.CompanyName).FirstOrDefault();
-                        SendEmailForVoting(user, companyName);
+                        //User user = _context.Users.Where(u => u.UserID == companyVote.UserID).FirstOrDefault();
+                        //string companyName = _context.Company.Where(c => c.CompanyID == companyVote.CompanyID).Select(c => c.CompanyName).FirstOrDefault();
+                        //SendEmailForVoting(user, user.CompanyName);
 
                         return "Thanks for voting.";
                     }
@@ -508,7 +532,7 @@ namespace UpVotes.BusinessServices.Service
             }
         }
 
-        private void SendEmailForVoting(User user, string companyName)
+        private void SendEmailForVoting(Sp_CompanyVoteUserInformation_Result user, string companyName)
         {
             Email emailProperties = new Email();
             emailProperties.EmailFrom = System.Configuration.ConfigurationManager.AppSettings["AdminEmail"];
@@ -565,7 +589,7 @@ namespace UpVotes.BusinessServices.Service
             return sb.ToString();
         }
 
-        private string GetVotingEmailContent(User user, string companyName)
+        private string GetVotingEmailContent(Sp_CompanyVoteUserInformation_Result user, string companyName)
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
@@ -640,7 +664,7 @@ namespace UpVotes.BusinessServices.Service
             EmailHelper.SendEmail(emailProperties);
         }
 
-        private void SendApproveRejectEmailForClaimedUser(string CompanyName, string Email, string password, bool IsAdminApproved, string RejectionComment)
+        private void SendApproveRejectEmailForClaimedUser(string CompanyName, string Email, string password, bool IsAdminApproved, string RejectionComment, string Type)
         {
             Email emailProperties = new Email();
             emailProperties.EmailFrom = System.Configuration.ConfigurationManager.AppSettings["AdminEmail"];
@@ -655,17 +679,21 @@ namespace UpVotes.BusinessServices.Service
             {
                 emailProperties.EmailSubject = CompanyName + " is rejected at upvotes.co";
             }
-            emailProperties.EmailBody = GetAdminApprovedRejectedEmailContentForClaimedUser(CompanyName, Email, password, IsAdminApproved, RejectionComment);
+            emailProperties.EmailBody = GetAdminApprovedRejectedEmailContentForClaimedUser(CompanyName, Email, password, IsAdminApproved, RejectionComment, Type);
             EmailHelper.SendEmail(emailProperties);
         }
 
-        private string GetAdminApprovedRejectedEmailContentForClaimedUser(string CompanyName, string Email, string password, bool IsAdminApproved, string RejectionComment)
+        private string GetAdminApprovedRejectedEmailContentForClaimedUser(string CompanyName, string Email, string password, bool IsAdminApproved, string RejectionComment, string Type)
         {
+            string type = "profile/";
+            if(Type == "software")
+                type = "software/";
+
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             if (IsAdminApproved)
             {
                 sb.Append("<p>Hello,</p><p> Your claimed company profile " + CompanyName + " has been approved at upvotes.co. Click on the below link to verify the contents.</p>");
-                sb.Append("<p><em><strong><a href='" + System.Configuration.ConfigurationManager.AppSettings["WebClientURL"] + "profile/" + CompanyName.Replace(" ", "-").Trim().ToLower() + "' target='_blank' rel='noopener'>" + System.Configuration.ConfigurationManager.AppSettings["WebClientURL"] + "profile/" + CompanyName.Replace(" ", "-").Trim().ToLower() + "</a></strong></em><p>");
+                sb.Append("<p><em><strong><a href='" + System.Configuration.ConfigurationManager.AppSettings["WebClientURL"] + type + CompanyName.Replace(" ", "-").Trim().ToLower() + "' target='_blank' rel='noopener'>" + System.Configuration.ConfigurationManager.AppSettings["WebClientURL"] + type + CompanyName.Replace(" ", "-").Trim().ToLower() + "</a></strong></em><p>");
                 sb.Append("<p>Please use below credentials to login to the upvotes portal.</p>");
                 sb.Append("<p> User Name:<br/>" + Email + "</p>");
                 sb.Append("<p> Password:<br/>" + EncryptionAndDecryption.Decrypt(password) + "</p>");
@@ -724,25 +752,13 @@ namespace UpVotes.BusinessServices.Service
             {
                 using (_context = new UpVotesEntities())
                 {
-
-                    bool isThanksNoted = _context.CompanyReviewThankNotes.Where(e => e.CompanyReview.CompanyID == companyReviewThanksNoteEntity.CompanyID && e.UserID == companyReviewThanksNoteEntity.UserID && e.CompanyReviewID == companyReviewThanksNoteEntity.CompanyReviewID).Count() > 0 ? true : false;
-
-                    if (isThanksNoted)
+                    var isThankNote = _context.Sp_InsCompanyReviewForThanksNote(companyReviewThanksNoteEntity.UserID, companyReviewThanksNoteEntity.CompanyReviewID).FirstOrDefault();
+                    if (isThankNote == -1)
                     {
                         return "Duplicate thanks note.";
                     }
                     else
-                    {
-                        CompanyReviewThankNote companyReviewThankNoteAdd = new CompanyReviewThankNote
-                        {
-                            CompanyReviewID = companyReviewThanksNoteEntity.CompanyReviewID,
-                            UserID = companyReviewThanksNoteEntity.UserID,
-                            ThankNoteDate = DateTime.Now,
-                        };
-
-                        _context.CompanyReviewThankNotes.Add(companyReviewThankNoteAdd);
-                        _context.SaveChanges();
-
+                    {                        
                         return "Your thanks note is recorded for this review.";
                     }
                 }
@@ -790,32 +806,84 @@ namespace UpVotes.BusinessServices.Service
             }
         }
 
-        public CompanyDetail GetUserReviews(string companyName)
+        public CompanyDetail GetUserReviews(string companyName, int noOfRows)
         {
             CompanyDetail companyDetail = new CompanyDetail();
             companyDetail.CompanyList = new List<CompanyEntity>();
 
             CompanyEntity company = new CompanyEntity();
             company.CompanyName = companyName.Trim();
-            company.CompanyReviews = GetCompanyReviews(company.CompanyName).ToList();
-            if (company.CompanyReviews.Count() > 0)
-            {
-                foreach (CompanyReviewsEntity companyReviewsEntity in company.CompanyReviews)
-                {
-                    companyReviewsEntity.NoOfThankNotes = GetCompanyReviewThankNotes(company.CompanyID, companyReviewsEntity.CompanyReviewID).Count();
-                }
-            }
+            company.CompanyReviews = GetCompanyReviews(company.CompanyName, noOfRows).ToList();
+            //if (company.CompanyReviews.Count() > 0)
+            //{
+            //    foreach (CompanyReviewsEntity companyReviewsEntity in company.CompanyReviews)
+            //    {
+            //        companyReviewsEntity.NoOfThankNotes = GetCompanyReviewThankNotes(company.CompanyID, companyReviewsEntity.CompanyReviewID).Count();
+            //    }
+            //}
 
             companyDetail.CompanyList.Add(company);
 
             return companyDetail;
         }
 
+        public CompanyDetail GetAllCompanyPortfolioByName(string companyName, int noOfRows)
+        {
+            CompanyDetail companyDetail = new CompanyDetail();
+            companyDetail.CompanyList = new List<CompanyEntity>();
+
+            CompanyEntity company = new CompanyEntity();
+            company.CompanyName = companyName.Trim();
+            company.CompanyPortFolio = GetCompanyPortFolioByName(company.CompanyName, noOfRows).ToList();
+
+            companyDetail.CompanyList.Add(company);
+
+            return companyDetail;
+        }
+
+        public CompanySoftwareReviews GetReviewsForCompanyListingPage(CompanyFilterEntity companyFilter)
+        {
+            CompanySoftwareReviews companyReviewsObj = new CompanySoftwareReviews();
+            companyReviewsObj.ReviewsList = new List<CompanyReviewsEntity>();
+            companyReviewsObj.CompanyNamesList = new List<string>();
+
+
+            using (_context = new UpVotesEntities())
+            {
+                var response = _context.Sp_GetCompanyReviewsForListingPage(companyFilter.CompanyName, companyFilter.FocusAreaID, 5, companyFilter.PageNo, companyFilter.PageSize).ToList();
+                if (response != null)
+                {
+                    response.ToList().ForEach(q => companyReviewsObj.ReviewsList.Add(new CompanyReviewsEntity
+                    {
+                        CompanyReviewID = q.CompanyReviewID,
+                        CompanyID = q.CompanyId,
+                        CompanyName = q.CompanyName,
+                        ReviewerFullName = q.ReviewerFullName,
+                        ReviewerCompanyName = q.ReviewerCompanyName,
+                        ReviewerDesignation = q.ReviewerDesignation,
+                        ReviewerProjectName = q.ReviewerProjectName,
+                        FocusAreaName = q.FocusAreaName,
+                        FeedBack = q.FeedBack,
+                        Rating = q.Rating,
+                        ReviewDate = q.ReviewDate,
+                        UserProfilePicture = q.UserProfilePicture,
+                        NoOfReviews = q.NoOfReviews,
+                        NoOfThankNotes = q.ThankYouCount
+                    }
+                ));
+                    companyReviewsObj.CompanyNamesList = response.ToList().Select(i => i.CompanyName).Distinct().ToList();
+
+                }
+            }
+            
+            return companyReviewsObj;
+        }
+
         public CompanyDetail GetUserCompanies(int userID, string companyName)
         {
             CompanyDetail companyDetail = new CompanyDetail();
             companyDetail.CompanyList = new List<CompanyEntity>();
-            companyDetail.ClaimList = new List<ClaimInfoDetail>();
+            //companyDetail.ClaimList = new List<ClaimInfoDetail>();
             bool isAdminUser = false;
             try
             {
@@ -899,6 +967,47 @@ namespace UpVotes.BusinessServices.Service
 
                     companyDetail.FocusAreaList = new FocusAreaService().GetFocusAreaList();
 
+                    //if (isAdminUser)
+                    //{
+                    //    var response = _context.Sp_GetClaimListingsForApproval(userID).ToList();
+                    //    if (response != null)
+                    //    {
+                    //        response.ToList().ForEach(q => companyDetail.ClaimList.Add(new ClaimInfoDetail
+                    //        {
+                    //            ClaimListingID = q.ClaimListingID,
+                    //            CompanyID = q.CompanyID,
+                    //            CompanyDomain = q.CompanyDomain,
+                    //            CompanyName = q.CompanyName,
+                    //            IsUserApproved = q.IsUserApproved,
+                    //            URL = q.URL,
+                    //            WorkEmail = q.WorkEmail,
+                    //            ProfileURL = q.ProfileURL,
+                    //            UpvotesURL = q.UpvotesURL,
+                    //            UserApprovedDate = q.UserApprovedDate
+                    //        }
+                    //    ));
+                    //    }
+                    //}
+
+                    return companyDetail;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public CompanyDetail GetClaimListingsForApproval(int userID)
+        {
+            CompanyDetail companyDetail = new CompanyDetail();            
+            companyDetail.ClaimList = new List<ClaimInfoDetail>();
+            bool isAdminUser = false;
+            try
+            {
+                using (_context = new UpVotesEntities())
+                {
+                    isAdminUser = _context.Users.Where(a => a.UserID == userID && a.UserType == 4).Count() > 0 ? true : false;
                     if (isAdminUser)
                     {
                         var response = _context.Sp_GetClaimListingsForApproval(userID).ToList();
@@ -915,7 +1024,8 @@ namespace UpVotes.BusinessServices.Service
                                 WorkEmail = q.WorkEmail,
                                 ProfileURL = q.ProfileURL,
                                 UpvotesURL = q.UpvotesURL,
-                                UserApprovedDate = q.UserApprovedDate
+                                UserApprovedDate = q.UserApprovedDate,
+                                IsSoftware = q.IsSoftware
                             }
                         ));
                         }
@@ -986,15 +1096,53 @@ namespace UpVotes.BusinessServices.Service
             {
                 using (_context = new UpVotesEntities())
                 {
-                    List<CountryEntity> countryList = (from a in _context.Countries
-                                                       where a.IsActive == true
-                                                       select new CountryEntity()
-                                                       {
-                                                           CountryID = a.CountryID,
-                                                           CountryName = a.CountryName
-                                                       }).ToList();
 
+                    //List<CountryEntity> countryList = (from a in _context.Countries
+                    //                                   where a.IsActive == true
+                    //                                   select new CountryEntity()
+                    //                                   {
+                    //                                       CountryID = a.CountryID,
+                    //                                       CountryName = a.CountryName
+                    //                                   }).ToList();
+                    List<CountryEntity> countryList = new List<CountryEntity>();
+                    var List = _context.Sp_GetCountry().ToList();
+                    if(List!=null)
+                    {
+                        List.ForEach(a => countryList.Add(new CountryEntity
+                        {
+                            CountryID = a.CountryID,
+                            CountryName = a.CountryName
+                        }));
+                    }
                     return countryList;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public List<CompanyEntity> GetTopVoteCompanies()
+        {            
+            List<CompanyEntity> TopVotedCompaniesObj = new List<CompanyEntity>();
+            try
+            {
+                using (_context = new UpVotesEntities())
+                {
+                    var response = _context.Sp_GetTopVotesCompany().ToList();
+
+                    if (response != null)
+                    {
+                        response.ToList().ForEach(v => TopVotedCompaniesObj.Add(new CompanyEntity
+                        {
+                            NoOfVotes = Convert.ToInt32(v.vote),
+                            CompanyID = v.CompanyID,
+                            CompanyName = v.CompanyName,
+                            LogoName = v.LogoName
+                        }));
+                    }
+                    return TopVotedCompaniesObj;
                 }
             }
             catch (Exception ex)
@@ -1009,15 +1157,51 @@ namespace UpVotes.BusinessServices.Service
             {
                 using (_context = new UpVotesEntities())
                 {
-                    List<StateEntity> statesList = (from a in _context.States
-                                                    where a.IsActive == true && a.CountryID == countryID
-                                                    select new StateEntity()
-                                                    {
-                                                        StateID = a.StateID,
-                                                        StateName = a.StateName
-                                                    }).ToList();
+                    //List<StateEntity> statesList = (from a in _context.States
+                    //                                where a.IsActive == true && a.CountryID == countryID
+                    //                                select new StateEntity()
+                    //                                {
+                    //                                    StateID = a.StateID,
+                    //                                    StateName = a.StateName
+                    //                                }).ToList();
+                    List<StateEntity> statesList = new List<StateEntity>();
+                    var list = _context.Sp_GetStateByCountryID(countryID).ToList();
+                    if(list !=null)
+                    {
+                        list.ForEach(a => statesList.Add(new StateEntity
+                        {
+                            StateID = a.StateID,
+                            StateName = a.StateName
+                        }));
+                    }
 
                     return statesList;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public List<SubFocusAreaEntity> GetSubFocusAreaByFocusID(int FocusID)
+        {
+            try
+            {
+                using (_context = new UpVotesEntities())
+                {                    
+                    List<SubFocusAreaEntity> subFocusList = new List<SubFocusAreaEntity>();
+                    var list = _context.Sp_GetSubFocusAreaByFocusID(FocusID).ToList();
+                    if (list != null)
+                    {
+                        list.ForEach(a => subFocusList.Add(new SubFocusAreaEntity
+                        {
+                            SubFocusAreaID = a.SubFocusAreaID,
+                            SubFocusAreaName = a.SubFocusAreaName
+                        }));
+                    }
+
+                    return subFocusList;
                 }
             }
             catch (Exception ex)
@@ -1106,7 +1290,9 @@ namespace UpVotes.BusinessServices.Service
                     var ClaimId = _context.Sp_InsertUpdateClaimListing(request.ClaimListingID, request.companyID, request.userID, request.IsUserVerify, request.Email+request.Domain).FirstOrDefault();
                     if (request.ClaimListingID == 0)
                     {
-                        SendEmailForUserVerification(Convert.ToInt32(ClaimId), request.CompanyName, request.companyID, new Random().Next(100000, 999999).ToString("D6"), request.Email + request.Domain, true);
+                        Thread thread = new Thread(() => SendEmailForUserVerification(Convert.ToInt32(ClaimId), request.CompanyName, request.companyID, new Random().Next(100000, 999999).ToString("D6"), request.Email + request.Domain, true));
+                        thread.Start();
+                        //SendEmailForUserVerification(Convert.ToInt32(ClaimId), request.CompanyName, request.companyID, new Random().Next(100000, 999999).ToString("D6"), request.Email + request.Domain, true);
                     }
                     return "OK";       
                 }
@@ -1129,7 +1315,9 @@ namespace UpVotes.BusinessServices.Service
                     int result = _context.Sp_AdminApproveRejectForClaiming(request.ClaimListingID,request.userID,request.companyID,request.IsAdminApproved, pwd);
                     if (result != -1)
                     {
-                        SendApproveRejectEmailForClaimedUser(request.CompanyName, request.Email, pwd, request.IsAdminApproved, request.RejectionComment);
+                        Thread thread = new Thread(() => SendApproveRejectEmailForClaimedUser(request.CompanyName, request.Email, pwd, request.IsAdminApproved, request.RejectionComment, request.Type));
+                        thread.Start();
+                        //SendApproveRejectEmailForClaimedUser(request.CompanyName, request.Email, pwd, request.IsAdminApproved, request.RejectionComment, request.Type);
                         if (request.IsAdminApproved)
                         {
                             return "claimed";

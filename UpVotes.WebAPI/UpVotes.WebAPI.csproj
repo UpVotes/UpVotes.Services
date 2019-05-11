@@ -228,6 +228,9 @@
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AuthenticateController.cs" />
+    <Compile Include="Controllers\OverviewAndNewsController.cs" />
+    <Compile Include="Controllers\SubmitReviewController.cs" />
+    <Compile Include="Controllers\SoftwareController.cs" />
     <Compile Include="Controllers\CompanyController.cs" />
     <Compile Include="Controllers\FocusAreaController.cs" />
     <Compile Include="Controllers\UserCompanyListController.cs" />

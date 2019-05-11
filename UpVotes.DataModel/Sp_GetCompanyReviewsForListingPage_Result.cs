@@ -11,11 +11,11 @@ namespace UpVotes.DataModel
 {
     using System;
     
-    public partial class Sp_GetCompanyReviews_Result
+    public partial class Sp_GetCompanyReviewsForListingPage_Result
     {
-        public int CompanyID { get; set; }
-        public string CompanyName { get; set; }
         public int CompanyReviewID { get; set; }
+        public int CompanyId { get; set; }
+        public string CompanyName { get; set; }
         public string ReviewerFullName { get; set; }
         public string ReviewerCompanyName { get; set; }
         public string ReviewerDesignation { get; set; }
@@ -25,6 +25,7 @@ namespace UpVotes.DataModel
         public short Rating { get; set; }
         public System.DateTime ReviewDate { get; set; }
         public string UserProfilePicture { get; set; }
-        public Nullable<int> NoOfThankNotes { get; set; }
+        public int NoOfReviews { get; set; }
+        public int ThankYouCount { get; set; }
     }
 }

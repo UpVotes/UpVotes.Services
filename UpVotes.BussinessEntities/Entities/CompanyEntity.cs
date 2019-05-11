@@ -103,7 +103,8 @@ namespace UpVotes.BusinessEntities.Entities
         public List<string> SubfocusNames { get; set; }
         public List<CompanyPortFolioEntity> CompanyPortFolio { get; set; }
 
-        public List<CompanyReviewsEntity> CompanyReviews { get; set; }        
+        public List<CompanyReviewsEntity> CompanyReviews { get; set; }
+        public List<OverviewNewsResponseEntity> OverviewNewsData { get; set; }
     }
 
     public class CompanyRejectComments

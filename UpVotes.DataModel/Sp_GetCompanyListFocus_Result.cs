@@ -11,14 +11,14 @@ namespace UpVotes.DataModel
 {
     using System;
     
-    public partial class Sp_GetSubFocus_Result
+    public partial class Sp_GetCompanyListFocus_Result
     {
         public int CompanyFocusID { get; set; }
         public int CompanyID { get; set; }
-        public int SubFocusAreaID { get; set; }
-        public string FocusAreaName { get; set; }
-        public string SubFocusAreaName { get; set; }
-        public Nullable<double> SubFocusAreaPercentage { get; set; }
         public int FocusAreaID { get; set; }
+        public string FocusAreaName { get; set; }
+        public double FocusAreaPercentage { get; set; }
+        public string SubFocusAreaName { get; set; }
+        public double SubFocusAreaPercentage { get; set; }
     }
 }
