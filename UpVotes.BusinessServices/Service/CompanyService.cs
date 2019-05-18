@@ -1123,6 +1123,46 @@ namespace UpVotes.BusinessServices.Service
             }
         }
 
+        public List<CategoryLinksEntity> GetServiceCategoryLinks(int focusAreaID)
+        {
+            List<CategoryLinksEntity> LinkObj = new List<CategoryLinksEntity>();
+            try
+            {
+                using (_context = new UpVotesEntities())
+                {
+                    var response = _context.Sp_GetAllCategoriesLinks(focusAreaID).ToList();
+
+                    if (response != null)
+                    {
+                        response.ToList().ForEach(v => LinkObj.Add(new CategoryLinksEntity
+                        {
+                            Name = v.Name,
+                            Category = v.Category,
+                            CountOfListing = Convert.ToInt32(v.CountOfListing),
+                            URL = v.URL,
+                            cityName = v.cityName,
+                            cityCategory = v.cityCategory,
+                            cityCountOfListing = Convert.ToInt32(v.cityCountOfListing),
+                            cityURL = v.cityURL,
+                            countryName = v.countryName,
+                            countryCategory = v.countryCategory,
+                            countryCountOfListing = Convert.ToInt32(v.countryCountOfListing),
+                            countryURL = v.countryURL,
+                            stateName = v.stateName,
+                            stateCategory = v.stateCategory,
+                            stateCountOfListing = Convert.ToInt32(v.stateCountOfListing),
+                            stateURL = v.stateURL,
+                        }));
+                    }
+                    return LinkObj;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public List<CompanyEntity> GetTopVoteCompanies()
         {            
             List<CompanyEntity> TopVotedCompaniesObj = new List<CompanyEntity>();

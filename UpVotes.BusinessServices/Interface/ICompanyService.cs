@@ -35,6 +35,7 @@ namespace UpVotes.BusinessServices.Interface
         List<SubFocusAreaEntity> GetSubFocusAreaByFocusID(int FocusID);
 
         CategoryMetaTags GetCategoryMetaTags(string FocusAreaName, string SubFocusAreaName);
+        List<CategoryLinksEntity> GetServiceCategoryLinks(int focusAreaID);
 
         bool CompanyVerificationByUser(int uID, string cID, int compID);
         bool UpdateRejectionComments(CompanyRejectComments companyRejectComments);

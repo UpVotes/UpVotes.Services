@@ -69,6 +69,7 @@
     <Compile Include="Entities\OverviewNewsEntity.cs" />
     <Compile Include="Entities\ClaimListing.cs" />
     <Compile Include="Entities\CompanySoftwareReviews.cs" />
+    <Compile Include="Entities\CategoryLinksEntity.cs" />
     <Compile Include="Entities\SubmitReviewEntity.cs" />
     <Compile Include="Entities\SoftwareReviewThankNoteEntity.cs" />
     <Compile Include="Entities\SoftwareReviewsEntity.cs" />

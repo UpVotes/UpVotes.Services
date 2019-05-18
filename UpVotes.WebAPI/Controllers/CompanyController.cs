@@ -224,6 +224,21 @@ namespace UpVotes.WebAPI.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("api/GetServiceCategoryLinks/{FocusAreaID}")]
+        public HttpResponseMessage GetServiceCategoryLinks(int FocusAreaID)
+        {
+            try
+            {
+                List<CategoryLinksEntity> allServiceCategoryLinks = _companyServices.GetServiceCategoryLinks(FocusAreaID);
+                return Request.CreateResponse(HttpStatusCode.OK, allServiceCategoryLinks);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
+
         [HttpPost]
         [Route("api/SaveCompany")]
         public HttpResponseMessage SaveCompany(CompanyEntity companyEntity)

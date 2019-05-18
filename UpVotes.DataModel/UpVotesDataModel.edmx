@@ -564,6 +564,9 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
         <Function Name="Sp_DeleteCompanyHistory" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="companyID" Type="int" Mode="In" />
         </Function>
+        <Function Name="Sp_GetAllCategoriesLinks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="FocusAreaID" Type="int" Mode="In" />
+        </Function>
         <Function Name="Sp_GetClaimListingsForApproval" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UserID" Type="int" Mode="In" />
         </Function>
@@ -1298,6 +1301,9 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
             <Parameter Name="ImageName" Mode="In" Type="String" />
             <Parameter Name="YoutubeURL" Mode="In" Type="String" />
             <Parameter Name="CreatedBy" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetAllCategoriesLinks" ReturnType="Collection(UpVotesModel.Sp_GetAllCategoriesLinks_Result)">
+            <Parameter Name="FocusAreaID" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="Sp_GetCompanyFocus_Result">
@@ -2259,6 +2265,24 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           <Property Type="Boolean" Name="IsPricing" Nullable="true" />
           <Property Type="Boolean" Name="IsBadges" Nullable="true" />
         </ComplexType>
+        <ComplexType Name="Sp_GetAllCategoriesLinks_Result">
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="URL" Nullable="true" />
+          <Property Type="String" Name="Category" Nullable="true" MaxLength="10" />
+          <Property Type="Int32" Name="CountOfListing" Nullable="true" />
+          <Property Type="String" Name="cityName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="cityURL" Nullable="true" />
+          <Property Type="String" Name="cityCategory" Nullable="true" MaxLength="10" />
+          <Property Type="Int32" Name="cityCountOfListing" Nullable="true" />
+          <Property Type="String" Name="countryName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="countryURL" Nullable="true" />
+          <Property Type="String" Name="countryCategory" Nullable="true" MaxLength="10" />
+          <Property Type="Int32" Name="countryCountOfListing" Nullable="true" />
+          <Property Type="String" Name="stateName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="stateURL" Nullable="true" />
+          <Property Type="String" Name="stateCategory" Nullable="true" MaxLength="10" />
+          <Property Type="Int32" Name="stateCountOfListing" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3150,6 +3174,28 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Sp_InsUserNews" FunctionName="UpVotesModel.Store.Sp_InsUserNews" />
+          <FunctionImportMapping FunctionImportName="Sp_GetAllCategoriesLinks" FunctionName="UpVotesModel.Store.Sp_GetAllCategoriesLinks">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetAllCategoriesLinks_Result">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="URL" ColumnName="URL" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="CountOfListing" ColumnName="CountOfListing" />
+                <ScalarProperty Name="cityName" ColumnName="cityName" />
+                <ScalarProperty Name="cityURL" ColumnName="cityURL" />
+                <ScalarProperty Name="cityCategory" ColumnName="cityCategory" />
+                <ScalarProperty Name="cityCountOfListing" ColumnName="cityCountOfListing" />
+                <ScalarProperty Name="countryName" ColumnName="countryName" />
+                <ScalarProperty Name="countryURL" ColumnName="countryURL" />
+                <ScalarProperty Name="countryCategory" ColumnName="countryCategory" />
+                <ScalarProperty Name="countryCountOfListing" ColumnName="countryCountOfListing" />
+                <ScalarProperty Name="stateName" ColumnName="stateName" />
+                <ScalarProperty Name="stateURL" ColumnName="stateURL" />
+                <ScalarProperty Name="stateCategory" ColumnName="stateCategory" />
+                <ScalarProperty Name="stateCountOfListing" ColumnName="stateCountOfListing" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

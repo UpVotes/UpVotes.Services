@@ -1052,5 +1052,14 @@ namespace UpVotes.DataModel
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("Sp_InsUserNews", isCompanySoftwareParameter, categoryIDParameter, companyOrSoftwareIDParameter, websiteURLParameter, newsTitleParameter, newsDescriptionParameter, imageNameParameter, youtubeURLParameter, createdByParameter);
         }
+    
+        public virtual ObjectResult<Sp_GetAllCategoriesLinks_Result> Sp_GetAllCategoriesLinks(Nullable<int> focusAreaID)
+        {
+            var focusAreaIDParameter = focusAreaID.HasValue ?
+                new ObjectParameter("FocusAreaID", focusAreaID) :
+                new ObjectParameter("FocusAreaID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetAllCategoriesLinks_Result>("Sp_GetAllCategoriesLinks", focusAreaIDParameter);
+        }
     }
 }
