@@ -50,6 +50,7 @@ namespace UpVotes.BusinessServices.Service
                             LogoName = q.LogoName,
                             NewsDescription = q.NewsDescription,
                             NewsTitle = q.NewsTitle,
+                            NewsTitleUrl = q.NewsTitleUrl,
                             SoftwareCompanyName = q.SoftwareCompanyName,
                             StateID = q.StateID,
                             StateName = q.StateName,
@@ -99,7 +100,7 @@ namespace UpVotes.BusinessServices.Service
                 {
                    var isNews = _context.Sp_InsAdminNews(NewsRequest.IsCompanySoftware, NewsRequest.CategoryID, NewsRequest.Subcategory,
                         NewsRequest.CountryID, NewsRequest.StateID, NewsRequest.City, NewsRequest.CompanySoftwareID, NewsRequest.WebsiteURL, NewsRequest.Title, NewsRequest.Description,
-                        NewsRequest.ImageName, NewsRequest.YoutubeURL, NewsRequest.CreatedBy).FirstOrDefault();
+                        NewsRequest.ImageName, NewsRequest.YoutubeURL, NewsRequest.CreatedBy,NewsRequest.UrlTitle).FirstOrDefault();
                     if(isNews > 0)
                     {
                         return Convert.ToInt32(isNews);
@@ -123,7 +124,7 @@ namespace UpVotes.BusinessServices.Service
                 using (_context = new UpVotesEntities())
                 {
                    var isNews = _context.Sp_InsUserNews(NewsRequest.IsCompanySoftware, NewsRequest.CategoryID, NewsRequest.CompanySoftwareID, NewsRequest.WebsiteURL, 
-                       NewsRequest.Title, NewsRequest.Description, NewsRequest.ImageName, NewsRequest.YoutubeURL, NewsRequest.CreatedBy).FirstOrDefault();
+                       NewsRequest.Title, NewsRequest.Description, NewsRequest.ImageName, NewsRequest.YoutubeURL, NewsRequest.CreatedBy,NewsRequest.UrlTitle).FirstOrDefault();
                     if(isNews > 0)
                     {
                         return Convert.ToInt32(isNews);
@@ -167,6 +168,7 @@ namespace UpVotes.BusinessServices.Service
                             LogoName = q.LogoName,
                             NewsDescription = q.NewsDescription,
                             NewsTitle = q.NewsTitle,
+                            NewsTitleUrl = q.NewsTitleUrl,
                             SoftwareCompanyName = q.SoftwareCompanyName,
                             StateID = q.StateID,
                             StateName = q.StateName,
@@ -211,6 +213,7 @@ namespace UpVotes.BusinessServices.Service
                             LogoName = q.LogoName,
                             NewsDescription = q.NewsDescription,
                             NewsTitle = q.NewsTitle,
+                            NewsTitleUrl = q.NewsTitleUrl,
                             SoftwareCompanyName = q.SoftwareCompanyName,
                             StateID = q.StateID,
                             StateName = q.StateName,

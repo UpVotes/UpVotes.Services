@@ -710,6 +710,7 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           <Parameter Name="ImageName" Type="nvarchar" Mode="In" />
           <Parameter Name="YoutubeURL" Type="nvarchar" Mode="In" />
           <Parameter Name="CreatedBy" Type="int" Mode="In" />
+          <Parameter Name="URLNewsTitle" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="Sp_InsCompanyReview" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyID" Type="int" Mode="In" />
@@ -786,6 +787,7 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           <Parameter Name="ImageName" Type="nvarchar" Mode="In" />
           <Parameter Name="YoutubeURL" Type="nvarchar" Mode="In" />
           <Parameter Name="CreatedBy" Type="int" Mode="In" />
+          <Parameter Name="URLNewsTitle" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="Sp_InsUserQuotation" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="platformType" Type="nvarchar" Mode="In" />
@@ -1287,6 +1289,7 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
             <Parameter Name="ImageName" Mode="In" Type="String" />
             <Parameter Name="YoutubeURL" Mode="In" Type="String" />
             <Parameter Name="CreatedBy" Mode="In" Type="Int32" />
+            <Parameter Name="URLNewsTitle" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="Sp_GetDashboardInfoForUser" ReturnType="Collection(UpVotesModel.Sp_GetDashboardInfoForUser_Result)">
           <Parameter Name="UserID" Mode="In" Type="Int32" />
@@ -1301,9 +1304,10 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
             <Parameter Name="ImageName" Mode="In" Type="String" />
             <Parameter Name="YoutubeURL" Mode="In" Type="String" />
             <Parameter Name="CreatedBy" Mode="In" Type="Int32" />
+            <Parameter Name="URLNewsTitle" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="Sp_GetAllCategoriesLinks" ReturnType="Collection(UpVotesModel.Sp_GetAllCategoriesLinks_Result)">
-            <Parameter Name="FocusAreaID" Mode="In" Type="Int32" />
+          <Parameter Name="FocusAreaID" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="Sp_GetCompanyFocus_Result">
@@ -2173,6 +2177,7 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           <Property Type="Int32" Name="CompanyOrSoftwareID" Nullable="true" />
           <Property Type="String" Name="WebsiteURL" Nullable="true" MaxLength="250" />
           <Property Type="String" Name="NewsTitle" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="NewsTitleUrl" Nullable="true" MaxLength="250" />
           <Property Type="String" Name="NewsDescription" Nullable="true" />
           <Property Type="String" Name="ImageName" Nullable="true" MaxLength="250" />
           <Property Type="String" Name="YoutubeURL" Nullable="true" MaxLength="250" />
@@ -2196,6 +2201,7 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           <Property Type="Int32" Name="CompanyOrSoftwareID" Nullable="true" />
           <Property Type="String" Name="WebsiteURL" Nullable="true" MaxLength="250" />
           <Property Type="String" Name="NewsTitle" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="NewsTitleUrl" Nullable="true" MaxLength="250" />
           <Property Type="String" Name="NewsDescription" Nullable="true" />
           <Property Type="String" Name="ImageName" Nullable="true" MaxLength="250" />
           <Property Type="String" Name="YoutubeURL" Nullable="true" MaxLength="250" />
@@ -3050,6 +3056,7 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
                 <ScalarProperty Name="CompanyOrSoftwareID" ColumnName="CompanyOrSoftwareID" />
                 <ScalarProperty Name="WebsiteURL" ColumnName="WebsiteURL" />
                 <ScalarProperty Name="NewsTitle" ColumnName="NewsTitle" />
+                <ScalarProperty Name="NewsTitleUrl" ColumnName="NewsTitleUrl" />
                 <ScalarProperty Name="NewsDescription" ColumnName="NewsDescription" />
                 <ScalarProperty Name="ImageName" ColumnName="ImageName" />
                 <ScalarProperty Name="YoutubeURL" ColumnName="YoutubeURL" />
@@ -3077,6 +3084,7 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
                 <ScalarProperty Name="CompanyOrSoftwareID" ColumnName="CompanyOrSoftwareID" />
                 <ScalarProperty Name="WebsiteURL" ColumnName="WebsiteURL" />
                 <ScalarProperty Name="NewsTitle" ColumnName="NewsTitle" />
+                <ScalarProperty Name="NewsTitleUrl" ColumnName="NewsTitleUrl" />
                 <ScalarProperty Name="NewsDescription" ColumnName="NewsDescription" />
                 <ScalarProperty Name="ImageName" ColumnName="ImageName" />
                 <ScalarProperty Name="YoutubeURL" ColumnName="YoutubeURL" />

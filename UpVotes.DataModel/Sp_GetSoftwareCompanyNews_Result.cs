@@ -23,6 +23,7 @@ namespace UpVotes.DataModel
         public Nullable<int> CompanyOrSoftwareID { get; set; }
         public string WebsiteURL { get; set; }
         public string NewsTitle { get; set; }
+        public string NewsTitleUrl { get; set; }
         public string NewsDescription { get; set; }
         public string ImageName { get; set; }
         public string YoutubeURL { get; set; }

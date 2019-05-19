@@ -946,7 +946,7 @@ namespace UpVotes.DataModel
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_IsNewsExists_Result>("Sp_IsNewsExists", titleParameter, uRLParameter);
         }
     
-        public virtual ObjectResult<Nullable<decimal>> Sp_InsAdminNews(Nullable<int> isCompanySoftware, Nullable<int> categoryID, Nullable<int> subCategoryID, Nullable<int> countryID, Nullable<int> stateID, string city, Nullable<int> companyOrSoftwareID, string websiteURL, string newsTitle, string newsDescription, string imageName, string youtubeURL, Nullable<int> createdBy)
+        public virtual ObjectResult<Nullable<decimal>> Sp_InsAdminNews(Nullable<int> isCompanySoftware, Nullable<int> categoryID, Nullable<int> subCategoryID, Nullable<int> countryID, Nullable<int> stateID, string city, Nullable<int> companyOrSoftwareID, string websiteURL, string newsTitle, string newsDescription, string imageName, string youtubeURL, Nullable<int> createdBy, string uRLNewsTitle)
         {
             var isCompanySoftwareParameter = isCompanySoftware.HasValue ?
                 new ObjectParameter("IsCompanySoftware", isCompanySoftware) :
@@ -1000,7 +1000,11 @@ namespace UpVotes.DataModel
                 new ObjectParameter("CreatedBy", createdBy) :
                 new ObjectParameter("CreatedBy", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("Sp_InsAdminNews", isCompanySoftwareParameter, categoryIDParameter, subCategoryIDParameter, countryIDParameter, stateIDParameter, cityParameter, companyOrSoftwareIDParameter, websiteURLParameter, newsTitleParameter, newsDescriptionParameter, imageNameParameter, youtubeURLParameter, createdByParameter);
+            var uRLNewsTitleParameter = uRLNewsTitle != null ?
+                new ObjectParameter("URLNewsTitle", uRLNewsTitle) :
+                new ObjectParameter("URLNewsTitle", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("Sp_InsAdminNews", isCompanySoftwareParameter, categoryIDParameter, subCategoryIDParameter, countryIDParameter, stateIDParameter, cityParameter, companyOrSoftwareIDParameter, websiteURLParameter, newsTitleParameter, newsDescriptionParameter, imageNameParameter, youtubeURLParameter, createdByParameter, uRLNewsTitleParameter);
         }
     
         public virtual ObjectResult<Sp_GetDashboardInfoForUser_Result> Sp_GetDashboardInfoForUser(Nullable<int> userID)
@@ -1012,7 +1016,7 @@ namespace UpVotes.DataModel
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetDashboardInfoForUser_Result>("Sp_GetDashboardInfoForUser", userIDParameter);
         }
     
-        public virtual ObjectResult<Nullable<decimal>> Sp_InsUserNews(Nullable<int> isCompanySoftware, Nullable<int> categoryID, Nullable<int> companyOrSoftwareID, string websiteURL, string newsTitle, string newsDescription, string imageName, string youtubeURL, Nullable<int> createdBy)
+        public virtual ObjectResult<Nullable<decimal>> Sp_InsUserNews(Nullable<int> isCompanySoftware, Nullable<int> categoryID, Nullable<int> companyOrSoftwareID, string websiteURL, string newsTitle, string newsDescription, string imageName, string youtubeURL, Nullable<int> createdBy, string uRLNewsTitle)
         {
             var isCompanySoftwareParameter = isCompanySoftware.HasValue ?
                 new ObjectParameter("IsCompanySoftware", isCompanySoftware) :
@@ -1050,7 +1054,11 @@ namespace UpVotes.DataModel
                 new ObjectParameter("CreatedBy", createdBy) :
                 new ObjectParameter("CreatedBy", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("Sp_InsUserNews", isCompanySoftwareParameter, categoryIDParameter, companyOrSoftwareIDParameter, websiteURLParameter, newsTitleParameter, newsDescriptionParameter, imageNameParameter, youtubeURLParameter, createdByParameter);
+            var uRLNewsTitleParameter = uRLNewsTitle != null ?
+                new ObjectParameter("URLNewsTitle", uRLNewsTitle) :
+                new ObjectParameter("URLNewsTitle", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("Sp_InsUserNews", isCompanySoftwareParameter, categoryIDParameter, companyOrSoftwareIDParameter, websiteURLParameter, newsTitleParameter, newsDescriptionParameter, imageNameParameter, youtubeURLParameter, createdByParameter, uRLNewsTitleParameter);
         }
     
         public virtual ObjectResult<Sp_GetAllCategoriesLinks_Result> Sp_GetAllCategoriesLinks(Nullable<int> focusAreaID)

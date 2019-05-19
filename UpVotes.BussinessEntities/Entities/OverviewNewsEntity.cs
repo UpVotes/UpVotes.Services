@@ -9,6 +9,7 @@ namespace UpVotes.BusinessEntities.Entities
         public string location { get; set; }
         public int IsCompanySoftware { get; set; }
         public string Title { get; set; }
+        public string UrlTitle { get; set; }
         public int CompanySoftwareID { get; set; }
         public string CompanySoftwareName { get; set; }
         public string WebsiteURL { get; set; }
@@ -39,6 +40,7 @@ namespace UpVotes.BusinessEntities.Entities
         public int? CompanyOrSoftwareID { get; set; }
         public string WebsiteURL { get; set; }
         public string NewsTitle { get; set; }
+        public string NewsTitleUrl { get; set; }
         public string NewsDescription { get; set; }
         public string ImageName { get; set; }
         public string YoutubeURL { get; set; }
