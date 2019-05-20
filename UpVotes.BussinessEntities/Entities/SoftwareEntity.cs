@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Web;
 
 namespace UpVotes.BusinessEntities.Entities
 {
@@ -22,7 +21,7 @@ namespace UpVotes.BusinessEntities.Entities
         public string FaceBookURL { get; set; }
         public string TwitterURL { get; set; }
         public string InstagramURL { get; set; }
-        public int FoundedYear { get; set; }
+        public int? FoundedYear { get; set; }
         [System.Web.Mvc.AllowHtml]
         public string SoftwareDescription { get; set; }
         public int CreatedBy { get; set; }
@@ -35,7 +34,35 @@ namespace UpVotes.BusinessEntities.Entities
         public int Ranks { get; set; }
         public int TotalCount { get; set; }
         public bool IsClaim { get; set; }
+
+        public string IsUserVerified { get; set; }
+
+        public string UserVerifiedDate { get; set; }
+
+        public string IsAdminApproved { get; set; }
+
+        public string AdminApprovedDate { get; set; }
+
+        public string WorkEmail { get; set; }
+        public string Remarks { get; set; }
+
         public List<SoftwareReviewsEntity> SoftwareReviews { get; set; }
         public List<OverviewNewsResponseEntity> OverviewNewsData { get; set; }
+        public int LoggedInUserName { get; set; }
+
+        public string SoftwareCatagoryIds { get; set; }
+    }
+
+    public class SoftwareRejectComments
+    {
+        public int SoftwareId { get; set; }
+
+        public string SoftwareName { get; set; }
+
+        public string RejectComments { get; set; }
+
+        public string RejectedBy { get; set; }
+
+        public  string WorkEmail { get; set; }
     }
 }

@@ -90,7 +90,7 @@
           <Property Name="ModifiedDate" Type="datetime" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="CompanyPendingForApproval">
           <Key>
             <PropertyRef Name="CompanyID" />
@@ -124,7 +124,7 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           <Property Name="ReviewDate" Type="datetime" Nullable="false" />
           <Property Name="Email" Type="nvarchar" MaxLength="100" />
           <Property Name="Phone" Type="nvarchar" MaxLength="20" />
-          <Property Name="IsApproved" Type="bit" />
+          <Property Name="IsApproved" Type="bit" Nullable="false" />
           <Property Name="ReviewerUserName" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="CompanyReviewThankNote">
@@ -219,6 +219,50 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           <Property Name="MaxPriceZone3" Type="decimal" Precision="10" Scale="2" />
           <Property Name="Question" Type="nvarchar(max)" />
           <Property Name="Answer" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="SoftwareCategory">
+          <Key>
+            <PropertyRef Name="SoftwareCategoryID" />
+          </Key>
+          <Property Name="SoftwareCategoryID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ServiceCategoryID" Type="int" Nullable="false" />
+          <Property Name="SoftwareID" Type="int" Nullable="false" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="int" />
+          <Property Name="ModifiedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Softwares">
+          <Key>
+            <PropertyRef Name="SoftwareID" />
+          </Key>
+          <Property Name="SoftwareID" Type="int" Nullable="false" />
+          <Property Name="SoftwareName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="LogoName" Type="nvarchar" MaxLength="50" />
+          <Property Name="TagLine" Type="nvarchar" MaxLength="100" />
+          <Property Name="PriceRange" Type="varchar" MaxLength="50" />
+          <Property Name="SoftwareTrail" Type="varchar" MaxLength="100" />
+          <Property Name="DemoURL" Type="nvarchar" MaxLength="250" />
+          <Property Name="DomainID" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="WebSiteURL" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="LinkedInURL" Type="nvarchar" MaxLength="250" />
+          <Property Name="FaceBookURL" Type="nvarchar" MaxLength="250" />
+          <Property Name="TwitterURL" Type="nvarchar" MaxLength="250" />
+          <Property Name="InstagramURL" Type="nvarchar" MaxLength="250" />
+          <Property Name="FoundedYear" Type="int" />
+          <Property Name="SoftwareDescription" Type="nvarchar(max)" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="int" />
+          <Property Name="ModifiedDate" Type="datetime" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="IsUserApproved" Type="bit" />
+          <Property Name="UserApprovedDate" Type="datetime" />
+          <Property Name="IsAdminApproved" Type="bit" />
+          <Property Name="AdminApprovedDate" Type="datetime" />
+          <Property Name="WorkEmail" Type="nvarchar" MaxLength="100" />
+          <Property Name="Remarks" Type="nvarchar" MaxLength="500" />
+          <Property Name="SoftwareOTP" Type="varchar" MaxLength="6" />
         </EntityType>
         <EntityType Name="State">
           <Key>
@@ -456,6 +500,18 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SoftwareCategory_Softwares_SoftwareID">
+          <End Role="Softwares" Type="Self.Softwares" Multiplicity="1" />
+          <End Role="SoftwareCategory" Type="Self.SoftwareCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Softwares">
+              <PropertyRef Name="SoftwareID" />
+            </Principal>
+            <Dependent Role="SoftwareCategory">
+              <PropertyRef Name="SoftwareID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_State_Country_CountryID">
           <End Role="Country" Type="Self.Country" Multiplicity="1" />
           <End Role="State" Type="Self.State" Multiplicity="*" />
@@ -550,6 +606,10 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           <Parameter Name="companyName" Type="nvarchar" Mode="In" />
           <Parameter Name="userID" Type="int" Mode="In" />
         </Function>
+        <Function Name="Sp_CheckForSoftwareAndAdminUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="softwareName" Type="nvarchar" Mode="In" />
+          <Parameter Name="userID" Type="int" Mode="In" />
+        </Function>
         <Function Name="Sp_CompanyVote" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UserID" Type="int" Mode="In" />
           <Parameter Name="CompanyID" Type="int" Mode="In" />
@@ -561,8 +621,23 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
         <Function Name="SP_CopyCompany" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="companyID" Type="int" Mode="In" />
         </Function>
+        <Function Name="SP_CopySoftware" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="softwareID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_DeleteCompany" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="companyID" Type="int" Mode="In" />
+        </Function>
         <Function Name="Sp_DeleteCompanyHistory" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="companyID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_DeleteSoftwareCatagory" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="softwareId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_DeleteSoftwareHistory" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="softwareID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_DeleteSoftwarePendingForApproval" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="softwareId" Type="int" Mode="In" />
         </Function>
         <Function Name="Sp_GetAllCategoriesLinks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="FocusAreaID" Type="int" Mode="In" />
@@ -659,6 +734,9 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           <Parameter Name="PageSize" Type="int" Mode="In" />
           <Parameter Name="sortByVotes" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="Sp_GetSoftwareCategoryIds" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="softwareId" Type="int" Mode="In" />
+        </Function>
         <Function Name="Sp_GetSoftwareCompanyNews" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="categoryID" Type="int" Mode="In" />
           <Parameter Name="subcategory" Type="nvarchar" Mode="In" />
@@ -670,6 +748,9 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
         <Function Name="Sp_GetSoftwareCompanyNewsByName" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="isCompanySoftware" Type="int" Mode="In" />
           <Parameter Name="CompanySoftwareName" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="Sp_GetSoftwareDetailsByName" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="softwareName" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="Sp_GetSoftwareReviews" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="softwareName" Type="nvarchar" Mode="In" />
@@ -685,6 +766,9 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
         <Function Name="Sp_GetSoftwareReviewThankNotedUsers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="SoftwareID" Type="int" Mode="In" />
           <Parameter Name="SoftwareReviewID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_GetSoftwaresByUserID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userId" Type="int" Mode="In" />
         </Function>
         <Function Name="Sp_GetStateByCountryID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CountryID" Type="int" Mode="In" />
@@ -729,6 +813,9 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           <Parameter Name="UserID" Type="int" Mode="In" />
           <Parameter Name="CompanyReviewID" Type="int" Mode="In" />
         </Function>
+        <Function Name="Sp_InsertSoftwarePendingForApproval" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="softwareId" Type="int" Mode="In" />
+        </Function>
         <Function Name="Sp_InsertUpdateClaimListing" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ClaimListingID" Type="int" Mode="In" />
           <Parameter Name="companyID" Type="int" Mode="In" />
@@ -760,6 +847,11 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           <Parameter Name="ProfileID" Type="nvarchar" Mode="In" />
           <Parameter Name="ProfileURL" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="UserType" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_InsSoftwareCategory" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="softwareId" Type="int" Mode="In" />
+          <Parameter Name="serviceCategoryId" Type="int" Mode="In" />
+          <Parameter Name="createdBy" Type="int" Mode="In" />
         </Function>
         <Function Name="Sp_InsSoftwareReview" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="SoftwareID" Type="int" Mode="In" />
@@ -819,6 +911,12 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           <Parameter Name="UserID" Type="int" Mode="In" />
           <Parameter Name="SoftwareID" Type="int" Mode="In" />
         </Function>
+        <Function Name="Sp_UpdSoftwareRejectComments" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="softwareId" Type="int" Mode="In" />
+          <Parameter Name="rejectedBy" Type="varchar" Mode="In" />
+          <Parameter Name="rejectedCommenst" Type="nvarchar" Mode="In" />
+          <Parameter Name="rejectedOn" Type="nvarchar" Mode="In" />
+        </Function>
         <EntityContainer Name="UpVotesModelStoreContainer">
           <EntitySet Name="CategoryBasedMetaTags" EntityType="Self.CategoryBasedMetaTags" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Company" EntityType="Self.Company" Schema="dbo" store:Type="Tables" />
@@ -834,6 +932,8 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           <EntitySet Name="Email" EntityType="Self.Email" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FocusArea" EntityType="Self.FocusArea" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="QuotationRateCard" EntityType="Self.QuotationRateCard" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SoftwareCategory" EntityType="Self.SoftwareCategory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Softwares" EntityType="Self.Softwares" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="State" EntityType="Self.State" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SubFocusArea" EntityType="Self.SubFocusArea" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserQuotation" EntityType="Self.UserQuotation" Schema="dbo" store:Type="Tables" />
@@ -893,6 +993,10 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           <AssociationSet Name="FK_FocusArea_CompanyReviews_FocusAreaID" Association="Self.FK_FocusArea_CompanyReviews_FocusAreaID">
             <End Role="FocusArea" EntitySet="FocusArea" />
             <End Role="CompanyReviews" EntitySet="CompanyReviews" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SoftwareCategory_Softwares_SoftwareID" Association="Self.FK_SoftwareCategory_Softwares_SoftwareID">
+            <End Role="Softwares" EntitySet="Softwares" />
+            <End Role="SoftwareCategory" EntitySet="SoftwareCategory" />
           </AssociationSet>
           <AssociationSet Name="FK_State_Country_CountryID" Association="Self.FK_State_Country_CountryID">
             <End Role="Country" EntitySet="Country" />
@@ -1309,6 +1413,54 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           <FunctionImport Name="Sp_GetAllCategoriesLinks" ReturnType="Collection(UpVotesModel.Sp_GetAllCategoriesLinks_Result)">
           <Parameter Name="FocusAreaID" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="SoftwareCategory" EntityType="UpVotesModel.SoftwareCategory" />
+          <EntitySet Name="Softwares" EntityType="UpVotesModel.Softwares" />
+          <FunctionImport Name="Sp_CheckForSoftwareAndAdminUser" ReturnType="Collection(UpVotesModel.Sp_CheckForSoftwareAndAdminUser_Result)">
+            <Parameter Name="softwareName" Mode="In" Type="String" />
+            <Parameter Name="userID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SP_CopySoftware">
+          <Parameter Name="softwareID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_DeleteCompany">
+          <Parameter Name="companyID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_DeleteSoftwareCatagory">
+          <Parameter Name="softwareId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_DeleteSoftwareHistory">
+          <Parameter Name="softwareID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_DeleteSoftwarePendingForApproval">
+          <Parameter Name="softwareId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetSoftwareDetailsByName" ReturnType="Collection(UpVotesModel.Sp_GetSoftwareDetailsByName_Result)">
+          <Parameter Name="softwareName" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetSoftwaresByUserID" ReturnType="Collection(UpVotesModel.Sp_GetSoftwaresByUserID_Result)">
+          <Parameter Name="userId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_InsertSoftwarePendingForApproval">
+          <Parameter Name="softwareId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <AssociationSet Name="FK_SoftwareCategory_Softwares_SoftwareID" Association="UpVotesModel.FK_SoftwareCategory_Softwares_SoftwareID">
+            <End Role="Softwares" EntitySet="Softwares" />
+            <End Role="SoftwareCategory" EntitySet="SoftwareCategory" />
+          </AssociationSet>
+          <FunctionImport Name="Sp_GetSoftwareCategoryIds" ReturnType="Collection(String)">
+          <Parameter Name="softwareId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_InsSoftwareCategory">
+            <Parameter Name="softwareId" Mode="In" Type="Int32" />
+            <Parameter Name="serviceCategoryId" Mode="In" Type="Int32" />
+            <Parameter Name="createdBy" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_UpdSoftwareRejectComments">
+            <Parameter Name="softwareId" Mode="In" Type="Int32" />
+            <Parameter Name="rejectedBy" Mode="In" Type="String" />
+            <Parameter Name="rejectedCommenst" Mode="In" Type="String" />
+            <Parameter Name="rejectedOn" Mode="In" Type="String" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="Sp_GetCompanyFocus_Result">
           <Property Type="Int32" Name="CompanyFocusID" Nullable="false" />
@@ -1395,7 +1547,7 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           <NavigationProperty Name="FocusArea" Relationship="UpVotesModel.FK_FocusArea_CompanyReviews_FocusAreaID" FromRole="CompanyReview" ToRole="FocusArea" />
           <NavigationProperty Name="User" Relationship="UpVotesModel.FK_Users_CompanyReviews_UserID" FromRole="CompanyReview" ToRole="User" />
           <NavigationProperty Name="Company" Relationship="UpVotesModel.FK_CompanyReviews_Company_CompanyID" FromRole="CompanyReview" ToRole="Company" />
-          <Property Name="IsApproved" Type="Boolean" />
+          <Property Name="IsApproved" Type="Boolean" Nullable="false" />
           <Property Name="ReviewerUserName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="CompanyReviewThankNote">
@@ -2289,6 +2441,104 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           <Property Type="String" Name="stateCategory" Nullable="true" MaxLength="10" />
           <Property Type="Int32" Name="stateCountOfListing" Nullable="true" />
         </ComplexType>
+        <EntityType Name="SoftwareCategory">
+          <Key>
+            <PropertyRef Name="SoftwareCategoryID" />
+          </Key>
+          <Property Name="SoftwareCategoryID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ServiceCategoryID" Type="Int32" Nullable="false" />
+          <Property Name="SoftwareID" Type="Int32" Nullable="false" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="Int32" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Softwares" Relationship="UpVotesModel.FK_SoftwareCategory_Softwares_SoftwareID" FromRole="SoftwareCategory" ToRole="Softwares" />
+        </EntityType>
+        <EntityType Name="Softwares">
+          <Key>
+            <PropertyRef Name="SoftwareID" />
+          </Key>
+          <Property Name="SoftwareID" Type="Int32" Nullable="false" />
+          <Property Name="SoftwareName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="LogoName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TagLine" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="PriceRange" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SoftwareTrail" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DemoURL" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="DomainID" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="WebSiteURL" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="LinkedInURL" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="FaceBookURL" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="TwitterURL" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="InstagramURL" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="FoundedYear" Type="Int32" />
+          <Property Name="SoftwareDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="Int32" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="IsUserApproved" Type="Boolean" />
+          <Property Name="UserApprovedDate" Type="DateTime" Precision="3" />
+          <Property Name="IsAdminApproved" Type="Boolean" />
+          <Property Name="AdminApprovedDate" Type="DateTime" Precision="3" />
+          <Property Name="WorkEmail" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="SoftwareOTP" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="SoftwareCategory" Relationship="UpVotesModel.FK_SoftwareCategory_Softwares_SoftwareID" FromRole="Softwares" ToRole="SoftwareCategory" />
+        </EntityType>
+        <ComplexType Name="Sp_CheckForSoftwareAndAdminUser_Result">
+          <Property Type="Boolean" Name="IsSoftwareExists" Nullable="true" />
+          <Property Type="Int32" Name="PreviousSoftwareID" Nullable="true" />
+          <Property Type="Boolean" Name="IsAdmin" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="Sp_GetSoftwareDetailsByName_Result">
+          <Property Type="Int32" Name="SoftwareID" Nullable="false" />
+          <Property Type="String" Name="SoftwareName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="LogoName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="TagLine" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="PriceRange" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="SoftwareTrail" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="DemoURL" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="DomainID" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="WebSiteURL" Nullable="false" MaxLength="250" />
+          <Property Type="String" Name="LinkedInURL" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="FaceBookURL" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="TwitterURL" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="InstagramURL" Nullable="true" MaxLength="250" />
+          <Property Type="Int32" Name="FoundedYear" Nullable="true" />
+          <Property Type="String" Name="SoftwareDescription" Nullable="true" />
+          <Property Type="Int32" Name="CreatedBy" Nullable="false" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="ModifiedBy" Nullable="true" />
+          <Property Type="DateTime" Name="ModifiedDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="IsActive" Nullable="false" />
+          <Property Type="Boolean" Name="IsUserApproved" Nullable="true" />
+          <Property Type="DateTime" Name="UserApprovedDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="IsAdminApproved" Nullable="true" />
+          <Property Type="DateTime" Name="AdminApprovedDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="WorkEmail" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Remarks" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="SoftwareOTP" Nullable="true" MaxLength="6" />
+        </ComplexType>
+        <ComplexType Name="Sp_GetSoftwaresByUserID_Result">
+          <Property Type="Int32" Name="SoftwareID" Nullable="false" />
+          <Property Type="String" Name="SoftwareName" Nullable="false" MaxLength="100" />
+          <Property Type="Boolean" Name="IsUserApproved" Nullable="true" />
+          <Property Type="Boolean" Name="IsAdminApproved" Nullable="true" />
+        </ComplexType>
+        <Association Name="FK_SoftwareCategory_Softwares_SoftwareID">
+          <End Type="UpVotesModel.Softwares" Role="Softwares" Multiplicity="1" />
+          <End Type="UpVotesModel.SoftwareCategory" Role="SoftwareCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Softwares">
+              <PropertyRef Name="SoftwareID" />
+            </Principal>
+            <Dependent Role="SoftwareCategory">
+              <PropertyRef Name="SoftwareID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3204,6 +3454,113 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="SoftwareCategory">
+            <EntityTypeMapping TypeName="UpVotesModel.SoftwareCategory">
+              <MappingFragment StoreEntitySet="SoftwareCategory">
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="SoftwareID" ColumnName="SoftwareID" />
+                <ScalarProperty Name="ServiceCategoryID" ColumnName="ServiceCategoryID" />
+                <ScalarProperty Name="SoftwareCategoryID" ColumnName="SoftwareCategoryID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Softwares">
+            <EntityTypeMapping TypeName="UpVotesModel.Softwares">
+              <MappingFragment StoreEntitySet="Softwares">
+                <ScalarProperty Name="SoftwareOTP" ColumnName="SoftwareOTP" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="WorkEmail" ColumnName="WorkEmail" />
+                <ScalarProperty Name="AdminApprovedDate" ColumnName="AdminApprovedDate" />
+                <ScalarProperty Name="IsAdminApproved" ColumnName="IsAdminApproved" />
+                <ScalarProperty Name="UserApprovedDate" ColumnName="UserApprovedDate" />
+                <ScalarProperty Name="IsUserApproved" ColumnName="IsUserApproved" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="SoftwareDescription" ColumnName="SoftwareDescription" />
+                <ScalarProperty Name="FoundedYear" ColumnName="FoundedYear" />
+                <ScalarProperty Name="InstagramURL" ColumnName="InstagramURL" />
+                <ScalarProperty Name="TwitterURL" ColumnName="TwitterURL" />
+                <ScalarProperty Name="FaceBookURL" ColumnName="FaceBookURL" />
+                <ScalarProperty Name="LinkedInURL" ColumnName="LinkedInURL" />
+                <ScalarProperty Name="WebSiteURL" ColumnName="WebSiteURL" />
+                <ScalarProperty Name="DomainID" ColumnName="DomainID" />
+                <ScalarProperty Name="DemoURL" ColumnName="DemoURL" />
+                <ScalarProperty Name="SoftwareTrail" ColumnName="SoftwareTrail" />
+                <ScalarProperty Name="PriceRange" ColumnName="PriceRange" />
+                <ScalarProperty Name="TagLine" ColumnName="TagLine" />
+                <ScalarProperty Name="LogoName" ColumnName="LogoName" />
+                <ScalarProperty Name="SoftwareName" ColumnName="SoftwareName" />
+                <ScalarProperty Name="SoftwareID" ColumnName="SoftwareID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="Sp_CheckForSoftwareAndAdminUser" FunctionName="UpVotesModel.Store.Sp_CheckForSoftwareAndAdminUser">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_CheckForSoftwareAndAdminUser_Result">
+                <ScalarProperty Name="IsSoftwareExists" ColumnName="IsSoftwareExists" />
+                <ScalarProperty Name="PreviousSoftwareID" ColumnName="PreviousSoftwareID" />
+                <ScalarProperty Name="IsAdmin" ColumnName="IsAdmin" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_CopySoftware" FunctionName="UpVotesModel.Store.SP_CopySoftware" />
+          <FunctionImportMapping FunctionImportName="Sp_DeleteCompany" FunctionName="UpVotesModel.Store.Sp_DeleteCompany" />
+          <FunctionImportMapping FunctionImportName="Sp_DeleteSoftwareCatagory" FunctionName="UpVotesModel.Store.Sp_DeleteSoftwareCatagory" />
+          <FunctionImportMapping FunctionImportName="Sp_DeleteSoftwareHistory" FunctionName="UpVotesModel.Store.Sp_DeleteSoftwareHistory" />
+          <FunctionImportMapping FunctionImportName="Sp_DeleteSoftwarePendingForApproval" FunctionName="UpVotesModel.Store.Sp_DeleteSoftwarePendingForApproval" />
+          <FunctionImportMapping FunctionImportName="Sp_GetSoftwareDetailsByName" FunctionName="UpVotesModel.Store.Sp_GetSoftwareDetailsByName">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetSoftwareDetailsByName_Result">
+                <ScalarProperty Name="SoftwareID" ColumnName="SoftwareID" />
+                <ScalarProperty Name="SoftwareName" ColumnName="SoftwareName" />
+                <ScalarProperty Name="LogoName" ColumnName="LogoName" />
+                <ScalarProperty Name="TagLine" ColumnName="TagLine" />
+                <ScalarProperty Name="PriceRange" ColumnName="PriceRange" />
+                <ScalarProperty Name="SoftwareTrail" ColumnName="SoftwareTrail" />
+                <ScalarProperty Name="DemoURL" ColumnName="DemoURL" />
+                <ScalarProperty Name="DomainID" ColumnName="DomainID" />
+                <ScalarProperty Name="WebSiteURL" ColumnName="WebSiteURL" />
+                <ScalarProperty Name="LinkedInURL" ColumnName="LinkedInURL" />
+                <ScalarProperty Name="FaceBookURL" ColumnName="FaceBookURL" />
+                <ScalarProperty Name="TwitterURL" ColumnName="TwitterURL" />
+                <ScalarProperty Name="InstagramURL" ColumnName="InstagramURL" />
+                <ScalarProperty Name="FoundedYear" ColumnName="FoundedYear" />
+                <ScalarProperty Name="SoftwareDescription" ColumnName="SoftwareDescription" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="IsUserApproved" ColumnName="IsUserApproved" />
+                <ScalarProperty Name="UserApprovedDate" ColumnName="UserApprovedDate" />
+                <ScalarProperty Name="IsAdminApproved" ColumnName="IsAdminApproved" />
+                <ScalarProperty Name="AdminApprovedDate" ColumnName="AdminApprovedDate" />
+                <ScalarProperty Name="WorkEmail" ColumnName="WorkEmail" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="SoftwareOTP" ColumnName="SoftwareOTP" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_GetSoftwaresByUserID" FunctionName="UpVotesModel.Store.Sp_GetSoftwaresByUserID">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetSoftwaresByUserID_Result">
+                <ScalarProperty Name="SoftwareID" ColumnName="SoftwareID" />
+                <ScalarProperty Name="SoftwareName" ColumnName="SoftwareName" />
+                <ScalarProperty Name="IsUserApproved" ColumnName="IsUserApproved" />
+                <ScalarProperty Name="IsAdminApproved" ColumnName="IsAdminApproved" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_InsertSoftwarePendingForApproval" FunctionName="UpVotesModel.Store.Sp_InsertSoftwarePendingForApproval" />
+          <FunctionImportMapping FunctionImportName="Sp_GetSoftwareCategoryIds" FunctionName="UpVotesModel.Store.Sp_GetSoftwareCategoryIds" />
+          <FunctionImportMapping FunctionImportName="Sp_InsSoftwareCategory" FunctionName="UpVotesModel.Store.Sp_InsSoftwareCategory" />
+          <FunctionImportMapping FunctionImportName="Sp_UpdSoftwareRejectComments" FunctionName="UpVotesModel.Store.Sp_UpdSoftwareRejectComments" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

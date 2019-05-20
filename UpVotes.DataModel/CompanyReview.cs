@@ -32,7 +32,7 @@ namespace UpVotes.DataModel
         public System.DateTime ReviewDate { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
-        public Nullable<bool> IsApproved { get; set; }
+        public bool IsApproved { get; set; }
         public string ReviewerUserName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

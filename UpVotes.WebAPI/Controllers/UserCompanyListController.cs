@@ -18,8 +18,7 @@ namespace UpVotes.WebAPI.Controllers
             _companyServices = companyService;
         }
 
-        [HttpGet]
-        [Route("api/GetUserCompanies/{userID}/{companyName}")]
+        [HttpGet, Route("api/GetUserCompanies/{userID}/{companyName}")]
         public HttpResponseMessage GetUserCompanies(int userID, string companyName)
         {
             try
@@ -59,10 +58,9 @@ namespace UpVotes.WebAPI.Controllers
             {
                 return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
             }
-        }        
+        }
 
-        [HttpGet]
-        [Route("api/GetCountry")]
+        [HttpGet, Route("api/GetCountry")]
         public HttpResponseMessage GetCountry()
         {
             try
@@ -75,8 +73,7 @@ namespace UpVotes.WebAPI.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("api/GetTopVoteCompanies")]
+        [HttpGet, Route("api/GetTopVoteCompanies")]
         public HttpResponseMessage GetTopVoteCompanies()
         {
             try
@@ -87,10 +84,9 @@ namespace UpVotes.WebAPI.Controllers
             {
                 return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
             }
-        }        
+        }
 
-        [HttpGet]
-        [Route("api/GetStates/{countryID}")]
+        [HttpGet, Route("api/GetStates/{countryID}")]
         public HttpResponseMessage GetStates(int countryID)
         {
             try
@@ -103,8 +99,7 @@ namespace UpVotes.WebAPI.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("api/GetSubFocusAreaByFocusID/{FocusAreaID}")]
+        [HttpGet, Route("api/GetSubFocusAreaByFocusID/{FocusAreaID}")]
         public HttpResponseMessage GetSubFocusAreaByFocusID(int FocusAreaID)
         {
             try
@@ -117,8 +112,7 @@ namespace UpVotes.WebAPI.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("api/CompanyVerificationByUser/{uID}/{cID}/{compID}")]
+        [HttpGet, Route("api/CompanyVerificationByUser/{uID}/{cID}/{compID}")]
         public HttpResponseMessage CompanyVerificationByUser(int uID, string cID, int compID)
         {
             try
@@ -137,8 +131,7 @@ namespace UpVotes.WebAPI.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("api/UpdateRejectionComments")]
+        [HttpPost, Route("api/UpdateRejectionComments")]
         public HttpResponseMessage UpdateRejectionComments(CompanyRejectComments companyRejectComments)
         {
             try

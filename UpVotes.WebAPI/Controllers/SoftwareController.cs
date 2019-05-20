@@ -23,8 +23,7 @@ namespace UpVotes.WebAPI.Controllers
             _softwareServices = softwareService;            
         }
 
-        [HttpPost]
-        [Route("api/GetSoftware")]
+        [HttpPost, Route("api/GetSoftware")]
         public HttpResponseMessage GetSoftware(SoftwareFilterEntity softwareFilter)
         {
             try
@@ -158,6 +157,74 @@ namespace UpVotes.WebAPI.Controllers
             {
                 CategoryMetaTags metaTagDetails = _softwareServices.GetSoftwareCategoryMetaTags(SoftwareCategoryName);
                 return Request.CreateResponse(HttpStatusCode.OK, metaTagDetails);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
+
+        [HttpGet, Route("api/GetUserSoftwares/{userId}")]
+        public HttpResponseMessage GetUserSoftwares(int userId)
+        {
+            try
+            {
+                var userSoftwares = _softwareServices.GetUserSoftwaresByUserId(userId);
+                return userSoftwares != null ? Request.CreateResponse(HttpStatusCode.OK, userSoftwares) : Request.CreateResponse(HttpStatusCode.NotFound, "No softwares found");
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
+
+        [HttpGet, Route("api/GetUserSoftwareByName/{softwareName}")]
+        public HttpResponseMessage GetUserSoftwareByName(string softwareName)
+        {
+            try
+            {
+                var userSoftware = _softwareServices.GetUserSoftwareByName(softwareName);
+                return userSoftware != null ? Request.CreateResponse(HttpStatusCode.OK, userSoftware) : Request.CreateResponse(HttpStatusCode.NotFound, "No software found");
+            }
+            catch (Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, e);
+            }
+        }
+
+        [HttpPost, Route("api/SaveSoftwareDetails")]
+        public HttpResponseMessage SaveSoftwareDetails(SoftwareEntity softwareEntity)
+        {
+            try
+            {
+                int softwareId = _softwareServices.SaveSoftwareDetails(softwareEntity);
+                if (softwareId != 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, softwareId);
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.Conflict, softwareId);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
+
+        [HttpGet, Route("api/SoftwareVerificationByUser/{uId}/{cId}/{softId}")]
+        public HttpResponseMessage SoftwareVerificationByUser(int uId, string cId, int softId)
+        {
+            try
+            {
+                bool isUserVerifiedSoftware = _softwareServices.SoftwareVerificationByUser(uId, cId, softId);
+                if (isUserVerifiedSoftware)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, isUserVerifiedSoftware);
+                }
+
+                return Request.CreateResponse(HttpStatusCode.BadRequest, isUserVerifiedSoftware);
             }
             catch (Exception ex)
             {

@@ -13,5 +13,9 @@ namespace UpVotes.BusinessServices.Interface
         string InsertUpdateClaimSoftwareListing(ClaimApproveRejectListingRequest ClaimSoftwareListingobj);
         CompanySoftwareReviews GetReviewsForSoftwareListingPage(SoftwareFilterEntity filter);
         SoftwareDetail GetUserReviewsForSoftware(string softwareName, int noOfRows);
+        SoftwareDetail GetUserSoftwaresByUserId(int userId);
+        SoftwareDetail GetUserSoftwareByName(string softwareName);
+        int SaveSoftwareDetails(SoftwareEntity softwareEntity);
+        bool SoftwareVerificationByUser(int uId, string cId, int softId);
     }
 }

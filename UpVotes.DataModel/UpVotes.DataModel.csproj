@@ -105,6 +105,12 @@
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Repository\Repository.cs" />
+    <Compile Include="SoftwareCategory.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Softwares.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Sp_CategoryMetaTags_Result.cs">
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>
@@ -112,6 +118,9 @@
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Sp_CheckForCompanyAndAdminUser_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_CheckForSoftwareAndAdminUser_Result.cs">
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Sp_CompanyVoteUserInformation_Result.cs">
@@ -177,6 +186,9 @@
     <Compile Include="Sp_GetSoftwareCompanyNews_Result.cs">
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Sp_GetSoftwareDetailsByName_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Sp_GetSoftwareReviewsForListingPage_Result.cs">
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>
@@ -184,6 +196,9 @@
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Sp_GetSoftwareReviewThankNotedUsers_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_GetSoftwaresByUserID_Result.cs">
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Sp_GetSoftware_Result.cs">

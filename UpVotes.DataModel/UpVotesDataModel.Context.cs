@@ -49,6 +49,8 @@ namespace UpVotes.DataModel
         public virtual DbSet<CompanyPendingForApproval> CompanyPendingForApproval { get; set; }
         public virtual DbSet<CompanyFocus> CompanyFocus { get; set; }
         public virtual DbSet<Email> Email { get; set; }
+        public virtual DbSet<SoftwareCategory> SoftwareCategory { get; set; }
+        public virtual DbSet<Softwares> Softwares { get; set; }
     
         public virtual ObjectResult<Sp_GetCompanyFocus_Result> Sp_GetCompanyFocus(Nullable<int> companyID)
         {
@@ -1068,6 +1070,138 @@ namespace UpVotes.DataModel
                 new ObjectParameter("FocusAreaID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetAllCategoriesLinks_Result>("Sp_GetAllCategoriesLinks", focusAreaIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_CheckForSoftwareAndAdminUser_Result> Sp_CheckForSoftwareAndAdminUser(string softwareName, Nullable<int> userID)
+        {
+            var softwareNameParameter = softwareName != null ?
+                new ObjectParameter("softwareName", softwareName) :
+                new ObjectParameter("softwareName", typeof(string));
+    
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("userID", userID) :
+                new ObjectParameter("userID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_CheckForSoftwareAndAdminUser_Result>("Sp_CheckForSoftwareAndAdminUser", softwareNameParameter, userIDParameter);
+        }
+    
+        public virtual int SP_CopySoftware(Nullable<int> softwareID)
+        {
+            var softwareIDParameter = softwareID.HasValue ?
+                new ObjectParameter("softwareID", softwareID) :
+                new ObjectParameter("softwareID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_CopySoftware", softwareIDParameter);
+        }
+    
+        public virtual int Sp_DeleteCompany(Nullable<int> companyID)
+        {
+            var companyIDParameter = companyID.HasValue ?
+                new ObjectParameter("companyID", companyID) :
+                new ObjectParameter("companyID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Sp_DeleteCompany", companyIDParameter);
+        }
+    
+        public virtual int Sp_DeleteSoftwareCatagory(Nullable<int> softwareId)
+        {
+            var softwareIdParameter = softwareId.HasValue ?
+                new ObjectParameter("softwareId", softwareId) :
+                new ObjectParameter("softwareId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Sp_DeleteSoftwareCatagory", softwareIdParameter);
+        }
+    
+        public virtual int Sp_DeleteSoftwareHistory(Nullable<int> softwareID)
+        {
+            var softwareIDParameter = softwareID.HasValue ?
+                new ObjectParameter("softwareID", softwareID) :
+                new ObjectParameter("softwareID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Sp_DeleteSoftwareHistory", softwareIDParameter);
+        }
+    
+        public virtual int Sp_DeleteSoftwarePendingForApproval(Nullable<int> softwareId)
+        {
+            var softwareIdParameter = softwareId.HasValue ?
+                new ObjectParameter("softwareId", softwareId) :
+                new ObjectParameter("softwareId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Sp_DeleteSoftwarePendingForApproval", softwareIdParameter);
+        }
+    
+        public virtual ObjectResult<Sp_GetSoftwareDetailsByName_Result> Sp_GetSoftwareDetailsByName(string softwareName)
+        {
+            var softwareNameParameter = softwareName != null ?
+                new ObjectParameter("softwareName", softwareName) :
+                new ObjectParameter("softwareName", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetSoftwareDetailsByName_Result>("Sp_GetSoftwareDetailsByName", softwareNameParameter);
+        }
+    
+        public virtual ObjectResult<Sp_GetSoftwaresByUserID_Result> Sp_GetSoftwaresByUserID(Nullable<int> userId)
+        {
+            var userIdParameter = userId.HasValue ?
+                new ObjectParameter("userId", userId) :
+                new ObjectParameter("userId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetSoftwaresByUserID_Result>("Sp_GetSoftwaresByUserID", userIdParameter);
+        }
+    
+        public virtual int Sp_InsertSoftwarePendingForApproval(Nullable<int> softwareId)
+        {
+            var softwareIdParameter = softwareId.HasValue ?
+                new ObjectParameter("softwareId", softwareId) :
+                new ObjectParameter("softwareId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Sp_InsertSoftwarePendingForApproval", softwareIdParameter);
+        }
+    
+        public virtual ObjectResult<string> Sp_GetSoftwareCategoryIds(Nullable<int> softwareId)
+        {
+            var softwareIdParameter = softwareId.HasValue ?
+                new ObjectParameter("softwareId", softwareId) :
+                new ObjectParameter("softwareId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("Sp_GetSoftwareCategoryIds", softwareIdParameter);
+        }
+    
+        public virtual int Sp_InsSoftwareCategory(Nullable<int> softwareId, Nullable<int> serviceCategoryId, Nullable<int> createdBy)
+        {
+            var softwareIdParameter = softwareId.HasValue ?
+                new ObjectParameter("softwareId", softwareId) :
+                new ObjectParameter("softwareId", typeof(int));
+    
+            var serviceCategoryIdParameter = serviceCategoryId.HasValue ?
+                new ObjectParameter("serviceCategoryId", serviceCategoryId) :
+                new ObjectParameter("serviceCategoryId", typeof(int));
+    
+            var createdByParameter = createdBy.HasValue ?
+                new ObjectParameter("createdBy", createdBy) :
+                new ObjectParameter("createdBy", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Sp_InsSoftwareCategory", softwareIdParameter, serviceCategoryIdParameter, createdByParameter);
+        }
+    
+        public virtual int Sp_UpdSoftwareRejectComments(Nullable<int> softwareId, string rejectedBy, string rejectedCommenst, string rejectedOn)
+        {
+            var softwareIdParameter = softwareId.HasValue ?
+                new ObjectParameter("softwareId", softwareId) :
+                new ObjectParameter("softwareId", typeof(int));
+    
+            var rejectedByParameter = rejectedBy != null ?
+                new ObjectParameter("rejectedBy", rejectedBy) :
+                new ObjectParameter("rejectedBy", typeof(string));
+    
+            var rejectedCommenstParameter = rejectedCommenst != null ?
+                new ObjectParameter("rejectedCommenst", rejectedCommenst) :
+                new ObjectParameter("rejectedCommenst", typeof(string));
+    
+            var rejectedOnParameter = rejectedOn != null ?
+                new ObjectParameter("rejectedOn", rejectedOn) :
+                new ObjectParameter("rejectedOn", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Sp_UpdSoftwareRejectComments", softwareIdParameter, rejectedByParameter, rejectedCommenstParameter, rejectedOnParameter);
         }
     }
 }

@@ -45,6 +45,9 @@
         <AssociationConnector Association="UpVotesModel.FK_CompanyFocus_Company" />
         <AssociationConnector Association="UpVotesModel.FK_CompanySubFocus_CompanyFocus_CompanyFocusID" />
         <EntityTypeShape EntityType="UpVotesModel.Email" Width="1.5" PointX="12.375" PointY="3.75" />
+        <EntityTypeShape EntityType="UpVotesModel.SoftwareCategory" Width="1.5" PointX="12.375" PointY="7.75" />
+        <EntityTypeShape EntityType="UpVotesModel.Softwares" Width="1.5" PointX="14.375" PointY="0.75" />
+        <AssociationConnector Association="UpVotesModel.FK_SoftwareCategory_Softwares_SoftwareID" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

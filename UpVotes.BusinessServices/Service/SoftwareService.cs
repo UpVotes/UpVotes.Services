@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Migrations;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Net.Mail;
@@ -26,10 +27,10 @@ namespace UpVotes.BusinessServices.Service
         UpVotesEntities _context = null;
         
 
-        public SoftwareDetail GetAllSoftwareDetails(int? serviceCategoryID, string softwareName, string sortby, int userID = 0, int PageNo = 1, int PageSize = 10)
+        public SoftwareDetail GetAllSoftwareDetails(int? serviceCategoryId, string softwareName, string sortby, int userId = 0, int pageNo = 1, int pageSize = 10)
         {
-            SoftwareDetail softwareDetail = new SoftwareDetail();
-            OverviewNewsService newsObj = new OverviewNewsService();
+            var softwareDetail = new SoftwareDetail();
+            var newsObj = new OverviewNewsService();
             softwareDetail.SoftwareList = new List<SoftwareEntity>();
             softwareName = Helper.BasicDecryptString(softwareName);
 
@@ -37,8 +38,8 @@ namespace UpVotes.BusinessServices.Service
             {
                 using (_context = new UpVotesEntities())
                 {
-                    IEnumerable<SoftwareEntity> softwareEntities = GetSoftware(serviceCategoryID, softwareName, userID, PageNo, PageSize, sortby).ToList();
-                    if (softwareEntities.Count() > 0)
+                    IEnumerable<SoftwareEntity> softwareEntities = GetSoftware(serviceCategoryId, softwareName, userId, pageNo, pageSize, sortby).ToList();
+                    if (softwareEntities.Any())
                     {
                         foreach (SoftwareEntity software in softwareEntities)
                         {
@@ -47,7 +48,7 @@ namespace UpVotes.BusinessServices.Service
                                 software.SoftwareName = System.Web.HttpUtility.HtmlEncode(software.SoftwareName);
                                 software.SoftwareReviews = GetSoftwareReviews(software.SoftwareName,5).ToList();
                                 software.OverviewNewsData = newsObj.GetCompanySoftwareNewsByID(2, software.SoftwareID);
-                                if (software.SoftwareReviews.Count() > 0)
+                                if (software.SoftwareReviews.Any())
                                 {
                                     foreach (SoftwareReviewsEntity softwareReviewsEntity in software.SoftwareReviews)
                                     {
@@ -58,42 +59,7 @@ namespace UpVotes.BusinessServices.Service
                             softwareDetail.SoftwareList.Add(software);
                         }
                     }
-                    //if (softwareEntities != null)
-                    //{
-                    //    softwareEntities.ToList().ForEach(q => softwareDetail.SoftwareList.Add(new SoftwareEntity
-                    //    {
-                    //        SoftwareID = Convert.ToInt32(q.SoftwareID),
-                    //        CreatedBy = Convert.ToInt32(q.CreatedBy),
-                    //        SoftwareName = q.SoftwareName,
-                    //        LogoName = q.LogoName,
-                    //        TagLine = q.TagLine,
-                    //        UserRating = Convert.ToInt32(q.UserRating),
-                    //        NoOfUsersRated = Convert.ToInt32(q.NoOfUsersRated),
-                    //        NoOfVotes = Convert.ToInt32(q.NoOfVotes),
-                    //        IsVoted = Convert.ToBoolean(q.IsVoted),
-                    //        PriceRange = q.PriceRange,
-                    //        SoftwareTrail = q.SoftwareTrail,
-                    //        DemoURL = q.DemoURL,
-                    //        DomainID = q.DomainID,
-                    //        WebSiteURL = q.WebSiteURL,
-                    //        LinkedInURL = q.LinkedInURL,
-                    //        FaceBookURL = q.FaceBookURL,
-                    //        TwitterURL = q.TwitterURL,
-                    //        InstagramURL = q.InstagramURL,
-                    //        FoundedYear = Convert.ToInt32(q.FoundedYear),
-                    //        SoftwareDescription = q.SoftwareDescription,
-                    //        CreatedDate = q.CreatedDate == null ? string.Empty : Convert.ToDateTime(q.CreatedDate).ToString("dd-MMM-yyyy"),
-                    //        ServiceCategoryName = q.ServiceCategoryName,
-                    //        ModifiedBy = Convert.ToInt32(q.ModifiedBy),
-                    //        ModifiedDate = q.ModifiedDate == null ? string.Empty : Convert.ToDateTime(q.ModifiedDate).ToString("dd-MMM-yyyy"),
-                    //        ServiceCategoryID = Convert.ToInt32(q.ServiceCategoryID),
-                    //        IsActive = Convert.ToBoolean(q.IsActive),
-                    //        Ranks = Convert.ToInt32(q.Ranks),
-                    //        TotalCount = Convert.ToInt32(q.TotalCount),
-                    //        IsClaim = Convert.ToBoolean(q.IsClaim)
-                    //    }
-                    //    ));
-                    //}
+                    
                     return softwareDetail;
                 }
                 
@@ -106,16 +72,311 @@ namespace UpVotes.BusinessServices.Service
 
         public SoftwareDetail GetUserReviewsForSoftware(string softwareName, int noOfRows)
         {
-            SoftwareDetail softwareDetail = new SoftwareDetail();
-            softwareDetail.SoftwareList = new List<SoftwareEntity>();
+            var softwareDetail = new SoftwareDetail {SoftwareList = new List<SoftwareEntity>()};
 
-            SoftwareEntity software = new SoftwareEntity();
-            software.SoftwareName = softwareName.Trim();
+            var software = new SoftwareEntity {SoftwareName = softwareName.Trim()};
             software.SoftwareReviews = GetSoftwareReviews(software.SoftwareName, noOfRows).ToList();
 
             softwareDetail.SoftwareList.Add(software);
 
             return softwareDetail;
+        }
+
+        public SoftwareDetail GetUserSoftwaresByUserId(int userId)
+        {
+            var softwareDetail = new SoftwareDetail() {SoftwareList = new List<SoftwareEntity>()};
+            using (_context = new UpVotesEntities())
+            {
+                var dbSoftwareList = _context.Sp_GetSoftwaresByUserID(userId).ToList();
+
+                foreach (var softwares in dbSoftwareList)
+                {
+                    var softwareEntity = new SoftwareEntity()
+                    {
+                        SoftwareID = softwares.SoftwareID,
+                        SoftwareName = softwares.SoftwareName,
+                        IsUserVerified = softwares.IsUserApproved == true ? "Yes" : "No",
+                        IsAdminApproved = softwares.IsAdminApproved == true ? "Yes" : "No"
+                    };
+
+                    softwareDetail.SoftwareList.Add(softwareEntity);
+                }
+            }
+
+            return softwareDetail;
+
+        }
+
+        public SoftwareDetail GetUserSoftwareByName(string softwareName)
+        {
+            var softwareDetail = new SoftwareDetail() {SoftwareList = new List<SoftwareEntity>()};
+            using (_context = new UpVotesEntities())
+            {
+
+                var dbSoftwareList = _context.Sp_GetSoftwareDetailsByName(softwareName).ToList();
+
+                foreach (var softwares in dbSoftwareList)
+                {
+                    var softwareEntity = new SoftwareEntity()
+                    {
+                        SoftwareID = softwares.SoftwareID,
+                        SoftwareName = softwares.SoftwareName,
+                        LogoName = softwares.LogoName,
+                        TagLine = softwares.TagLine,
+                        PriceRange = softwares.PriceRange,
+                        SoftwareTrail = softwares.SoftwareTrail,
+                        WebSiteURL = softwares.WebSiteURL,
+                        FoundedYear = softwares.FoundedYear,
+                        DemoURL = softwares.DemoURL,
+                        SoftwareDescription = softwares.SoftwareDescription,
+                        WorkEmail = softwares.WorkEmail,
+                        DomainID = softwares.DomainID,
+                        LinkedInURL = softwares.LinkedInURL,
+                        FaceBookURL = softwares.FaceBookURL,
+                        TwitterURL = softwares.TwitterURL,
+                        InstagramURL = softwares.InstagramURL,
+                        Remarks = softwares.Remarks,
+                        CreatedBy = softwares.CreatedBy
+                    };
+
+                    softwareDetail.SoftwareList.Add(softwareEntity);
+                }
+            }
+
+            return softwareDetail;
+        }
+
+        public int SaveSoftwareDetails(SoftwareEntity softwareEntity)
+        {
+            try
+            {
+                using (_context = new UpVotesEntities())
+                {
+                    Softwares softwareObj = null;
+                    int softwareId = 0;
+                    bool isAdmin = false;
+                    string softwareOtp = string.Empty; bool isAdd = false;
+                    var checkForSoftwareAndAdminUserObj = _context.Sp_CheckForSoftwareAndAdminUser(softwareEntity.SoftwareName, softwareEntity.LoggedInUserName).FirstOrDefault();
+                    
+                    if (checkForSoftwareAndAdminUserObj != null)
+                    {
+                        isAdmin = Convert.ToBoolean(checkForSoftwareAndAdminUserObj.IsAdmin);
+                        if (softwareEntity.SoftwareID == 0)
+                        {
+                            if (Convert.ToBoolean(checkForSoftwareAndAdminUserObj.IsSoftwareExists))
+                            {
+                                return 0;
+                            }
+                            isAdd = true;
+                            softwareId = Convert.ToInt32(checkForSoftwareAndAdminUserObj.PreviousSoftwareID);
+                            softwareId = softwareId + 1;
+                            softwareEntity.SoftwareID = softwareId;
+
+                            softwareObj = new Softwares();
+                            SoftwareDataInitialization(softwareEntity, softwareObj, isAdmin);
+                            softwareObj.CreatedBy = softwareEntity.CreatedBy;
+                            softwareObj.CreatedDate = DateTime.Now;
+                            softwareObj.SoftwareOTP = new Random().Next(100000, 999999).ToString("D6");
+                            softwareObj.IsActive = true;
+                            _context.Softwares.Add(softwareObj);
+                        }
+                        else
+                        {
+                            isAdd = false;
+                            softwareObj = _context.Softwares.FirstOrDefault(s=>s.SoftwareID == softwareEntity.SoftwareID);
+                            SoftwareDataInitialization(softwareEntity, softwareObj, checkForSoftwareAndAdminUserObj.IsAdmin);
+                            softwareObj.ModifiedBy = softwareEntity.ModifiedBy;
+                            softwareObj.ModifiedDate = DateTime.Now;
+
+                            if (isAdmin && softwareObj.IsUserApproved == true && softwareObj.IsAdminApproved == true)
+                            {
+                                _context.SP_CopySoftware(softwareEntity.SoftwareID);
+                            }
+                        }
+                    }
+
+                    _context.SaveChanges();
+
+                    SaveSoftwareCategory(softwareEntity, _context);
+
+                    if (isAdd)
+                    {                        
+                        if (!isAdmin)
+                        {
+                            SendEmailForSoftwareUserVerification(softwareEntity.LoggedInUserName, softwareObj.SoftwareName, softwareId, softwareObj.SoftwareOTP, softwareObj.WorkEmail, false);
+                        }
+                    }
+
+                    if (!isAdmin)
+                    {
+                        _context.Sp_InsertSoftwarePendingForApproval(softwareId);
+                    }
+                    else
+                    {
+                        if (!isAdd && Convert.ToBoolean(softwareObj.IsUserApproved))
+                        {
+                            _context.Sp_DeleteSoftwarePendingForApproval(softwareId);
+                            if (!Convert.ToBoolean(softwareObj.IsAdminApproved))
+                            {
+                                User newUserObj = AddUserByWorkEmailID(softwareObj, _context);
+                                SendSoftwareApprovedEmail(softwareObj.SoftwareName, softwareObj.WorkEmail, newUserObj);
+                                softwareObj.CreatedBy = newUserObj.UserID;
+                            }
+                            softwareObj.IsAdminApproved = true;
+                            softwareObj.AdminApprovedDate = DateTime.Now;
+
+                            _context.Sp_DeleteSoftwareHistory(softwareObj.SoftwareID);
+                        }                        
+                    }
+
+                    _context.SaveChanges();
+
+                    return softwareId;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private void SaveSoftwareCategory(SoftwareEntity softwareEntity, UpVotesEntities context)
+        {
+            _context.Sp_DeleteSoftwareCatagory(softwareEntity.SoftwareID);
+            foreach (var categoryId in softwareEntity.SoftwareCatagoryList)
+            {
+                var softwareCategoryObj = new SoftwareCategory
+                {
+                    SoftwareID = softwareEntity.SoftwareID,
+                    ServiceCategoryID = categoryId,
+                    CreatedBy = softwareEntity.LoggedInUserName,
+                    CreatedDate = DateTime.Now
+                };                
+                _context.SoftwareCategory.Add(softwareCategoryObj);
+                _context.SaveChanges();
+            }
+        }
+
+        public bool SoftwareVerificationByUser(int uId, string cId, int softId)
+        {
+            try
+            {
+                using (_context = new UpVotesEntities())
+                {
+                    var userVerifiedSoftware = _context.Softwares.FirstOrDefault(a => a.SoftwareID == softId && a.CreatedBy == uId && a.SoftwareOTP.Trim().ToUpper() == cId.Trim().ToUpper());
+                    if (userVerifiedSoftware != null)
+                    {
+                        userVerifiedSoftware.IsUserApproved = true;
+                        userVerifiedSoftware.UserApprovedDate = DateTime.Now;
+                        _context.SaveChanges();
+                        SendUserApprovedEmail(userVerifiedSoftware.SoftwareName);
+                        return true;
+                    }
+
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private void SendUserApprovedEmail(string softwareName)
+        {
+            var emailProperties = new Email
+            {
+                EmailFrom = System.Configuration.ConfigurationManager.AppSettings["AdminEmail"],
+                DomainDisplayName = System.Configuration.ConfigurationManager.AppSettings["DomainDisplayName"],
+                EmailTo = System.Configuration.ConfigurationManager.AppSettings["AdminEmail"],
+                EmailBCC = "upvotes7@gmail.com; puneethm@hotmail.com",
+                EmailSubject = softwareName + " is approved by user.",
+                EmailBody = GetUserApprovedEmailContent(softwareName)
+            };
+            EmailHelper.SendEmail(emailProperties);
+        }
+
+        private string GetUserApprovedEmailContent(string softwareName)
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.Append("<p>Hello,</p><p>Hello Admin, <br/> <b>" + softwareName + "<b/> has been approved from User.</p>");
+
+            EmailHelper.GetEmailSignature(sb);
+            return sb.ToString();
+        }
+
+        private User AddUserByWorkEmailID(Softwares softwareObj, UpVotesEntities _upvotesContext)
+        {
+            var dbUser = _upvotesContext.Users.FirstOrDefault(a => a.UserName.Trim().ToUpper() == softwareObj.WorkEmail.Trim().ToUpper());
+
+            if (dbUser == null)
+            {
+                dbUser = _upvotesContext.Users.FirstOrDefault(a => a.UserID == softwareObj.CreatedBy);
+                if (dbUser != null)
+                {
+                    User dbNewUser = new User()
+                    {
+                        UserName = softwareObj.WorkEmail.Trim(),
+                        UserPassword = EncryptionAndDecryption.Encrypt((dbUser.FirstName ?? "!Upvotes") + EncryptionAndDecryption.GenRandomAlphaNum(6)),
+                        FirstName = dbUser.FirstName,
+                        LastName = dbUser.LastName,
+                        UserEmail = dbUser.UserEmail,
+                        UserMobile = dbUser.UserMobile,
+                        UserType = 1,
+                        ProfileURL = dbUser.ProfileURL,
+                        IsActive = true,
+                        IsBlocked = false,
+                        UserActivatedDateTime = DateTime.Now,
+                        UserLastLoginDateTime = DateTime.Now,
+                        Remarks = dbUser.Remarks,
+                        DateOfBirth = dbUser.DateOfBirth,
+                        ProfilePictureURL = dbUser.ProfilePictureURL,
+                        ProfileID = dbUser.ProfileID,
+                        CreatedBy = dbUser.UserID,
+                        CreatedDate = DateTime.Now
+                    };
+                    _upvotesContext.Users.Add(dbNewUser);
+                    _upvotesContext.SaveChanges();
+                }
+            }
+
+            dbUser = _upvotesContext.Users.FirstOrDefault(a => a.UserName.Trim().ToUpper() == softwareObj.WorkEmail.Trim().ToUpper());
+
+            softwareObj.CreatedBy = dbUser.UserID;
+
+            return dbUser;
+        }
+
+        private void SoftwareDataInitialization(SoftwareEntity softwareEntity, Softwares softwareObj, bool? isAdmin)
+        {
+            softwareObj.SoftwareID = softwareEntity.SoftwareID;
+            softwareObj.SoftwareName = softwareEntity.SoftwareName;
+            softwareObj.TagLine = softwareEntity.TagLine;
+            if (!string.IsNullOrWhiteSpace(softwareEntity.LogoName))
+            {
+                softwareObj.LogoName = softwareEntity.LogoName;
+            }
+
+            softwareObj.PriceRange = softwareEntity.PriceRange;
+            softwareObj.SoftwareTrail = softwareEntity.SoftwareTrail;
+            softwareObj.DemoURL = softwareEntity.DemoURL;
+            if (Convert.ToBoolean(isAdmin) && softwareEntity.CreatedBy == softwareEntity.LoggedInUserName)
+            {
+                softwareObj.DomainID = softwareEntity.DomainID;
+            }
+            else
+            {
+                softwareObj.WorkEmail = softwareEntity.WorkEmail;
+                softwareObj.DomainID = string.Empty;
+            }
+
+            softwareObj.WebSiteURL = softwareEntity.WebSiteURL;
+            softwareObj.LinkedInURL = softwareEntity.LinkedInURL;
+            softwareObj.FaceBookURL = softwareEntity.FaceBookURL;
+            softwareObj.TwitterURL = softwareEntity.TwitterURL;
+            softwareObj.InstagramURL = softwareEntity.InstagramURL;
+            softwareObj.FoundedYear = softwareEntity.FoundedYear;
+            softwareObj.SoftwareDescription = softwareEntity.SoftwareDescription;
         }
 
         public CompanySoftwareReviews GetReviewsForSoftwareListingPage(SoftwareFilterEntity softwareFilter)
@@ -213,12 +474,12 @@ namespace UpVotes.BusinessServices.Service
             emailProperties.EmailBCC = "upvotes7@gmail.com; puneethm@hotmail.com";
             if (!IsClaim)
             {
-                emailProperties.EmailSubject = "Company profile verification at upvotes.co";
+                emailProperties.EmailSubject = "Software profile verification at upvotes.co";
                 emailProperties.EmailBody = GetSoftwareUserVerificationEmailContent(userID, softwareName, softwareID, softwareOTP).ToString();
             }
             else
             {
-                emailProperties.EmailSubject = "Company profile claimed at upvotes.co";
+                emailProperties.EmailSubject = "Software profile claimed at upvotes.co";
                 emailProperties.EmailBody = GetSoftwareUserClaimedEmailContent(userID, softwareName, softwareID, workEmail).ToString();
             }
 
@@ -243,7 +504,7 @@ namespace UpVotes.BusinessServices.Service
 
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             sb.Append("<p>Hello,</p>");
-            sb.Append("<p>Click the below link to verify your company profile " + softwareName + " at upvotes.co</p>");
+            sb.Append("<p>Click the below link to verify your software profile " + softwareName + " at upvotes.co</p>");
             sb.Append("<p><em><strong><a href = '" + url + "' target = '_blank' rel = 'noopener'>" + url + "</a> &nbsp;</strong></em></p>");
             EmailHelper.GetEmailSignature(sb);
             return sb.ToString();
@@ -272,18 +533,18 @@ namespace UpVotes.BusinessServices.Service
             }
         }
 
-        private IEnumerable<SoftwareReviewThankNoteEntity> GetSoftwareReviewThankNotes(int softwareID, int softwareReviewID)
+        private IEnumerable<SoftwareReviewThankNoteEntity> GetSoftwareReviewThankNotes(int softwareId, int softwareReviewId)
         {
             using (_context = new UpVotesEntities())
             {
-                IEnumerable<Sp_GetSoftwareReviewThankNotedUsers_Result> softwareReviewThankNotes = _context.Database.SqlQuery(typeof(Sp_GetSoftwareReviewThankNotedUsers_Result), "EXEC Sp_GetSoftwareReviewThankNotedUsers " + softwareID + "," + softwareReviewID).Cast<Sp_GetSoftwareReviewThankNotedUsers_Result>().AsEnumerable();
+                IEnumerable<Sp_GetSoftwareReviewThankNotedUsers_Result> softwareReviewThankNotes = _context.Database.SqlQuery(typeof(Sp_GetSoftwareReviewThankNotedUsers_Result), "EXEC Sp_GetSoftwareReviewThankNotedUsers " + softwareId + "," + softwareReviewId).Cast<Sp_GetSoftwareReviewThankNotedUsers_Result>().AsEnumerable();
                 Mapper.Initialize(cfg => { cfg.CreateMap<Sp_GetSoftwareReviewThankNotedUsers_Result, SoftwareReviewThankNoteEntity>(); });
                 IEnumerable<SoftwareReviewThankNoteEntity> softwareReviewThankNotesEntity = Mapper.Map<IEnumerable<Sp_GetSoftwareReviewThankNotedUsers_Result>, IEnumerable<SoftwareReviewThankNoteEntity>>(softwareReviewThankNotes);
                 return softwareReviewThankNotesEntity;
             }
         }
 
-        public List<string> GetSoftwareForAutoComplete(int SoftwareCategory, string searchTerm)
+        public List<string> GetSoftwareForAutoComplete(int softwareCategory, string searchTerm)
         {
             try
             {
@@ -292,7 +553,7 @@ namespace UpVotes.BusinessServices.Service
                     List<string> myAutoCompleteList = new List<string>();                    
                     using (_context = new UpVotesEntities())
                     {
-                        myAutoCompleteList = _context.Database.SqlQuery(typeof(string), "EXEC Sp_GetSoftwareNames " + SoftwareCategory + "," + searchTerm).Cast<string>().ToList();
+                        myAutoCompleteList = _context.Database.SqlQuery(typeof(string), "EXEC Sp_GetSoftwareNames " + softwareCategory + "," + searchTerm).Cast<string>().ToList();
                         return myAutoCompleteList;
                     }                   
                 }
@@ -345,6 +606,7 @@ namespace UpVotes.BusinessServices.Service
             emailProperties.EmailBody = GetSoftwareVotingEmailContent(user, softwareName).ToString();
             EmailHelper.SendEmail(emailProperties);
         }
+
         private string GetSoftwareVotingEmailContent(Sp_SoftwareVoteUserInformation_Result user, string softwareName)
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
@@ -357,10 +619,10 @@ namespace UpVotes.BusinessServices.Service
             return sb.ToString();
         }
 
-        public CategoryMetaTags GetSoftwareCategoryMetaTags(string SoftwareCategoryAreaName)
+        public CategoryMetaTags GetSoftwareCategoryMetaTags(string softwareCategoryAreaName)
         {
             CategoryMetaTags metaTagAndTitle = new CategoryMetaTags();
-            IEnumerable<CategoryMetaTags> metaTag = SoftwareCategoryMetaTags(SoftwareCategoryAreaName);
+            IEnumerable<CategoryMetaTags> metaTag = SoftwareCategoryMetaTags(softwareCategoryAreaName);
             if (metaTag.Count() > 0)
             {
                 foreach (CategoryMetaTags metadata in metaTag)
@@ -376,16 +638,44 @@ namespace UpVotes.BusinessServices.Service
             return metaTagAndTitle;
         }
 
-        private IEnumerable<CategoryMetaTags> SoftwareCategoryMetaTags(string SoftwareCategoryAreaName)
+        private IEnumerable<CategoryMetaTags> SoftwareCategoryMetaTags(string softwareCategoryAreaName)
         {
             using (_context = new UpVotesEntities())
             {
                 bool IsService = false;
-                IEnumerable<Sp_CategoryMetaTags_Result> metaTag = _context.Database.SqlQuery(typeof(Sp_CategoryMetaTags_Result), "EXEC Sp_CategoryMetaTags '" + SoftwareCategoryAreaName + "','" + 0 + "'," + IsService).Cast<Sp_CategoryMetaTags_Result>().AsEnumerable();
+                IEnumerable<Sp_CategoryMetaTags_Result> metaTag = _context.Database.SqlQuery(typeof(Sp_CategoryMetaTags_Result), "EXEC Sp_CategoryMetaTags '" + softwareCategoryAreaName + "','" + 0 + "'," + IsService).Cast<Sp_CategoryMetaTags_Result>().AsEnumerable();
                 Mapper.Initialize(cfg => { cfg.CreateMap<Sp_CategoryMetaTags_Result, CategoryMetaTags>(); });
                 IEnumerable<CategoryMetaTags> CategoryMetaTags = Mapper.Map<IEnumerable<Sp_CategoryMetaTags_Result>, IEnumerable<CategoryMetaTags>>(metaTag);
                 return CategoryMetaTags;
             }
+        }
+
+        private void SendSoftwareApprovedEmail(string softwareName, string workEmail, User newUserObj)
+        {
+            Email emailProperties = new Email();
+            emailProperties.EmailFrom = System.Configuration.ConfigurationManager.AppSettings["AdminEmail"];
+            emailProperties.DomainDisplayName = System.Configuration.ConfigurationManager.AppSettings["DomainDisplayName"];
+            emailProperties.EmailTo = workEmail;
+            emailProperties.EmailBCC = "upvotes7@gmail.com; puneethm@hotmail.com";
+            emailProperties.EmailSubject = softwareName + " is updated at upvotes.co";
+            emailProperties.EmailBody = GetAdminApprovedEmailContent(softwareName, newUserObj);
+            EmailHelper.SendEmail(emailProperties);
+        }
+
+        private string GetAdminApprovedEmailContent(string softwareName, User newUserObj)
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.Append("<p>Hello,</p><p> Your software profile " + softwareName + " has been updated at upvotes.co. Click on the below link to verify the contents.</p>");
+            sb.Append("<p><em><strong><a href='" + System.Configuration.ConfigurationManager.AppSettings["WebClientURL"] + "software/" + softwareName.Replace(" ", "-").Trim().ToLower() + "' target='_blank' rel='noopener'>" + System.Configuration.ConfigurationManager.AppSettings["WebClientURL"] + "software/" + softwareName.Replace(" ", "-").Trim().ToLower() + "</a></strong></em><p>");
+            if (newUserObj != null)
+            {
+                sb.Append("<p>Please use below credentials to login to the upvotes portal.</p>");
+                sb.Append("<p> User Name:<br/>" + newUserObj.UserName + "</p>");
+                sb.Append("<p> Password:<br/>" + EncryptionAndDecryption.Decrypt(newUserObj.UserPassword) + "</p>");
+            }
+
+            EmailHelper.GetEmailSignature(sb);
+            return sb.ToString();
         }
     }
 }
