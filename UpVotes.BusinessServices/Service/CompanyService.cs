@@ -148,21 +148,23 @@ namespace UpVotes.BusinessServices.Service
             foreach (CompanyBranchEntity companyBranchEntityObj in companyEntity.CompanyBranches)
             {
                 j = j + 1;
-                companyBranchObj = new CompanyBranch();
-                companyBranchObj.BranchID = companyBranchID + j;
-                companyBranchObj.BranchName = companyBranchEntityObj.BranchName;
-                companyBranchObj.CompanyID = companyEntity.CompanyID;
-                companyBranchObj.CountryID = companyBranchEntityObj.CountryID;
-                companyBranchObj.StateID = companyBranchEntityObj.StateID;
-                companyBranchObj.Address = companyBranchEntityObj.Address;
-                companyBranchObj.City = companyBranchEntityObj.City;
-                companyBranchObj.PostalCode = companyBranchEntityObj.PostalCode;
-                companyBranchObj.PhoneNumber = companyBranchEntityObj.PhoneNumber;
-                companyBranchObj.Email = companyBranchEntityObj.Email;
-                companyBranchObj.IsHeadQuarters = companyBranchEntityObj.IsHeadQuarters;
-                companyBranchObj.IsActive = true;
-                companyBranchObj.CreatedBy = companyEntity.LoggedInUser;
-                companyBranchObj.CreatedDate = DateTime.Now;
+                companyBranchObj = new CompanyBranch
+                {
+                    BranchID = companyBranchID + j,
+                    BranchName = companyBranchEntityObj.BranchName,
+                    CompanyID = companyEntity.CompanyID,
+                    CountryID = companyBranchEntityObj.CountryID,
+                    StateID = companyBranchEntityObj.StateID,
+                    Address = companyBranchEntityObj.Address,
+                    City = companyBranchEntityObj.City,
+                    PostalCode = companyBranchEntityObj.PostalCode,
+                    PhoneNumber = companyBranchEntityObj.PhoneNumber,
+                    Email = companyBranchEntityObj.Email,
+                    IsHeadQuarters = companyBranchEntityObj.IsHeadQuarters,
+                    IsActive = true,
+                    CreatedBy = companyEntity.LoggedInUser,
+                    CreatedDate = DateTime.Now
+                };
                 _context.CompanyBranches.Add(companyBranchObj);
             }
 
@@ -180,27 +182,31 @@ namespace UpVotes.BusinessServices.Service
             foreach (CompanyFocusEntity companyFocusEntityObj in companyEntity.CompanyFocus)
             {
                 i = i + 1;
-                companyFocusObj = new CompanyFocus();
-                companyFocusObj.CompanyID = companyEntity.CompanyID;
-                companyFocusObj.CompanyFocusID = companyFocusID + i;
-                companyFocusObj.FocusAreaID = companyFocusEntityObj.FocusAreaID;
-                companyFocusObj.FocusAreaPercentage = companyFocusEntityObj.FocusAreaPercentage;
-                companyFocusObj.IsActive = true;
-                companyFocusObj.CreatedBy = companyEntity.LoggedInUser;
-                companyFocusObj.CreatedDate = DateTime.Now;
+                companyFocusObj = new CompanyFocus
+                {
+                    CompanyID = companyEntity.CompanyID,
+                    CompanyFocusID = companyFocusID + i,
+                    FocusAreaID = companyFocusEntityObj.FocusAreaID,
+                    FocusAreaPercentage = companyFocusEntityObj.FocusAreaPercentage,
+                    IsActive = true,
+                    CreatedBy = companyEntity.LoggedInUser,
+                    CreatedDate = DateTime.Now
+                };
                 _context.CompanyFocus.Add(companyFocusObj);
                 //_context.SaveChanges();
 
                 CompanySubFocus dbCompanySubFocusObj = null;
                 foreach (CompanySubFocusEntity companySubFocusEntityObj in companyFocusEntityObj.CompanySubFocus)
                 {
-                    dbCompanySubFocusObj = new CompanySubFocus();
-                    dbCompanySubFocusObj.CompanyFocusID = companyFocusID + i;
-                    dbCompanySubFocusObj.SubFocusAreaID = companySubFocusEntityObj.SubFocusAreaID;
-                    dbCompanySubFocusObj.SubFocusAreaPercentage = companySubFocusEntityObj.SubFocusAreaPercentage;
-                    dbCompanySubFocusObj.IsActive = true;
-                    dbCompanySubFocusObj.CreatedBy = companyEntity.LoggedInUser;
-                    dbCompanySubFocusObj.CreatedDate = DateTime.Now;
+                    dbCompanySubFocusObj = new CompanySubFocus
+                    {
+                        CompanyFocusID = companyFocusID + i,
+                        SubFocusAreaID = companySubFocusEntityObj.SubFocusAreaID,
+                        SubFocusAreaPercentage = companySubFocusEntityObj.SubFocusAreaPercentage,
+                        IsActive = true,
+                        CreatedBy = companyEntity.LoggedInUser,
+                        CreatedDate = DateTime.Now
+                    };
                     _context.CompanySubFocus.Add(dbCompanySubFocusObj);
                     // _context.SaveChanges();
                 }
@@ -538,23 +544,27 @@ namespace UpVotes.BusinessServices.Service
 
         private void SendEmailForVoting(Sp_CompanyVoteUserInformation_Result user, string companyName)
         {
-            Email emailProperties = new Email();
-            emailProperties.EmailFrom = System.Configuration.ConfigurationManager.AppSettings["AdminEmail"];
-            emailProperties.DomainDisplayName = System.Configuration.ConfigurationManager.AppSettings["DomainDisplayName"];
-            emailProperties.EmailTo = System.Configuration.ConfigurationManager.AppSettings["EmailTo"];
-            emailProperties.EmailBCC = "support@upvotes.co; puneethm@hotmail.com";
-            emailProperties.EmailSubject = user.FirstName + " " + user.LastName + " voted for " + companyName;
-            emailProperties.EmailBody = GetVotingEmailContent(user, companyName).ToString();
+            Email emailProperties = new Email
+            {
+                EmailFrom = System.Configuration.ConfigurationManager.AppSettings["AdminEmail"],
+                DomainDisplayName = System.Configuration.ConfigurationManager.AppSettings["DomainDisplayName"],
+                EmailTo = System.Configuration.ConfigurationManager.AppSettings["EmailTo"],
+                EmailBCC = "support@upvotes.co; puneethm@hotmail.com",
+                EmailSubject = user.FirstName + " " + user.LastName + " voted for " + companyName,
+                EmailBody = GetVotingEmailContent(user, companyName).ToString()
+            };
             EmailHelper.SendEmail(emailProperties);
         }
 
         private void SendEmailForUserVerification(int userID, string companyName, int companyID, string companyOTP, string workEmail, bool IsClaim)
         {
-            Email emailProperties = new Email();
-            emailProperties.EmailFrom = System.Configuration.ConfigurationManager.AppSettings["AdminEmail"];
-            emailProperties.DomainDisplayName = System.Configuration.ConfigurationManager.AppSettings["DomainDisplayName"];
-            emailProperties.EmailTo = workEmail;
-            emailProperties.EmailBCC = "upvotes7@gmail.com; puneethm@hotmail.com";
+            Email emailProperties = new Email
+            {
+                EmailFrom = System.Configuration.ConfigurationManager.AppSettings["AdminEmail"],
+                DomainDisplayName = System.Configuration.ConfigurationManager.AppSettings["DomainDisplayName"],
+                EmailTo = workEmail,
+                EmailBCC = "upvotes7@gmail.com; puneethm@hotmail.com"
+            };
             if (!IsClaim)
             {
                 emailProperties.EmailSubject = "Company profile verification at upvotes.co";
@@ -607,13 +617,15 @@ namespace UpVotes.BusinessServices.Service
 
         private void SendEmailForQuotation(QuotationRequest request, QuotationResponse response)
         {
-            Email emailProp = new Email();
-            emailProp.EmailFrom = System.Configuration.ConfigurationManager.AppSettings["AdminEmail"];
-            emailProp.DomainDisplayName = System.Configuration.ConfigurationManager.AppSettings["DomainDisplayName"];
-            emailProp.EmailTo = request.EmailId;
-            emailProp.EmailBCC = "support@upvotes.co; upvotes7@gmail.com; puneethm@hotmail.com";
-            emailProp.EmailSubject = "Your Mobile App Development Cost Estimate";
-            emailProp.EmailBody = GetQuotationEmailContent(request, response).ToString();
+            Email emailProp = new Email
+            {
+                EmailFrom = System.Configuration.ConfigurationManager.AppSettings["AdminEmail"],
+                DomainDisplayName = System.Configuration.ConfigurationManager.AppSettings["DomainDisplayName"],
+                EmailTo = request.EmailId,
+                EmailBCC = "support@upvotes.co; upvotes7@gmail.com; puneethm@hotmail.com",
+                EmailSubject = "Your Mobile App Development Cost Estimate",
+                EmailBody = GetQuotationEmailContent(request, response).ToString()
+            };
             EmailHelper.SendEmail(emailProp);
         }
 
@@ -658,13 +670,15 @@ namespace UpVotes.BusinessServices.Service
 
         private void SendCompanyApprovedEmail(string companyName, string workEmail, User newUserObj)
         {
-            Email emailProperties = new Email();
-            emailProperties.EmailFrom = System.Configuration.ConfigurationManager.AppSettings["AdminEmail"];
-            emailProperties.DomainDisplayName = System.Configuration.ConfigurationManager.AppSettings["DomainDisplayName"];
-            emailProperties.EmailTo = workEmail;
-            emailProperties.EmailBCC = "upvotes7@gmail.com; puneethm@hotmail.com";
-            emailProperties.EmailSubject = companyName + " is updated at upvotes.co";
-            emailProperties.EmailBody = GetAdminApprovedEmailContent(companyName, newUserObj);
+            Email emailProperties = new Email
+            {
+                EmailFrom = System.Configuration.ConfigurationManager.AppSettings["AdminEmail"],
+                DomainDisplayName = System.Configuration.ConfigurationManager.AppSettings["DomainDisplayName"],
+                EmailTo = workEmail,
+                EmailBCC = "upvotes7@gmail.com; puneethm@hotmail.com",
+                EmailSubject = companyName + " is updated at upvotes.co",
+                EmailBody = GetAdminApprovedEmailContent(companyName, newUserObj)
+            };
             EmailHelper.SendEmail(emailProperties);
         }
 

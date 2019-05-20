@@ -164,12 +164,12 @@ namespace UpVotes.WebAPI.Controllers
             }
         }
 
-        [HttpGet, Route("api/GetUserSoftwares/{userId}")]
-        public HttpResponseMessage GetUserSoftwares(int userId)
+        [HttpGet, Route("api/GetUserSoftwares/{userId}/{isAdmin}")]
+        public HttpResponseMessage GetUserSoftwares(int userId, bool isAdmin)
         {
             try
             {
-                var userSoftwares = _softwareServices.GetUserSoftwaresByUserId(userId);
+                var userSoftwares = _softwareServices.GetUserSoftwaresByUserId(userId, isAdmin);
                 return userSoftwares != null ? Request.CreateResponse(HttpStatusCode.OK, userSoftwares) : Request.CreateResponse(HttpStatusCode.NotFound, "No softwares found");
             }
             catch (Exception ex)
@@ -225,6 +225,20 @@ namespace UpVotes.WebAPI.Controllers
                 }
 
                 return Request.CreateResponse(HttpStatusCode.BadRequest, isUserVerifiedSoftware);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
+
+        [HttpPost, Route("api/UpdateSoftwareRejectionComments")]
+        public HttpResponseMessage UpdateSoftwareRejectionComments(SoftwareRejectComments softwareRejectComments)
+        {
+            try
+            {
+                bool isRejectionCommentsUpdated = _softwareServices.UpdateSoftwareRejectionComments(softwareRejectComments);
+                return Request.CreateResponse(HttpStatusCode.OK, isRejectionCommentsUpdated);
             }
             catch (Exception ex)
             {
