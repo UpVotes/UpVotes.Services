@@ -179,6 +179,7 @@ namespace UpVotes.BusinessServices.Service
                             softwareObj.CreatedDate = DateTime.Now;
                             softwareObj.SoftwareOTP = new Random().Next(100000, 999999).ToString("D6");
                             softwareObj.IsActive = true;
+                            softwareObj.IsAdminApproved = false;
                             _context.Softwares.Add(softwareObj);
                         }
                         else
@@ -210,7 +211,7 @@ namespace UpVotes.BusinessServices.Service
                             SendEmailForSoftwareUserVerification(softwareEntity.LoggedInUserName,
                                 softwareObj.SoftwareName, softwareEntity.SoftwareID, softwareObj.SoftwareOTP,
                                 softwareObj.WorkEmail, false);
-                        }
+                        }                        
                     }
 
                     if (!isAdmin)
