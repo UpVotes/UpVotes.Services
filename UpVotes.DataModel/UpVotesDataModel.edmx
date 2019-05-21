@@ -1414,7 +1414,6 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Parameter Name="FocusAreaID" Mode="In" Type="Int32" />
           </FunctionImport>
           <EntitySet Name="SoftwareCategory" EntityType="UpVotesModel.SoftwareCategory" />
-          <EntitySet Name="Softwares" EntityType="UpVotesModel.Softwares" />
           <FunctionImport Name="Sp_CheckForSoftwareAndAdminUser" ReturnType="Collection(UpVotesModel.Sp_CheckForSoftwareAndAdminUser_Result)">
             <Parameter Name="softwareName" Mode="In" Type="String" />
             <Parameter Name="userID" Mode="In" Type="Int32" />
@@ -1443,10 +1442,6 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <FunctionImport Name="Sp_InsertSoftwarePendingForApproval">
           <Parameter Name="softwareId" Mode="In" Type="Int32" />
           </FunctionImport>
-          <AssociationSet Name="FK_SoftwareCategory_Softwares_SoftwareID" Association="UpVotesModel.FK_SoftwareCategory_Softwares_SoftwareID">
-            <End Role="Softwares" EntitySet="Softwares" />
-            <End Role="SoftwareCategory" EntitySet="SoftwareCategory" />
-          </AssociationSet>
           <FunctionImport Name="Sp_GetSoftwareCategoryIds" ReturnType="Collection(String)">
           <Parameter Name="softwareId" Mode="In" Type="Int32" />
           </FunctionImport>
@@ -1461,6 +1456,11 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
             <Parameter Name="rejectedCommenst" Mode="In" Type="String" />
             <Parameter Name="rejectedOn" Mode="In" Type="String" />
           </FunctionImport>
+          <EntitySet Name="Softwares" EntityType="UpVotesModel.Softwares" />
+          <AssociationSet Name="FK_SoftwareCategory_Softwares_SoftwareID" Association="UpVotesModel.FK_SoftwareCategory_Softwares_SoftwareID">
+            <End Role="Softwares" EntitySet="Softwares" />
+            <End Role="SoftwareCategory" EntitySet="SoftwareCategory" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="Sp_GetCompanyFocus_Result">
           <Property Type="Int32" Name="CompanyFocusID" Nullable="false" />
@@ -2454,39 +2454,6 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Softwares" Relationship="UpVotesModel.FK_SoftwareCategory_Softwares_SoftwareID" FromRole="SoftwareCategory" ToRole="Softwares" />
         </EntityType>
-        <EntityType Name="Softwares">
-          <Key>
-            <PropertyRef Name="SoftwareID" />
-          </Key>
-          <Property Name="SoftwareID" Type="Int32" Nullable="false" />
-          <Property Name="SoftwareName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="LogoName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="TagLine" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="PriceRange" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="SoftwareTrail" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="DemoURL" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
-          <Property Name="DomainID" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="WebSiteURL" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
-          <Property Name="LinkedInURL" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
-          <Property Name="FaceBookURL" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
-          <Property Name="TwitterURL" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
-          <Property Name="InstagramURL" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
-          <Property Name="FoundedYear" Type="Int32" />
-          <Property Name="SoftwareDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ModifiedBy" Type="Int32" />
-          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="IsUserApproved" Type="Boolean" />
-          <Property Name="UserApprovedDate" Type="DateTime" Precision="3" />
-          <Property Name="IsAdminApproved" Type="Boolean" />
-          <Property Name="AdminApprovedDate" Type="DateTime" Precision="3" />
-          <Property Name="WorkEmail" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="SoftwareOTP" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="SoftwareCategory" Relationship="UpVotesModel.FK_SoftwareCategory_Softwares_SoftwareID" FromRole="Softwares" ToRole="SoftwareCategory" />
-        </EntityType>
         <ComplexType Name="Sp_CheckForSoftwareAndAdminUser_Result">
           <Property Type="Boolean" Name="IsSoftwareExists" Nullable="true" />
           <Property Type="Int32" Name="PreviousSoftwareID" Nullable="true" />
@@ -2527,6 +2494,39 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Property Type="Boolean" Name="IsUserApproved" Nullable="true" />
           <Property Type="Boolean" Name="IsAdminApproved" Nullable="true" />
         </ComplexType>
+        <EntityType Name="Softwares">
+          <Key>
+            <PropertyRef Name="SoftwareID" />
+          </Key>
+          <Property Name="SoftwareID" Type="Int32" Nullable="false" />
+          <Property Name="SoftwareName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="LogoName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TagLine" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="PriceRange" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SoftwareTrail" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DemoURL" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="DomainID" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="WebSiteURL" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="LinkedInURL" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="FaceBookURL" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="TwitterURL" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="InstagramURL" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="FoundedYear" Type="Int32" />
+          <Property Name="SoftwareDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="Int32" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="IsUserApproved" Type="Boolean" />
+          <Property Name="UserApprovedDate" Type="DateTime" Precision="3" />
+          <Property Name="IsAdminApproved" Type="Boolean" />
+          <Property Name="AdminApprovedDate" Type="DateTime" Precision="3" />
+          <Property Name="WorkEmail" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="SoftwareOTP" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="SoftwareCategory" Relationship="UpVotesModel.FK_SoftwareCategory_Softwares_SoftwareID" FromRole="Softwares" ToRole="SoftwareCategory" />
+        </EntityType>
         <Association Name="FK_SoftwareCategory_Softwares_SoftwareID">
           <End Type="UpVotesModel.Softwares" Role="Softwares" Multiplicity="1" />
           <End Type="UpVotesModel.SoftwareCategory" Role="SoftwareCategory" Multiplicity="*" />
@@ -3467,39 +3467,6 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Softwares">
-            <EntityTypeMapping TypeName="UpVotesModel.Softwares">
-              <MappingFragment StoreEntitySet="Softwares">
-                <ScalarProperty Name="SoftwareOTP" ColumnName="SoftwareOTP" />
-                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-                <ScalarProperty Name="WorkEmail" ColumnName="WorkEmail" />
-                <ScalarProperty Name="AdminApprovedDate" ColumnName="AdminApprovedDate" />
-                <ScalarProperty Name="IsAdminApproved" ColumnName="IsAdminApproved" />
-                <ScalarProperty Name="UserApprovedDate" ColumnName="UserApprovedDate" />
-                <ScalarProperty Name="IsUserApproved" ColumnName="IsUserApproved" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="SoftwareDescription" ColumnName="SoftwareDescription" />
-                <ScalarProperty Name="FoundedYear" ColumnName="FoundedYear" />
-                <ScalarProperty Name="InstagramURL" ColumnName="InstagramURL" />
-                <ScalarProperty Name="TwitterURL" ColumnName="TwitterURL" />
-                <ScalarProperty Name="FaceBookURL" ColumnName="FaceBookURL" />
-                <ScalarProperty Name="LinkedInURL" ColumnName="LinkedInURL" />
-                <ScalarProperty Name="WebSiteURL" ColumnName="WebSiteURL" />
-                <ScalarProperty Name="DomainID" ColumnName="DomainID" />
-                <ScalarProperty Name="DemoURL" ColumnName="DemoURL" />
-                <ScalarProperty Name="SoftwareTrail" ColumnName="SoftwareTrail" />
-                <ScalarProperty Name="PriceRange" ColumnName="PriceRange" />
-                <ScalarProperty Name="TagLine" ColumnName="TagLine" />
-                <ScalarProperty Name="LogoName" ColumnName="LogoName" />
-                <ScalarProperty Name="SoftwareName" ColumnName="SoftwareName" />
-                <ScalarProperty Name="SoftwareID" ColumnName="SoftwareID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="Sp_CheckForSoftwareAndAdminUser" FunctionName="UpVotesModel.Store.Sp_CheckForSoftwareAndAdminUser">
             <ResultMapping>
               <ComplexTypeMapping TypeName="UpVotesModel.Sp_CheckForSoftwareAndAdminUser_Result">
@@ -3561,6 +3528,39 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <FunctionImportMapping FunctionImportName="Sp_GetSoftwareCategoryIds" FunctionName="UpVotesModel.Store.Sp_GetSoftwareCategoryIds" />
           <FunctionImportMapping FunctionImportName="Sp_InsSoftwareCategory" FunctionName="UpVotesModel.Store.Sp_InsSoftwareCategory" />
           <FunctionImportMapping FunctionImportName="Sp_UpdSoftwareRejectComments" FunctionName="UpVotesModel.Store.Sp_UpdSoftwareRejectComments" />
+          <EntitySetMapping Name="Softwares">
+            <EntityTypeMapping TypeName="UpVotesModel.Softwares">
+              <MappingFragment StoreEntitySet="Softwares">
+                <ScalarProperty Name="SoftwareOTP" ColumnName="SoftwareOTP" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="WorkEmail" ColumnName="WorkEmail" />
+                <ScalarProperty Name="AdminApprovedDate" ColumnName="AdminApprovedDate" />
+                <ScalarProperty Name="IsAdminApproved" ColumnName="IsAdminApproved" />
+                <ScalarProperty Name="UserApprovedDate" ColumnName="UserApprovedDate" />
+                <ScalarProperty Name="IsUserApproved" ColumnName="IsUserApproved" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="SoftwareDescription" ColumnName="SoftwareDescription" />
+                <ScalarProperty Name="FoundedYear" ColumnName="FoundedYear" />
+                <ScalarProperty Name="InstagramURL" ColumnName="InstagramURL" />
+                <ScalarProperty Name="TwitterURL" ColumnName="TwitterURL" />
+                <ScalarProperty Name="FaceBookURL" ColumnName="FaceBookURL" />
+                <ScalarProperty Name="LinkedInURL" ColumnName="LinkedInURL" />
+                <ScalarProperty Name="WebSiteURL" ColumnName="WebSiteURL" />
+                <ScalarProperty Name="DomainID" ColumnName="DomainID" />
+                <ScalarProperty Name="DemoURL" ColumnName="DemoURL" />
+                <ScalarProperty Name="SoftwareTrail" ColumnName="SoftwareTrail" />
+                <ScalarProperty Name="PriceRange" ColumnName="PriceRange" />
+                <ScalarProperty Name="TagLine" ColumnName="TagLine" />
+                <ScalarProperty Name="LogoName" ColumnName="LogoName" />
+                <ScalarProperty Name="SoftwareName" ColumnName="SoftwareName" />
+                <ScalarProperty Name="SoftwareID" ColumnName="SoftwareID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
