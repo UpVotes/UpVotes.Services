@@ -137,6 +137,22 @@ namespace UpVotes.BusinessServices.Service
             }
         }
 
+        public int SaveUpdateCompanyPortFolio(CompanyPortFolioEntity companyEntity)
+        {
+            try
+            {
+                using (_context = new UpVotesEntities())
+                {
+                    int? portfolioID = _context.Sp_InsUpdCompanyPortFolio(companyEntity.CompanyPortFolioID, companyEntity.CompanyID, companyEntity.Title, companyEntity.Description, companyEntity.CreatedBy, companyEntity.ImageURL).FirstOrDefault();
+                    return Convert.ToInt32(portfolioID);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         private void AddCompanyBranches(CompanyEntity companyEntity)
         {
             CompanyBranch companyBranchObj = null;
@@ -336,7 +352,7 @@ namespace UpVotes.BusinessServices.Service
                             company.SubfocusNames = GetDistinctSubFocusNames(company.CompanyID).ToList();
                             company.CompanySubFocus = GetCompanySubFocus(company.CompanyID).ToList();
                             company.CompanyBranches = GetCompanyBranches(company.CompanyID).ToList();
-                            company.CompanyPortFolio = GetCompanyPortFolio(company.CompanyID).ToList();
+                            company.CompanyPortFolio = GetCompanyPortFolio(company.CompanyID,5).ToList();
                             company.CompanyReviews = GetCompanyReviews(company.CompanyName,5).ToList();
                             company.OverviewNewsData = newsObj.GetCompanySoftwareNewsByID(1, company.CompanyID);
                             //if (company.CompanyReviews.Count() > 0)
@@ -376,11 +392,11 @@ namespace UpVotes.BusinessServices.Service
             }
         }
 
-        private IEnumerable<CompanyPortFolioEntity> GetCompanyPortFolio(int companyID)
+        private IEnumerable<CompanyPortFolioEntity> GetCompanyPortFolio(int companyID, int rows)
         {
             using (_context = new UpVotesEntities())
             {
-                IEnumerable<Sp_GetCompanyPortFolio_Result> companyPortFolio = _context.Database.SqlQuery(typeof(Sp_GetCompanyPortFolio_Result), "EXEC Sp_GetCompanyPortFolio " + companyID).Cast<Sp_GetCompanyPortFolio_Result>().AsEnumerable();
+                IEnumerable<Sp_GetCompanyPortFolio_Result> companyPortFolio = _context.Database.SqlQuery(typeof(Sp_GetCompanyPortFolio_Result), "EXEC Sp_GetCompanyPortFolio " + companyID + ","+rows+"").Cast<Sp_GetCompanyPortFolio_Result>().AsEnumerable();
                 Mapper.Initialize(cfg => { cfg.CreateMap<Sp_GetCompanyPortFolio_Result, CompanyPortFolioEntity>(); });
                 IEnumerable<CompanyPortFolioEntity> companyPortFolioEntity = Mapper.Map<IEnumerable<Sp_GetCompanyPortFolio_Result>, IEnumerable<CompanyPortFolioEntity>>(companyPortFolio);
                 return companyPortFolioEntity;
@@ -850,6 +866,55 @@ namespace UpVotes.BusinessServices.Service
             companyDetail.CompanyList.Add(company);
 
             return companyDetail;
+        }
+
+        public List<CompanyPortFolioEntity> GetCompanyPortfolioByID(int CompanyID, int Rows)
+        {
+            List<CompanyPortFolioEntity> companyPortfolioObj = new List<CompanyPortFolioEntity>();                        
+            companyPortfolioObj = GetCompanyPortFolio(CompanyID, Rows).ToList();            
+            return companyPortfolioObj;
+        }
+
+        public int DeleteCompanyPortfolio(int portfolioID)
+        {
+            try
+            {
+                using (_context = new UpVotesEntities())
+                {
+                    int? deleted = _context.Sp_DeletePortfolio(portfolioID).FirstOrDefault();
+                    return Convert.ToInt32(deleted);
+                }
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public CompanyPortFolioEntity GetPortfolioInfoByID(int portfolioID)
+        {
+            CompanyPortFolioEntity PortfolioObj = new CompanyPortFolioEntity();
+            try
+            {
+                using (_context = new UpVotesEntities())
+                {
+                    var response = _context.Sp_GetPortfolioInfoByID(portfolioID).FirstOrDefault();
+                    if(response !=null)
+                    {
+                        PortfolioObj.CompanyID = response.CompanyID;
+                        PortfolioObj.CompanyPortFolioID = response.CompanyPortFolioID;
+                        PortfolioObj.Description = response.Description;
+                        PortfolioObj.ImageURL = response.ImageURL;
+                        PortfolioObj.Title = response.Title;
+                    }                    
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            
+            return PortfolioObj;
         }
 
         public CompanySoftwareReviews GetReviewsForCompanyListingPage(CompanyFilterEntity companyFilter)

@@ -23,6 +23,13 @@ namespace UpVotes.BusinessServices.Interface
         CompanyDetail GetUserReviews(string companyName, int noOfRows);
         CompanyDetail GetAllCompanyPortfolioByName(string companyName, int noOfRows);
 
+        List<CompanyPortFolioEntity> GetCompanyPortfolioByID(int companyID, int noOfRows);
+        CompanyPortFolioEntity GetPortfolioInfoByID(int CompanyPortFolioID);
+
+        int SaveUpdateCompanyPortFolio(CompanyPortFolioEntity portfolioobj);
+
+        int DeleteCompanyPortfolio(int portfolioID);
+
         CompanySoftwareReviews GetReviewsForCompanyListingPage(CompanyFilterEntity filter);
 
         QuotationResponse GetQuotationData(QuotationRequest Quotationobj);

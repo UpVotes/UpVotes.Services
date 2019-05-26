@@ -153,6 +153,51 @@ namespace UpVotes.WebAPI.Controllers
         }
 
         [HttpPost]
+        [Route("api/GetAllCompanyPortfolioByID")]
+        public HttpResponseMessage GetCompanyPortfolioByID(CompanyFilterEntity filter)
+        {
+            try
+            {
+                List<CompanyPortFolioEntity> companyPortFolioObj = _companyServices.GetCompanyPortfolioByID(filter.CompanyID, filter.Rows);
+                return Request.CreateResponse(HttpStatusCode.OK, companyPortFolioObj);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
+
+        [HttpPost]
+        [Route("api/GetPortfolioInfoByID")]
+        public HttpResponseMessage GetPortfolioInfoByID(CompanyPortFolioEntity filter)
+        {
+            try
+            {
+                CompanyPortFolioEntity PortFolioObj = _companyServices.GetPortfolioInfoByID(filter.CompanyPortFolioID);
+                return Request.CreateResponse(HttpStatusCode.OK, PortFolioObj);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
+
+        [HttpPost]
+        [Route("api/DeleteCompanyPortfolio")]
+        public HttpResponseMessage DeleteCompanyPortfolio(CompanyPortFolioEntity filter)
+        {
+            try
+            {
+                int deleted = _companyServices.DeleteCompanyPortfolio(filter.CompanyPortFolioID);
+                return Request.CreateResponse(HttpStatusCode.OK, deleted);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
+
+        [HttpPost]
         [Route("api/GetQuotationDetailsForMobileApp")]
         public HttpResponseMessage GetQuotationDetails(QuotationRequest quotationrequest)
         {
@@ -253,6 +298,28 @@ namespace UpVotes.WebAPI.Controllers
                 else
                 {
                     return Request.CreateResponse(HttpStatusCode.Conflict, companyID);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
+
+        [HttpPost]
+        [Route("api/SaveUpdateCompanyPortFolio")]
+        public HttpResponseMessage SaveUpdateCompanyPortFolio(CompanyPortFolioEntity portfolioEntity)
+        {
+            try
+            {
+                int portfolioID = _companyServices.SaveUpdateCompanyPortFolio(portfolioEntity);
+                if (portfolioID != 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, portfolioID);
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.Conflict, portfolioID);
                 }
             }
             catch (Exception ex)

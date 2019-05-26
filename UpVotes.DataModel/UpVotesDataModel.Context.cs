@@ -61,13 +61,17 @@ namespace UpVotes.DataModel
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetCompanyFocus_Result>("Sp_GetCompanyFocus", companyIDParameter);
         }
     
-        public virtual ObjectResult<Sp_GetCompanyPortFolio_Result> Sp_GetCompanyPortFolio(Nullable<int> companyID)
+        public virtual ObjectResult<Sp_GetCompanyPortFolio_Result> Sp_GetCompanyPortFolio(Nullable<int> companyID, Nullable<int> rows)
         {
             var companyIDParameter = companyID.HasValue ?
                 new ObjectParameter("CompanyID", companyID) :
                 new ObjectParameter("CompanyID", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetCompanyPortFolio_Result>("Sp_GetCompanyPortFolio", companyIDParameter);
+            var rowsParameter = rows.HasValue ?
+                new ObjectParameter("Rows", rows) :
+                new ObjectParameter("Rows", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetCompanyPortFolio_Result>("Sp_GetCompanyPortFolio", companyIDParameter, rowsParameter);
         }
     
         public virtual ObjectResult<Sp_GetCompanyReviewThankNotedUsers_Result> Sp_GetCompanyReviewThankNotedUsers(Nullable<int> companyID, Nullable<int> companyReviewID)
@@ -1202,6 +1206,53 @@ namespace UpVotes.DataModel
                 new ObjectParameter("rejectedOn", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Sp_UpdSoftwareRejectComments", softwareIdParameter, rejectedByParameter, rejectedCommenstParameter, rejectedOnParameter);
+        }
+    
+        public virtual ObjectResult<Sp_GetPortfolioInfoByID_Result> Sp_GetPortfolioInfoByID(Nullable<int> companyPortFolioID)
+        {
+            var companyPortFolioIDParameter = companyPortFolioID.HasValue ?
+                new ObjectParameter("CompanyPortFolioID", companyPortFolioID) :
+                new ObjectParameter("CompanyPortFolioID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetPortfolioInfoByID_Result>("Sp_GetPortfolioInfoByID", companyPortFolioIDParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<int>> Sp_InsUpdCompanyPortFolio(Nullable<int> companyPortFolioID, Nullable<int> companyID, string title, string description, Nullable<int> createdBy, string imageURL)
+        {
+            var companyPortFolioIDParameter = companyPortFolioID.HasValue ?
+                new ObjectParameter("CompanyPortFolioID", companyPortFolioID) :
+                new ObjectParameter("CompanyPortFolioID", typeof(int));
+    
+            var companyIDParameter = companyID.HasValue ?
+                new ObjectParameter("CompanyID", companyID) :
+                new ObjectParameter("CompanyID", typeof(int));
+    
+            var titleParameter = title != null ?
+                new ObjectParameter("Title", title) :
+                new ObjectParameter("Title", typeof(string));
+    
+            var descriptionParameter = description != null ?
+                new ObjectParameter("Description", description) :
+                new ObjectParameter("Description", typeof(string));
+    
+            var createdByParameter = createdBy.HasValue ?
+                new ObjectParameter("CreatedBy", createdBy) :
+                new ObjectParameter("CreatedBy", typeof(int));
+    
+            var imageURLParameter = imageURL != null ?
+                new ObjectParameter("ImageURL", imageURL) :
+                new ObjectParameter("ImageURL", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("Sp_InsUpdCompanyPortFolio", companyPortFolioIDParameter, companyIDParameter, titleParameter, descriptionParameter, createdByParameter, imageURLParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<int>> Sp_DeletePortfolio(Nullable<int> companyPortFolioID)
+        {
+            var companyPortFolioIDParameter = companyPortFolioID.HasValue ?
+                new ObjectParameter("CompanyPortFolioID", companyPortFolioID) :
+                new ObjectParameter("CompanyPortFolioID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("Sp_DeletePortfolio", companyPortFolioIDParameter);
         }
     }
 }

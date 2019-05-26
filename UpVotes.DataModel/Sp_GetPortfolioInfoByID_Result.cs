@@ -10,9 +10,8 @@
 namespace UpVotes.DataModel
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class CompanyPortFolio
+    public partial class Sp_GetPortfolioInfoByID_Result
     {
         public int CompanyPortFolioID { get; set; }
         public int CompanyID { get; set; }
@@ -20,11 +19,5 @@ namespace UpVotes.DataModel
         public string ImageURL { get; set; }
         public string VideoURL { get; set; }
         public string Description { get; set; }
-        public Nullable<int> CreatedBy { get; set; }
-        public Nullable<System.DateTime> CreatedDate { get; set; }
-        public Nullable<int> ModifiedBy { get; set; }
-        public Nullable<System.DateTime> ModifiedDate { get; set; }
-    
-        public virtual Company Company { get; set; }
     }
 }

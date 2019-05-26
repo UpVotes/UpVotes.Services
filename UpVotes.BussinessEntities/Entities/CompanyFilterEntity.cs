@@ -8,6 +8,7 @@ namespace UpVotes.BusinessEntities.Entities
 {
     public class CompanyFilterEntity
     {
+        public int CompanyID { get; set; }
         public string CompanyName { get; set; }
 
         public decimal MinRate { get; set; }

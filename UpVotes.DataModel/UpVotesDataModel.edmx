@@ -90,7 +90,7 @@
           <Property Name="ModifiedDate" Type="datetime" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="CompanyPendingForApproval">
           <Key>
             <PropertyRef Name="CompanyID" />
@@ -107,6 +107,10 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Property Name="ImageURL" Type="nvarchar(max)" />
           <Property Name="VideoURL" Type="nvarchar(max)" />
           <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="ModifiedBy" Type="int" />
+          <Property Name="ModifiedDate" Type="datetime" />
         </EntityType>
         <EntityType Name="CompanyReviews">
           <Key>
@@ -630,6 +634,9 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
         <Function Name="Sp_DeleteCompanyHistory" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="companyID" Type="int" Mode="In" />
         </Function>
+        <Function Name="Sp_DeletePortfolio" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CompanyPortFolioID" Type="int" Mode="In" />
+        </Function>
         <Function Name="Sp_DeleteSoftwareCatagory" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="softwareId" Type="int" Mode="In" />
         </Function>
@@ -680,6 +687,7 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
         </Function>
         <Function Name="Sp_GetCompanyPortFolio" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyID" Type="int" Mode="In" />
+          <Parameter Name="Rows" Type="int" Mode="In" />
         </Function>
         <Function Name="Sp_GetCompanyPortFolioByName" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyName" Type="nvarchar" Mode="In" />
@@ -714,6 +722,9 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
         <Function Name="Sp_GetFocusArea" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="Sp_GetIndustrialFocus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_GetPortfolioInfoByID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CompanyPortFolioID" Type="int" Mode="In" />
         </Function>
         <Function Name="Sp_GetQuoteForMobileApp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="platformType" Type="nvarchar" Mode="In" />
@@ -868,6 +879,14 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
         <Function Name="Sp_InsSoftwareReviewForThanksNote" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UserID" Type="int" Mode="In" />
           <Parameter Name="SoftwareReviewID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_InsUpdCompanyPortFolio" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CompanyPortFolioID" Type="int" Mode="In" />
+          <Parameter Name="CompanyID" Type="int" Mode="In" />
+          <Parameter Name="Title" Type="nvarchar" Mode="In" />
+          <Parameter Name="Description" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="CreatedBy" Type="int" Mode="In" />
+          <Parameter Name="ImageURL" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="Sp_InsUserNews" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="IsCompanySoftware" Type="int" Mode="In" />
@@ -1032,7 +1051,8 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Parameter Name="CompanyID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="Sp_GetCompanyPortFolio" ReturnType="Collection(UpVotesModel.Sp_GetCompanyPortFolio_Result)">
-          <Parameter Name="CompanyID" Mode="In" Type="Int32" />
+            <Parameter Name="CompanyID" Mode="In" Type="Int32" />
+            <Parameter Name="Rows" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="Sp_GetCompanyReviewThankNotedUsers" ReturnType="Collection(UpVotesModel.Sp_GetCompanyReviewThankNotedUsers_Result)">
             <Parameter Name="CompanyID" Mode="In" Type="Int32" />
@@ -1461,6 +1481,20 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
             <End Role="Softwares" EntitySet="Softwares" />
             <End Role="SoftwareCategory" EntitySet="SoftwareCategory" />
           </AssociationSet>
+          <FunctionImport Name="Sp_GetPortfolioInfoByID" ReturnType="Collection(UpVotesModel.Sp_GetPortfolioInfoByID_Result)">
+          <Parameter Name="CompanyPortFolioID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_InsUpdCompanyPortFolio" ReturnType="Collection(Int32)">
+            <Parameter Name="CompanyPortFolioID" Mode="In" Type="Int32" />
+            <Parameter Name="CompanyID" Mode="In" Type="Int32" />
+            <Parameter Name="Title" Mode="In" Type="String" />
+            <Parameter Name="Description" Mode="In" Type="String" />
+            <Parameter Name="CreatedBy" Mode="In" Type="Int32" />
+            <Parameter Name="ImageURL" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_DeletePortfolio" ReturnType="Collection(Int32)">
+            <Parameter Name="CompanyPortFolioID" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="Sp_GetCompanyFocus_Result">
           <Property Type="Int32" Name="CompanyFocusID" Nullable="false" />
@@ -1526,6 +1560,10 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Property Name="VideoURL" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Company" Relationship="UpVotesModel.FK_CompanyPortFolio_Company_CompanyID" FromRole="CompanyPortFolio" ToRole="Company" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="Int32" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="CompanyReview">
           <Key>
@@ -2539,6 +2577,14 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="Sp_GetPortfolioInfoByID_Result">
+          <Property Type="Int32" Name="CompanyPortFolioID" Nullable="false" />
+          <Property Type="Int32" Name="CompanyID" Nullable="false" />
+          <Property Type="String" Name="Title" Nullable="true" MaxLength="150" />
+          <Property Type="String" Name="ImageURL" Nullable="true" />
+          <Property Type="String" Name="VideoURL" Nullable="true" />
+          <Property Type="String" Name="Description" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2615,6 +2661,10 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <EntitySetMapping Name="CompanyPortFolios">
             <EntityTypeMapping TypeName="UpVotesModel.CompanyPortFolio">
               <MappingFragment StoreEntitySet="CompanyPortFolio">
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="VideoURL" ColumnName="VideoURL" />
                 <ScalarProperty Name="ImageURL" ColumnName="ImageURL" />
@@ -3561,6 +3611,20 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="Sp_GetPortfolioInfoByID" FunctionName="UpVotesModel.Store.Sp_GetPortfolioInfoByID">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetPortfolioInfoByID_Result">
+                <ScalarProperty Name="CompanyPortFolioID" ColumnName="CompanyPortFolioID" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="ImageURL" ColumnName="ImageURL" />
+                <ScalarProperty Name="VideoURL" ColumnName="VideoURL" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_InsUpdCompanyPortFolio" FunctionName="UpVotesModel.Store.Sp_InsUpdCompanyPortFolio" />
+          <FunctionImportMapping FunctionImportName="Sp_DeletePortfolio" FunctionName="UpVotesModel.Store.Sp_DeletePortfolio" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
