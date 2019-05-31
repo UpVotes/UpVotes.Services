@@ -824,6 +824,14 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           <Parameter Name="UserID" Type="int" Mode="In" />
           <Parameter Name="CompanyReviewID" Type="int" Mode="In" />
         </Function>
+        <Function Name="Sp_InsContactUsInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Name" Type="nvarchar" Mode="In" />
+          <Parameter Name="Email" Type="nvarchar" Mode="In" />
+          <Parameter Name="Phone" Type="nvarchar" Mode="In" />
+          <Parameter Name="CompanyName" Type="nvarchar" Mode="In" />
+          <Parameter Name="ContactMessage" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="AddedBy" Type="int" Mode="In" />
+        </Function>
         <Function Name="Sp_InsertSoftwarePendingForApproval" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="softwareId" Type="int" Mode="In" />
         </Function>
@@ -1493,7 +1501,15 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
             <Parameter Name="ImageURL" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="Sp_DeletePortfolio" ReturnType="Collection(Int32)">
-            <Parameter Name="CompanyPortFolioID" Mode="In" Type="Int32" />
+          <Parameter Name="CompanyPortFolioID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_InsContactUsInfo" ReturnType="Collection(Int32)">
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="Email" Mode="In" Type="String" />
+            <Parameter Name="Phone" Mode="In" Type="String" />
+            <Parameter Name="CompanyName" Mode="In" Type="String" />
+            <Parameter Name="ContactMessage" Mode="In" Type="String" />
+            <Parameter Name="AddedBy" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="Sp_GetCompanyFocus_Result">
@@ -3625,6 +3641,7 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Sp_InsUpdCompanyPortFolio" FunctionName="UpVotesModel.Store.Sp_InsUpdCompanyPortFolio" />
           <FunctionImportMapping FunctionImportName="Sp_DeletePortfolio" FunctionName="UpVotesModel.Store.Sp_DeletePortfolio" />
+          <FunctionImportMapping FunctionImportName="Sp_InsContactUsInfo" FunctionName="UpVotesModel.Store.Sp_InsContactUsInfo" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
