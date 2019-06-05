@@ -17,6 +17,7 @@ namespace UpVotes.BusinessServices
             registerComponent.RegisterType<IReviewsService, ReviewsService>();
             registerComponent.RegisterType<ISoftwareService, SoftwareService>();
             registerComponent.RegisterType<IOverviewAndNewsService, OverviewNewsService>();
+            registerComponent.RegisterType<IContactUsService, ContactUsService>();
         }
     }
 }

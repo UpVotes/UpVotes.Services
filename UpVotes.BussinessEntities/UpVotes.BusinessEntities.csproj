@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\CategoryLinksEntity.cs" />
+    <Compile Include="Entities\ContactUsInfoEntity.cs" />
     <Compile Include="Entities\OverviewNewsEntity.cs" />
     <Compile Include="Entities\ClaimListing.cs" />
     <Compile Include="Entities\CompanySoftwareReviews.cs" />

@@ -1355,5 +1355,34 @@ namespace UpVotes.DataModel
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("Sp_UpdTeamMember", memberIDParameter, memberNameParameter, pictureNameParameter, designationParameter, linkedInProfileParameter, startDateParameter, endDateParameter);
         }
+    
+        public virtual ObjectResult<Nullable<int>> Sp_InsContactUsInfo(string name, string email, string phone, string companyName, string contactMessage, Nullable<int> addedBy)
+        {
+            var nameParameter = name != null ?
+                new ObjectParameter("Name", name) :
+                new ObjectParameter("Name", typeof(string));
+    
+            var emailParameter = email != null ?
+                new ObjectParameter("Email", email) :
+                new ObjectParameter("Email", typeof(string));
+    
+            var phoneParameter = phone != null ?
+                new ObjectParameter("Phone", phone) :
+                new ObjectParameter("Phone", typeof(string));
+    
+            var companyNameParameter = companyName != null ?
+                new ObjectParameter("CompanyName", companyName) :
+                new ObjectParameter("CompanyName", typeof(string));
+    
+            var contactMessageParameter = contactMessage != null ?
+                new ObjectParameter("ContactMessage", contactMessage) :
+                new ObjectParameter("ContactMessage", typeof(string));
+    
+            var addedByParameter = addedBy.HasValue ?
+                new ObjectParameter("AddedBy", addedBy) :
+                new ObjectParameter("AddedBy", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("Sp_InsContactUsInfo", nameParameter, emailParameter, phoneParameter, companyNameParameter, contactMessageParameter, addedByParameter);
+        }
     }
 }
