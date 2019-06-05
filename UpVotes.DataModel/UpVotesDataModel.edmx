@@ -3843,10 +3843,7 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Sp_InsTeamMember" FunctionName="UpVotesModel.Store.Sp_InsTeamMember" />
-          <FunctionImportMapping FunctionImportName="Sp_UpdTeamMember" FunctionName="UpVotesModel.Store.Sp_UpdTeamMember" />
-          </EntityContainerMapping>
-          <FunctionImportMapping FunctionImportName="Sp_InsUpdCompanyPortFolio" FunctionName="UpVotesModel.Store.Sp_InsUpdCompanyPortFolio" />
-          <FunctionImportMapping FunctionImportName="Sp_DeletePortfolio" FunctionName="UpVotesModel.Store.Sp_DeletePortfolio" />
+          <FunctionImportMapping FunctionImportName="Sp_UpdTeamMember" FunctionName="UpVotesModel.Store.Sp_UpdTeamMember" />                    
           <FunctionImportMapping FunctionImportName="Sp_InsContactUsInfo" FunctionName="UpVotesModel.Store.Sp_InsContactUsInfo" />
         </EntityContainerMapping>
       </Mapping>
