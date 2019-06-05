@@ -17,9 +17,11 @@ namespace UpVotes.DataModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public User()
         {
+            this.Company = new HashSet<Company>();
             this.CompanyReviews = new HashSet<CompanyReview>();
-            this.CompanyReviewThankNotes = new HashSet<CompanyReviewThankNote>();
-            this.UserRegistrations = new HashSet<UserRegistration>();
+            this.CompanyReviewThankNote = new HashSet<CompanyReviewThankNote>();
+            this.Softwares = new HashSet<Softwares>();
+            this.UserRegistration = new HashSet<UserRegistration>();
             this.UserTokens = new HashSet<UserToken>();
         }
     
@@ -44,11 +46,15 @@ namespace UpVotes.DataModel
         public Nullable<System.DateTime> CreatedDate { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Company> Company { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CompanyReview> CompanyReviews { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CompanyReviewThankNote> CompanyReviewThankNotes { get; set; }
+        public virtual ICollection<CompanyReviewThankNote> CompanyReviewThankNote { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<UserRegistration> UserRegistrations { get; set; }
+        public virtual ICollection<Softwares> Softwares { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<UserRegistration> UserRegistration { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserToken> UserTokens { get; set; }
     }

@@ -92,6 +92,7 @@
     <Compile Include="Entities\AutoComplete.cs" />
     <Compile Include="Entities\StateEntity.cs" />
     <Compile Include="Entities\SubFocusAreaEntity.cs" />
+    <Compile Include="Entities\TeamMemebersEntity.cs" />
     <Compile Include="Entities\UserRegistrationEntity.cs" />
     <Compile Include="Entities\ChangePasswordEntity.cs" />
     <Compile Include="Entities\UsersEntity.cs" />

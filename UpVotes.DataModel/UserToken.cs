@@ -20,6 +20,6 @@ namespace UpVotes.DataModel
         public System.DateTime IssuedOn { get; set; }
         public System.DateTime ExpiresOn { get; set; }
     
-        public virtual User User { get; set; }
+        public virtual User Users { get; set; }
     }
 }

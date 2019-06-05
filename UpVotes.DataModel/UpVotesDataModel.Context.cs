@@ -36,11 +36,9 @@ namespace UpVotes.DataModel
         public virtual DbSet<FocusArea> FocusAreas { get; set; }
         public virtual DbSet<State> States { get; set; }
         public virtual DbSet<UserRegistration> UserRegistrations { get; set; }
-        public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserToken> UserTokens { get; set; }
         public virtual DbSet<UserType> UserTypes { get; set; }
         public virtual DbSet<CompanyVote> CompanyVotes { get; set; }
-        public virtual DbSet<Company> Company { get; set; }
         public virtual DbSet<CategoryBasedMetaTags> CategoryBasedMetaTags { get; set; }
         public virtual DbSet<CompanySubFocus> CompanySubFocus { get; set; }
         public virtual DbSet<QuotationRateCard> QuotationRateCard { get; set; }
@@ -50,7 +48,10 @@ namespace UpVotes.DataModel
         public virtual DbSet<CompanyFocus> CompanyFocus { get; set; }
         public virtual DbSet<Email> Email { get; set; }
         public virtual DbSet<SoftwareCategory> SoftwareCategory { get; set; }
+        public virtual DbSet<Company> Company { get; set; }
         public virtual DbSet<Softwares> Softwares { get; set; }
+        public virtual DbSet<TeamMembers> TeamMembers { get; set; }
+        public virtual DbSet<User> Users { get; set; }
     
         public virtual ObjectResult<Sp_GetCompanyFocus_Result> Sp_GetCompanyFocus(Nullable<int> companyID)
         {
@@ -1253,6 +1254,106 @@ namespace UpVotes.DataModel
                 new ObjectParameter("CompanyPortFolioID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("Sp_DeletePortfolio", companyPortFolioIDParameter);
+        }
+    
+        public virtual int Sp_DelTeamMember(Nullable<int> memberID)
+        {
+            var memberIDParameter = memberID.HasValue ?
+                new ObjectParameter("MemberID", memberID) :
+                new ObjectParameter("MemberID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Sp_DelTeamMember", memberIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_GetTeamMembers_Result> Sp_GetTeamMembers(Nullable<int> memberID, Nullable<int> companyID, Nullable<int> softwareID, Nullable<int> noOfRows)
+        {
+            var memberIDParameter = memberID.HasValue ?
+                new ObjectParameter("MemberID", memberID) :
+                new ObjectParameter("MemberID", typeof(int));
+    
+            var companyIDParameter = companyID.HasValue ?
+                new ObjectParameter("CompanyID", companyID) :
+                new ObjectParameter("CompanyID", typeof(int));
+    
+            var softwareIDParameter = softwareID.HasValue ?
+                new ObjectParameter("SoftwareID", softwareID) :
+                new ObjectParameter("SoftwareID", typeof(int));
+    
+            var noOfRowsParameter = noOfRows.HasValue ?
+                new ObjectParameter("NoOfRows", noOfRows) :
+                new ObjectParameter("NoOfRows", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetTeamMembers_Result>("Sp_GetTeamMembers", memberIDParameter, companyIDParameter, softwareIDParameter, noOfRowsParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<int>> Sp_InsTeamMember(Nullable<int> companyID, Nullable<int> softwareID, string memberName, string pictureName, string designation, string linkedInProfile, Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate)
+        {
+            var companyIDParameter = companyID.HasValue ?
+                new ObjectParameter("CompanyID", companyID) :
+                new ObjectParameter("CompanyID", typeof(int));
+    
+            var softwareIDParameter = softwareID.HasValue ?
+                new ObjectParameter("SoftwareID", softwareID) :
+                new ObjectParameter("SoftwareID", typeof(int));
+    
+            var memberNameParameter = memberName != null ?
+                new ObjectParameter("MemberName", memberName) :
+                new ObjectParameter("MemberName", typeof(string));
+    
+            var pictureNameParameter = pictureName != null ?
+                new ObjectParameter("PictureName", pictureName) :
+                new ObjectParameter("PictureName", typeof(string));
+    
+            var designationParameter = designation != null ?
+                new ObjectParameter("Designation", designation) :
+                new ObjectParameter("Designation", typeof(string));
+    
+            var linkedInProfileParameter = linkedInProfile != null ?
+                new ObjectParameter("LinkedInProfile", linkedInProfile) :
+                new ObjectParameter("LinkedInProfile", typeof(string));
+    
+            var startDateParameter = startDate.HasValue ?
+                new ObjectParameter("StartDate", startDate) :
+                new ObjectParameter("StartDate", typeof(System.DateTime));
+    
+            var endDateParameter = endDate.HasValue ?
+                new ObjectParameter("EndDate", endDate) :
+                new ObjectParameter("EndDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("Sp_InsTeamMember", companyIDParameter, softwareIDParameter, memberNameParameter, pictureNameParameter, designationParameter, linkedInProfileParameter, startDateParameter, endDateParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<int>> Sp_UpdTeamMember(Nullable<int> memberID, string memberName, string pictureName, string designation, string linkedInProfile, Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate)
+        {
+            var memberIDParameter = memberID.HasValue ?
+                new ObjectParameter("MemberID", memberID) :
+                new ObjectParameter("MemberID", typeof(int));
+    
+            var memberNameParameter = memberName != null ?
+                new ObjectParameter("MemberName", memberName) :
+                new ObjectParameter("MemberName", typeof(string));
+    
+            var pictureNameParameter = pictureName != null ?
+                new ObjectParameter("PictureName", pictureName) :
+                new ObjectParameter("PictureName", typeof(string));
+    
+            var designationParameter = designation != null ?
+                new ObjectParameter("Designation", designation) :
+                new ObjectParameter("Designation", typeof(string));
+    
+            var linkedInProfileParameter = linkedInProfile != null ?
+                new ObjectParameter("LinkedInProfile", linkedInProfile) :
+                new ObjectParameter("LinkedInProfile", typeof(string));
+    
+            var startDateParameter = startDate.HasValue ?
+                new ObjectParameter("StartDate", startDate) :
+                new ObjectParameter("StartDate", typeof(System.DateTime));
+    
+            var endDateParameter = endDate.HasValue ?
+                new ObjectParameter("EndDate", endDate) :
+                new ObjectParameter("EndDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("Sp_UpdTeamMember", memberIDParameter, memberNameParameter, pictureNameParameter, designationParameter, linkedInProfileParameter, startDateParameter, endDateParameter);
         }
     }
 }

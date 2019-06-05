@@ -25,7 +25,7 @@ namespace UpVotes.DataModel
         public bool IsPlatinum { get; set; }
         public string Remarks { get; set; }
     
-        public virtual User User { get; set; }
         public virtual UserType UserType { get; set; }
+        public virtual User Users { get; set; }
     }
 }

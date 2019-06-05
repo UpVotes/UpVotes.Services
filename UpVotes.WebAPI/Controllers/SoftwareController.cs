@@ -245,5 +245,57 @@ namespace UpVotes.WebAPI.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
             }
         }
+
+        [HttpGet, Route("api/GetTeamMembersBySoftwareId/{softwareId}")]
+        public HttpResponseMessage GetTeamMembersBySoftwareId(string softwareId)
+        {
+            try
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, _softwareServices.GetTeamMembersBySoftwareId(Convert.ToInt32(softwareId)));
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
+
+        [HttpPost, Route("api/SaveSoftwareTeamMembers")]
+        public HttpResponseMessage SaveSoftwareTeamMembers(TeamMemebersEntity teamMembers)
+        {
+            try
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, _softwareServices.SaveSoftwareTeamMembers(teamMembers));
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
+
+        [HttpDelete, Route("api/DeleteSoftwareTeamMember/{teamMemberId}")]
+        public HttpResponseMessage DeleteSoftwareTeamMember(int teamMemberId)
+        {
+            try
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, _softwareServices.DeleteSoftwareTeamMember(teamMemberId));
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
+
+        [HttpGet, Route("api/GetSoftwareTeamMember/{teamMemberId}")]
+        public HttpResponseMessage GetCompanyTeamMember(int teamMemberId)
+        {
+            try
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, _softwareServices.GetCompanyTeamMember(teamMemberId));
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
     }
 }

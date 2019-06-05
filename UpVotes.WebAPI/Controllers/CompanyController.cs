@@ -327,5 +327,57 @@ namespace UpVotes.WebAPI.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
             }
         }
+
+        [HttpGet, Route("api/GetTeamMembersByCompanyId/{companyId}")]        
+        public HttpResponseMessage GetTeamMembersByCompanyId(int companyId)
+        {
+            try
+            {                
+                return Request.CreateResponse(HttpStatusCode.OK, _companyServices.GetTeamMembersByCompanyId(companyId));
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
+
+        [HttpPost, Route("api/SaveCompanyTeamMembers")]
+        public HttpResponseMessage SaveCompanyTeamMembers(TeamMemebersEntity teamMembers)
+        {
+            try
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, _companyServices.SaveCompanyTeamMembers(teamMembers));
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
+
+        [HttpDelete, Route("api/DeleteCompanyTeamMember/{teamMemberId}")]
+        public HttpResponseMessage DeleteCompanyTeamMember(int teamMemberId)
+        {
+            try
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, _companyServices.DeleteCompanyTeamMember(teamMemberId));
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
+
+        [HttpGet, Route("api/GetCompanyTeamMember/{teamMemberId}")]
+        public HttpResponseMessage GetCompanyTeamMember(int teamMemberId)
+        {
+            try
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, _companyServices.GetCompanyTeamMember(teamMemberId));
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
     }
 }

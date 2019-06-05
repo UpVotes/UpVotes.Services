@@ -18,10 +18,10 @@ namespace UpVotes.DataModel
         public Company()
         {
             this.CompanyBranch = new HashSet<CompanyBranch>();
+            this.CompanyFocus = new HashSet<CompanyFocus>();
             this.CompanyPortFolio = new HashSet<CompanyPortFolio>();
             this.CompanyReviews = new HashSet<CompanyReview>();
             this.CompanyVote = new HashSet<CompanyVote>();
-            this.CompanyFocus = new HashSet<CompanyFocus>();
         }
     
         public int CompanyID { get; set; }
@@ -57,15 +57,16 @@ namespace UpVotes.DataModel
         public string WorkEmail { get; set; }
         public string CompanyDomain { get; set; }
     
+        public virtual User Users { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CompanyBranch> CompanyBranch { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CompanyFocus> CompanyFocus { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CompanyPortFolio> CompanyPortFolio { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CompanyReview> CompanyReviews { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CompanyVote> CompanyVote { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CompanyFocus> CompanyFocus { get; set; }
     }
 }

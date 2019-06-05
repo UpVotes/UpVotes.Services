@@ -9,21 +9,24 @@ namespace UpVotes.BusinessServices.Interface
 
         int SaveCompany(CompanyEntity companyEntity);
 
-        bool DeleteCompany(int companyID);
+        string DeleteCompany(int companyID);
 
         string VoteForCompany(CompanyVoteEntity companyVote);
 
         string ThanksNoteForReview(CompanyReviewThankNoteEntity companyReviewThanksNoteEntity);
 
         CompanyDetail GetUserCompanies(int userID, string companyName);
+
         CompanyDetail GetClaimListingsForApproval(int userID);
 
         List<string> GetDataForAutoComplete(int type, int focusAreaID, string searchTerm);
 
         CompanyDetail GetUserReviews(string companyName, int noOfRows);
+
         CompanyDetail GetAllCompanyPortfolioByName(string companyName, int noOfRows);
 
         List<CompanyPortFolioEntity> GetCompanyPortfolioByID(int companyID, int noOfRows);
+
         CompanyPortFolioEntity GetPortfolioInfoByID(int CompanyPortFolioID);
 
         int SaveUpdateCompanyPortFolio(CompanyPortFolioEntity portfolioobj);
@@ -39,14 +42,27 @@ namespace UpVotes.BusinessServices.Interface
         List<CompanyEntity> GetTopVoteCompanies();
 
         List<StateEntity> GetStates(int countryID);
+
         List<SubFocusAreaEntity> GetSubFocusAreaByFocusID(int FocusID);
 
         CategoryMetaTags GetCategoryMetaTags(string FocusAreaName, string SubFocusAreaName);
+
         List<CategoryLinksEntity> GetServiceCategoryLinks(int focusAreaID);
 
         bool CompanyVerificationByUser(int uID, string cID, int compID);
+
         bool UpdateRejectionComments(CompanyRejectComments companyRejectComments);
+
         string InsertUpdateClaimListing(ClaimApproveRejectListingRequest ClaimListingobj);
+
         string AdminApproveRejectForClaiming(ClaimApproveRejectListingRequest ClaimListingobj);
+
+        List<TeamMemebersEntity> GetTeamMembersByCompanyId(int companyId);
+
+        int SaveCompanyTeamMembers(TeamMemebersEntity teamMembers);
+
+        int DeleteCompanyTeamMember(int teamMemberId);
+
+        TeamMemebersEntity GetCompanyTeamMember(int teamMemberId);
     }
 }

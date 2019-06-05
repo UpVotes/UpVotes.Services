@@ -216,6 +216,9 @@
     <Compile Include="Sp_GetSubFocus_Result.cs">
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Sp_GetTeamMembers_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Sp_GetTopVotesCompany_Result.cs">
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>
@@ -235,6 +238,9 @@
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="SubFocusArea.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TeamMembers.cs">
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="UnitOfWork\IUnitOfWork.cs" />

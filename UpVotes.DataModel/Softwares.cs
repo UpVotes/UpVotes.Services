@@ -50,5 +50,6 @@ namespace UpVotes.DataModel
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SoftwareCategory> SoftwareCategory { get; set; }
+        public virtual User Users { get; set; }
     }
 }

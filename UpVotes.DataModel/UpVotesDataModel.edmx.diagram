@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="23d4a81d0031435f808aae03afc56633" Name="Diagram1">
+      <Diagram DiagramId="23d4a81d0031435f808aae03afc56633" Name="Diagram1" ZoomLevel="64">
         <EntityTypeShape EntityType="UpVotesModel.CompanyBranch" Width="1.5" PointX="12.5" PointY="16.125" />
         <EntityTypeShape EntityType="UpVotesModel.CompanyPortFolio" Width="1.5" PointX="6" PointY="18.125" />
         <EntityTypeShape EntityType="UpVotesModel.CompanyReview" Width="1.5" PointX="6" PointY="4.875" />
@@ -14,26 +14,16 @@
         <EntityTypeShape EntityType="UpVotesModel.FocusArea" Width="1.5" PointX="3.75" PointY="2.5" />
         <EntityTypeShape EntityType="UpVotesModel.State" Width="1.5" PointX="10.25" PointY="12.875" />
         <EntityTypeShape EntityType="UpVotesModel.UserRegistration" Width="1.5" PointX="3" PointY="5.25" />
-        <EntityTypeShape EntityType="UpVotesModel.User" Width="1.5" PointX="0.75" PointY="4.625" />
         <EntityTypeShape EntityType="UpVotesModel.UserToken" Width="1.5" PointX="3" PointY="14.75" />
         <EntityTypeShape EntityType="UpVotesModel.UserType" Width="1.5" PointX="0.75" PointY="2.125" />
         <AssociationConnector Association="UpVotesModel.FK_CompanyBranch_Country" />
         <AssociationConnector Association="UpVotesModel.FK_CompanyBranch_State" />
         <AssociationConnector Association="UpVotesModel.FK_CompanyReviewThankNote_CompanyReviews" />
         <AssociationConnector Association="UpVotesModel.FK_FocusArea_CompanyReviews_FocusAreaID" />
-        <AssociationConnector Association="UpVotesModel.FK_Users_CompanyReviews_UserID" />
-        <AssociationConnector Association="UpVotesModel.FK_CompanyReviewThankNote_Users" />
         <AssociationConnector Association="UpVotesModel.FK_Country_Currency_CurrencyID" />
         <AssociationConnector Association="UpVotesModel.FK_State_Country_CountryID" />
-        <AssociationConnector Association="UpVotesModel.FK_UserRegistration_Users_UserID" />
         <AssociationConnector Association="UpVotesModel.FK_UserRegistration_UserType_UserTypeID" />
-        <AssociationConnector Association="UpVotesModel.FK_Tokens_Users_UserID" />
         <EntityTypeShape EntityType="UpVotesModel.CompanyVote" Width="1.5" PointX="3" PointY="18.5" />
-        <EntityTypeShape EntityType="UpVotesModel.Company" Width="1.5" PointX="0.75" PointY="10.5" />
-        <AssociationConnector Association="UpVotesModel.FK_CompanyBranch_Company" />
-        <AssociationConnector Association="UpVotesModel.FK_CompanyPortFolio_Company_CompanyID" />
-        <AssociationConnector Association="UpVotesModel.FK_CompanyReviews_Company_CompanyID" />
-        <AssociationConnector Association="UpVotesModel.FK_CompanyVote_Company" />
         <EntityTypeShape EntityType="UpVotesModel.CategoryBasedMetaTags" Width="1.5" PointX="8.375" PointY="0.75" />
         <EntityTypeShape EntityType="UpVotesModel.CompanySubFocus" Width="1.5" PointX="5.25" PointY="22.125" />
         <EntityTypeShape EntityType="UpVotesModel.QuotationRateCard" Width="1.5" PointX="10.375" PointY="0.75" />
@@ -42,12 +32,25 @@
         <EntityTypeShape EntityType="UpVotesModel.CompanyPendingForApproval" Width="1.5" PointX="5.375" PointY="9.75" />
         <AssociationConnector Association="UpVotesModel.FK_SubFocusArea_FocusArea_FocusAreaID" />
         <EntityTypeShape EntityType="UpVotesModel.CompanyFocus" Width="1.5" PointX="3" PointY="10.25" />
-        <AssociationConnector Association="UpVotesModel.FK_CompanyFocus_Company" />
         <AssociationConnector Association="UpVotesModel.FK_CompanySubFocus_CompanyFocus_CompanyFocusID" />
         <EntityTypeShape EntityType="UpVotesModel.Email" Width="1.5" PointX="12.375" PointY="3.75" />
         <EntityTypeShape EntityType="UpVotesModel.SoftwareCategory" Width="1.5" PointX="12.375" PointY="7.75" />
-        <EntityTypeShape EntityType="UpVotesModel.Softwares" Width="1.5" PointX="10.125" PointY="16.875" />
+        <EntityTypeShape EntityType="UpVotesModel.Company" Width="1.5" PointX="3" PointY="8.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="UpVotesModel.Softwares" Width="1.5" PointX="3" PointY="21.75" />
+        <EntityTypeShape EntityType="UpVotesModel.TeamMembers" Width="1.5" PointX="14.625" PointY="11.75" />
+        <EntityTypeShape EntityType="UpVotesModel.User" Width="1.5" PointX="0.75" PointY="8.125" />
+        <AssociationConnector Association="UpVotesModel.FK_Company_Users" />
+        <AssociationConnector Association="UpVotesModel.FK_CompanyBranch_Company" />
+        <AssociationConnector Association="UpVotesModel.FK_CompanyFocus_Company" />
+        <AssociationConnector Association="UpVotesModel.FK_CompanyPortFolio_Company_CompanyID" />
+        <AssociationConnector Association="UpVotesModel.FK_CompanyReviews_Company_CompanyID" />
+        <AssociationConnector Association="UpVotesModel.FK_CompanyVote_Company" />
+        <AssociationConnector Association="UpVotesModel.FK_Users_CompanyReviews_UserID" />
+        <AssociationConnector Association="UpVotesModel.FK_CompanyReviewThankNote_Users" />
         <AssociationConnector Association="UpVotesModel.FK_SoftwareCategory_Softwares_SoftwareID" />
+        <AssociationConnector Association="UpVotesModel.FK_Softwares_Users_UserID" />
+        <AssociationConnector Association="UpVotesModel.FK_UserRegistration_Users_UserID" />
+        <AssociationConnector Association="UpVotesModel.FK_Tokens_Users_UserID" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

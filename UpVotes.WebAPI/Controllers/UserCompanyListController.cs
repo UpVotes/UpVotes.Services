@@ -143,6 +143,19 @@ namespace UpVotes.WebAPI.Controllers
             {
                 return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
             }
-        }        
+        }
+
+        [HttpGet, Route("api/DeleteCompany/{companyId}")]
+        public HttpResponseMessage DeleteCompany(int companyId)
+        {
+            try
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, _companyServices.DeleteCompany(companyId));
+            }
+            catch (Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, e);
+            }
+        }
     }
 }

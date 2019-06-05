@@ -59,6 +59,7 @@
     <Compile Include="Helper\DependencyResolver.cs" />
     <Compile Include="Helper\EmailHelper.cs" />
     <Compile Include="Helper\Helper.cs" />
+    <Compile Include="Helper\TeamMemberHelper.cs" />
     <Compile Include="Interface\IOverviewAndNewsService.cs" />
     <Compile Include="Interface\IReviewsService.cs" />
     <Compile Include="Interface\ISoftwareService.cs" />

@@ -20,6 +20,6 @@ namespace UpVotes.DataModel
         public System.DateTime ThankNoteDate { get; set; }
     
         public virtual CompanyReview CompanyReview { get; set; }
-        public virtual User User { get; set; }
+        public virtual User Users { get; set; }
     }
 }

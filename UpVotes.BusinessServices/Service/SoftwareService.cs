@@ -38,6 +38,7 @@ namespace UpVotes.BusinessServices.Service
                             {
                                 software.SoftwareName = System.Web.HttpUtility.HtmlEncode(software.SoftwareName);
                                 software.SoftwareReviews = GetSoftwareReviews(software.SoftwareName, 5).ToList();
+                                software.SoftwareTeamMembers = new TeamMemberHelper().GetTeamMembers(0, 0, software.SoftwareID, 5);
                                 software.OverviewNewsData = newsObj.GetCompanySoftwareNewsByID(2, software.SoftwareID);
                                 if (software.SoftwareReviews.Any())
                                 {
@@ -317,6 +318,59 @@ namespace UpVotes.BusinessServices.Service
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        public List<TeamMemebersEntity> GetTeamMembersBySoftwareId(int softwareId)
+        {
+            try
+            {
+                return new TeamMemberHelper().GetTeamMembers(0, 0, softwareId, 0);
+            }
+            catch (Exception e)
+            {                
+                throw e;
+            }
+        }
+
+        public int SaveSoftwareTeamMembers(TeamMemebersEntity teamMembers)
+        {
+            try
+            {
+                teamMembers.CompanyId = null;
+                return new TeamMemberHelper().SaveTeamMember(teamMembers);
+            }
+            catch (Exception e)
+            {                
+                throw e;
+            }            
+        }
+
+        public int DeleteSoftwareTeamMember(int teamMemberId)
+        {
+            try
+            {
+                using (_context = new UpVotesEntities())
+                {
+                    return _context.Sp_DelTeamMember(teamMemberId);
+                }
+            }
+            catch (Exception e)
+            {                
+                throw e;
+            }
+        }
+
+        public TeamMemebersEntity GetCompanyTeamMember(int teamMemberId)
+        {
+            try
+            {
+                return new TeamMemberHelper().GetTeamMembers(teamMemberId, 0, 0, 0).FirstOrDefault();//get all team members for a software
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
             }
         }
 
