@@ -90,7 +90,7 @@
           <Property Name="ModifiedDate" Type="datetime" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="CompanyPendingForApproval">
           <Key>
             <PropertyRef Name="CompanyID" />
@@ -130,6 +130,8 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Property Name="Phone" Type="nvarchar" MaxLength="20" />
           <Property Name="IsApproved" Type="bit" Nullable="false" />
           <Property Name="ReviewerUserName" Type="nvarchar" MaxLength="100" />
+          <Property Name="ApprovedBy" Type="int" />
+          <Property Name="ApprovedDate" Type="datetime" />
         </EntityType>
         <EntityType Name="CompanyReviewThankNote">
           <Key>
@@ -634,6 +636,13 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Parameter Name="IsAdminApproved" Type="bit" Mode="In" />
           <Parameter Name="userPassword" Type="nvarchar" Mode="In" />
         </Function>
+        <Function Name="Sp_ApproveRejectUserReview" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userID" Type="int" Mode="In" />
+          <Parameter Name="ReviewID" Type="int" Mode="In" />
+          <Parameter Name="IsApprove" Type="bit" Mode="In" />
+          <Parameter Name="companyID" Type="int" Mode="In" />
+          <Parameter Name="softwareID" Type="int" Mode="In" />
+        </Function>
         <Function Name="Sp_CategoryMetaTags" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="FocusAreaName" Type="nvarchar" Mode="In" />
           <Parameter Name="SubFocusAreaName" Type="nvarchar" Mode="In" />
@@ -717,6 +726,9 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
         <Function Name="Sp_GetCompanyFocus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyID" Type="int" Mode="In" />
         </Function>
+        <Function Name="Sp_GetCompanyHeadQuartersEmail" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="companyID" Type="int" Mode="In" />
+        </Function>
         <Function Name="Sp_GetCompanyListFocus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyID" Type="int" Mode="In" />
           <Parameter Name="focusAreaID" Type="int" Mode="In" />
@@ -779,6 +791,11 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Parameter Name="databaseType" Type="nvarchar" Mode="In" />
           <Parameter Name="featuresType" Type="nvarchar(max)" Mode="In" />
         </Function>
+        <Function Name="Sp_GetServiceSoftwareReviewsListForApproval" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userID" Type="int" Mode="In" />
+          <Parameter Name="companyID" Type="int" Mode="In" />
+          <Parameter Name="softwareID" Type="int" Mode="In" />
+        </Function>
         <Function Name="Sp_GetSoftware" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="servicecategoryid" Type="int" Mode="In" />
           <Parameter Name="softwarename" Type="nvarchar" Mode="In" />
@@ -839,6 +856,12 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Parameter Name="NoOfRows" Type="int" Mode="In" />
         </Function>
         <Function Name="Sp_GetTopVotesCompany" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="Sp_GetUserReviewByReviewID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userID" Type="int" Mode="In" />
+          <Parameter Name="ReviewID" Type="int" Mode="In" />
+          <Parameter Name="companyID" Type="int" Mode="In" />
+          <Parameter Name="softwareID" Type="int" Mode="In" />
+        </Function>
         <Function Name="Sp_InsAdminNews" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="IsCompanySoftware" Type="int" Mode="In" />
           <Parameter Name="CategoryID" Type="int" Mode="In" />
@@ -1624,6 +1647,27 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
             <Parameter Name="ContactMessage" Mode="In" Type="String" />
             <Parameter Name="AddedBy" Mode="In" Type="Int32" />
           </FunctionImport>
+          <FunctionImport Name="Sp_GetServiceSoftwareReviewsListForApproval" ReturnType="Collection(UpVotesModel.Sp_GetServiceSoftwareReviewsListForApproval_Result)">
+            <Parameter Name="userID" Mode="In" Type="Int32" />
+            <Parameter Name="companyID" Mode="In" Type="Int32" />
+            <Parameter Name="softwareID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetUserReviewByReviewID" ReturnType="Collection(UpVotesModel.Sp_GetUserReviewByReviewID_Result)">
+            <Parameter Name="userID" Mode="In" Type="Int32" />
+            <Parameter Name="ReviewID" Mode="In" Type="Int32" />
+            <Parameter Name="companyID" Mode="In" Type="Int32" />
+            <Parameter Name="softwareID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_ApproveRejectUserReview" ReturnType="Collection(Boolean)">
+            <Parameter Name="userID" Mode="In" Type="Int32" />
+            <Parameter Name="ReviewID" Mode="In" Type="Int32" />
+            <Parameter Name="IsApprove" Mode="In" Type="Boolean" />
+            <Parameter Name="companyID" Mode="In" Type="Int32" />
+            <Parameter Name="softwareID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetCompanyHeadQuartersEmail" ReturnType="Collection(String)">
+            <Parameter Name="companyID" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="Sp_GetCompanyFocus_Result">
           <Property Type="Int32" Name="CompanyFocusID" Nullable="false" />
@@ -1716,6 +1760,8 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Property Name="ReviewerUserName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Company" Relationship="UpVotesModel.FK_CompanyReviews_Company_CompanyID" FromRole="CompanyReview" ToRole="Company" />
           <NavigationProperty Name="Users" Relationship="UpVotesModel.FK_Users_CompanyReviews_UserID" FromRole="CompanyReview" ToRole="Users" />
+          <Property Name="ApprovedBy" Type="Int32" />
+          <Property Name="ApprovedDate" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="CompanyReviewThankNote">
           <Key>
@@ -2769,6 +2815,26 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Property Type="DateTime" Name="StartDate" Nullable="false" Precision="23" />
           <Property Type="DateTime" Name="EndDate" Nullable="true" Precision="23" />
         </ComplexType>
+        <ComplexType Name="Sp_GetServiceSoftwareReviewsListForApproval_Result">
+          <Property Type="Int32" Name="ReviewID" Nullable="false" />
+          <Property Type="String" Name="CompanyName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="ProjectName" Nullable="false" MaxLength="100" />
+          <Property Type="Boolean" Name="IsApproved" Nullable="false" />
+          <Property Type="String" Name="ReviewerUserName" Nullable="true" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="Sp_GetUserReviewByReviewID_Result">
+          <Property Type="Int32" Name="ReviewID" Nullable="false" />
+          <Property Type="String" Name="CompanyName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="ProjectName" Nullable="false" MaxLength="100" />
+          <Property Type="Boolean" Name="IsApproved" Nullable="false" />
+          <Property Type="String" Name="ReviewerUserName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="CategoryName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="FeedBack" Nullable="false" />
+          <Property Type="Int16" Name="Rating" Nullable="false" />
+          <Property Type="String" Name="Designation" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Phone" Nullable="true" MaxLength="20" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2861,6 +2927,8 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <EntitySetMapping Name="CompanyReviews">
             <EntityTypeMapping TypeName="UpVotesModel.CompanyReview">
               <MappingFragment StoreEntitySet="CompanyReviews">
+                <ScalarProperty Name="ApprovedDate" ColumnName="ApprovedDate" />
+                <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />
                 <ScalarProperty Name="ReviewerUserName" ColumnName="ReviewerUserName" />
                 <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
                 <ScalarProperty Name="Phone" ColumnName="Phone" />
@@ -3845,6 +3913,36 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <FunctionImportMapping FunctionImportName="Sp_InsTeamMember" FunctionName="UpVotesModel.Store.Sp_InsTeamMember" />
           <FunctionImportMapping FunctionImportName="Sp_UpdTeamMember" FunctionName="UpVotesModel.Store.Sp_UpdTeamMember" />                    
           <FunctionImportMapping FunctionImportName="Sp_InsContactUsInfo" FunctionName="UpVotesModel.Store.Sp_InsContactUsInfo" />
+          <FunctionImportMapping FunctionImportName="Sp_GetServiceSoftwareReviewsListForApproval" FunctionName="UpVotesModel.Store.Sp_GetServiceSoftwareReviewsListForApproval">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetServiceSoftwareReviewsListForApproval_Result">
+                <ScalarProperty Name="ReviewID" ColumnName="ReviewID" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="ProjectName" ColumnName="ProjectName" />
+                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+                <ScalarProperty Name="ReviewerUserName" ColumnName="ReviewerUserName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_GetUserReviewByReviewID" FunctionName="UpVotesModel.Store.Sp_GetUserReviewByReviewID">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetUserReviewByReviewID_Result">
+                <ScalarProperty Name="ReviewID" ColumnName="ReviewID" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="ProjectName" ColumnName="ProjectName" />
+                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+                <ScalarProperty Name="ReviewerUserName" ColumnName="ReviewerUserName" />
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+                <ScalarProperty Name="FeedBack" ColumnName="FeedBack" />
+                <ScalarProperty Name="Rating" ColumnName="Rating" />
+                <ScalarProperty Name="Designation" ColumnName="Designation" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_ApproveRejectUserReview" FunctionName="UpVotesModel.Store.Sp_ApproveRejectUserReview" />
+          <FunctionImportMapping FunctionImportName="Sp_GetCompanyHeadQuartersEmail" FunctionName="UpVotesModel.Store.Sp_GetCompanyHeadQuartersEmail" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

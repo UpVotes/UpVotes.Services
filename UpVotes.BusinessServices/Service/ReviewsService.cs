@@ -30,7 +30,8 @@ namespace UpVotes.BusinessServices.Service
                     var isReview = _context.Sp_InsCompanyReview(companyReviewEntity.CompanyID, companyReviewEntity.FocusAreaID, companyReviewEntity.UserID, companyReviewEntity.ReviewerCompanyName, companyReviewEntity.ReviewerDesignation, companyReviewEntity.ReviewerProjectName, companyReviewEntity.FeedBack, companyReviewEntity.Rating, companyReviewEntity.Email, companyReviewEntity.Phone, companyReviewEntity.ReviewerFullName).FirstOrDefault();
                     if (isReview > 0)
                     {
-                        Thread threadAck = new Thread(() => SendAcknowledgeMail(companyReviewEntity.CompanyName, companyReviewEntity.ReviewerDesignation, companyReviewEntity.ReviewerCompanyName, companyReviewEntity.ReviewerFullName));
+                        string Toemail = _context.Sp_GetCompanyHeadQuartersEmail(companyReviewEntity.CompanyID).FirstOrDefault();
+                        Thread threadAck = new Thread(() => SendAcknowledgeMail(companyReviewEntity.CompanyName, companyReviewEntity.ReviewerDesignation, companyReviewEntity.ReviewerCompanyName, companyReviewEntity.ReviewerFullName, Toemail));
                         Thread threadThx = new Thread(() => SendThankyouMail(companyReviewEntity.CompanyName, companyReviewEntity.ReviewerDesignation, companyReviewEntity.ReviewerCompanyName, companyReviewEntity.ReviewerFullName, companyReviewEntity.Email));
                         threadAck.Start();
                         threadThx.Start();
@@ -85,7 +86,7 @@ namespace UpVotes.BusinessServices.Service
                     var isReview = _context.Sp_InsSoftwareReview(softwareReviewEntity.SoftwareID, softwareReviewEntity.ServiceCategoryID, softwareReviewEntity.UserID, softwareReviewEntity.ReviewerCompanyName, softwareReviewEntity.ReviewerDesignation, softwareReviewEntity.FeedBack, softwareReviewEntity.Rating, softwareReviewEntity.Email, softwareReviewEntity.Phone, softwareReviewEntity.ReviewerFullName).FirstOrDefault();
                     if (isReview > 0)
                     {
-                        Thread threadAck = new Thread(() => SendAcknowledgeMail(softwareReviewEntity.SoftwareName, softwareReviewEntity.ReviewerDesignation, softwareReviewEntity.ReviewerCompanyName, softwareReviewEntity.ReviewerFullName));
+                        Thread threadAck = new Thread(() => SendAcknowledgeMail(softwareReviewEntity.SoftwareName, softwareReviewEntity.ReviewerDesignation, softwareReviewEntity.ReviewerCompanyName, softwareReviewEntity.ReviewerFullName, ""));
                         Thread threadThx = new Thread(() => SendThankyouMail(softwareReviewEntity.SoftwareName, softwareReviewEntity.ReviewerDesignation, softwareReviewEntity.ReviewerCompanyName, softwareReviewEntity.ReviewerFullName, softwareReviewEntity.Email));
                         threadAck.Start();
                         threadThx.Start();
@@ -105,12 +106,89 @@ namespace UpVotes.BusinessServices.Service
             }
         }
 
-        private void SendAcknowledgeMail(string Name, string ReviewerDesignation, string ReviewerCompanyName, string ReviewerFullName)
+        public List<UserReviewsResponseEntity> GetUserReviewsListForApproval(UserReviewRequestEntity ReviewsRequestEntity)
+        {
+            List<UserReviewsResponseEntity> ReviewsListForApprovalObj = new List<UserReviewsResponseEntity>();
+            using (_context = new UpVotesEntities())
+            {
+                try
+                {
+                    var result = _context.Sp_GetServiceSoftwareReviewsListForApproval(ReviewsRequestEntity.userID, ReviewsRequestEntity.companyID, ReviewsRequestEntity.softwareID).ToList();
+                    if (result != null)
+                    {
+                        result.ToList().ForEach(q => ReviewsListForApprovalObj.Add(new UserReviewsResponseEntity
+                        {
+                            ReviewID = q.ReviewID,
+                            ReviewerCompanyName = q.CompanyName,
+                            ProjectName = q.ProjectName,
+                            IsApproved = q.IsApproved,
+                            ReviewerUserName = q.ReviewerUserName
+                        }));
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+                
+            return ReviewsListForApprovalObj;
+        }
+
+        public UserReviewsResponseEntity GetUserReviewByReviewID(UserReviewRequestEntity ReviewsRequestEntity)
+        {
+            UserReviewsResponseEntity ReviewDetailsObj = new UserReviewsResponseEntity();
+            using (_context = new UpVotesEntities())
+            {
+                try
+                {
+                    var result = _context.Sp_GetUserReviewByReviewID(ReviewsRequestEntity.userID, ReviewsRequestEntity.ReviewID, ReviewsRequestEntity.companyID, ReviewsRequestEntity.softwareID).FirstOrDefault();
+                    if (result != null)
+                    {
+                        ReviewDetailsObj.ReviewID = result.ReviewID;
+                        ReviewDetailsObj.ReviewerCompanyName = result.CompanyName;
+                        ReviewDetailsObj.ProjectName = result.ProjectName;
+                        ReviewDetailsObj.IsApproved = result.IsApproved;
+                        ReviewDetailsObj.ReviewerUserName = result.ReviewerUserName;
+                        ReviewDetailsObj.CategoryName = result.CategoryName;
+                        ReviewDetailsObj.Summary = result.FeedBack;
+                        ReviewDetailsObj.Rating = result.Rating;
+                        ReviewDetailsObj.ReviewerDesignation = result.Designation;
+                        ReviewDetailsObj.Email = result.Email;
+                        ReviewDetailsObj.Phone = result.Phone;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return ReviewDetailsObj;
+        }
+
+        public bool ApproveRejectUserReview(UserReviewRequestEntity ReviewsRequestEntity)
+        {
+            using (_context = new UpVotesEntities())
+            {
+                try
+                {
+                    var isApproveReject = _context.Sp_ApproveRejectUserReview(ReviewsRequestEntity.userID, ReviewsRequestEntity.ReviewID, ReviewsRequestEntity.IsApprove, ReviewsRequestEntity.companyID, ReviewsRequestEntity.softwareID).FirstOrDefault();
+                    return Convert.ToBoolean(isApproveReject);
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+            }
+        }
+
+        private void SendAcknowledgeMail(string Name, string ReviewerDesignation, string ReviewerCompanyName, string ReviewerFullName, string companyMail)
         {
             Email emailProperties = new Email();
             emailProperties.EmailFrom = System.Configuration.ConfigurationManager.AppSettings["AdminEmail"];
             emailProperties.DomainDisplayName = System.Configuration.ConfigurationManager.AppSettings["DomainDisplayName"];
-            emailProperties.EmailTo = System.Configuration.ConfigurationManager.AppSettings["EmailTo"];
+            emailProperties.EmailTo = companyMail != "" ? companyMail : System.Configuration.ConfigurationManager.AppSettings["EmailTo"];
             emailProperties.EmailBCC = "support@upvotes.co; puneethm@hotmail.com";
             emailProperties.EmailSubject = "New review for " + Name + " from " + ReviewerDesignation + " at "+ ReviewerCompanyName;
             emailProperties.EmailBody = GetAcknowledgeEmailContent(Name, ReviewerDesignation, ReviewerCompanyName, ReviewerFullName).ToString();

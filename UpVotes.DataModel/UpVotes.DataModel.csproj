@@ -183,6 +183,9 @@
     <Compile Include="Sp_GetQuoteForMobileApp_Result.cs">
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Sp_GetServiceSoftwareReviewsListForApproval_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Sp_GetSoftwareCompanyNewsByName_Result.cs">
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>
@@ -220,6 +223,9 @@
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Sp_GetTopVotesCompany_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_GetUserReviewByReviewID_Result.cs">
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Sp_InsertUpdateUser_Result.cs">

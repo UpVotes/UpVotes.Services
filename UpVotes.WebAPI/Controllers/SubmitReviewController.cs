@@ -66,5 +66,50 @@ namespace UpVotes.WebAPI.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
             }
         }
+
+        [HttpPost]
+        [Route("api/GetUserReviewsListForApproval")]
+        public HttpResponseMessage GetUserReviewsListForApproval(UserReviewRequestEntity ReviewsRequestEntity)
+        {
+            try
+            {
+                List<UserReviewsResponseEntity> reviewsApprovalList = _submitReviewsServices.GetUserReviewsListForApproval(ReviewsRequestEntity);
+                return Request.CreateResponse(HttpStatusCode.OK, reviewsApprovalList);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
+
+        [HttpPost]
+        [Route("api/GetUserReviewByReviewID")]
+        public HttpResponseMessage GetUserReviewByReviewID(UserReviewRequestEntity ReviewsRequestEntity)
+        {
+            try
+            {
+                UserReviewsResponseEntity reviewsApprovalList = _submitReviewsServices.GetUserReviewByReviewID(ReviewsRequestEntity);
+                return Request.CreateResponse(HttpStatusCode.OK, reviewsApprovalList);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
+
+        [HttpPost]
+        [Route("api/ApproveRejectUserReview")]
+        public HttpResponseMessage ApproveRejectUserReview(UserReviewRequestEntity ReviewsRequestEntity)
+        {
+            try
+            {
+                bool isApproveReject = _submitReviewsServices.ApproveRejectUserReview(ReviewsRequestEntity);
+                return Request.CreateResponse(HttpStatusCode.OK, isApproveReject);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.ExpectationFailed, ex);
+            }
+        }
     }
 }

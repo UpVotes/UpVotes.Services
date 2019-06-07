@@ -34,6 +34,8 @@ namespace UpVotes.DataModel
         public string Phone { get; set; }
         public bool IsApproved { get; set; }
         public string ReviewerUserName { get; set; }
+        public Nullable<int> ApprovedBy { get; set; }
+        public Nullable<System.DateTime> ApprovedDate { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CompanyReviewThankNote> CompanyReviewThankNotes { get; set; }

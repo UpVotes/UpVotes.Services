@@ -1384,5 +1384,77 @@ namespace UpVotes.DataModel
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("Sp_InsContactUsInfo", nameParameter, emailParameter, phoneParameter, companyNameParameter, contactMessageParameter, addedByParameter);
         }
+    
+        public virtual ObjectResult<Sp_GetServiceSoftwareReviewsListForApproval_Result> Sp_GetServiceSoftwareReviewsListForApproval(Nullable<int> userID, Nullable<int> companyID, Nullable<int> softwareID)
+        {
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("userID", userID) :
+                new ObjectParameter("userID", typeof(int));
+    
+            var companyIDParameter = companyID.HasValue ?
+                new ObjectParameter("companyID", companyID) :
+                new ObjectParameter("companyID", typeof(int));
+    
+            var softwareIDParameter = softwareID.HasValue ?
+                new ObjectParameter("softwareID", softwareID) :
+                new ObjectParameter("softwareID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetServiceSoftwareReviewsListForApproval_Result>("Sp_GetServiceSoftwareReviewsListForApproval", userIDParameter, companyIDParameter, softwareIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_GetUserReviewByReviewID_Result> Sp_GetUserReviewByReviewID(Nullable<int> userID, Nullable<int> reviewID, Nullable<int> companyID, Nullable<int> softwareID)
+        {
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("userID", userID) :
+                new ObjectParameter("userID", typeof(int));
+    
+            var reviewIDParameter = reviewID.HasValue ?
+                new ObjectParameter("ReviewID", reviewID) :
+                new ObjectParameter("ReviewID", typeof(int));
+    
+            var companyIDParameter = companyID.HasValue ?
+                new ObjectParameter("companyID", companyID) :
+                new ObjectParameter("companyID", typeof(int));
+    
+            var softwareIDParameter = softwareID.HasValue ?
+                new ObjectParameter("softwareID", softwareID) :
+                new ObjectParameter("softwareID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetUserReviewByReviewID_Result>("Sp_GetUserReviewByReviewID", userIDParameter, reviewIDParameter, companyIDParameter, softwareIDParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<bool>> Sp_ApproveRejectUserReview(Nullable<int> userID, Nullable<int> reviewID, Nullable<bool> isApprove, Nullable<int> companyID, Nullable<int> softwareID)
+        {
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("userID", userID) :
+                new ObjectParameter("userID", typeof(int));
+    
+            var reviewIDParameter = reviewID.HasValue ?
+                new ObjectParameter("ReviewID", reviewID) :
+                new ObjectParameter("ReviewID", typeof(int));
+    
+            var isApproveParameter = isApprove.HasValue ?
+                new ObjectParameter("IsApprove", isApprove) :
+                new ObjectParameter("IsApprove", typeof(bool));
+    
+            var companyIDParameter = companyID.HasValue ?
+                new ObjectParameter("companyID", companyID) :
+                new ObjectParameter("companyID", typeof(int));
+    
+            var softwareIDParameter = softwareID.HasValue ?
+                new ObjectParameter("softwareID", softwareID) :
+                new ObjectParameter("softwareID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<bool>>("Sp_ApproveRejectUserReview", userIDParameter, reviewIDParameter, isApproveParameter, companyIDParameter, softwareIDParameter);
+        }
+    
+        public virtual ObjectResult<string> Sp_GetCompanyHeadQuartersEmail(Nullable<int> companyID)
+        {
+            var companyIDParameter = companyID.HasValue ?
+                new ObjectParameter("companyID", companyID) :
+                new ObjectParameter("companyID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("Sp_GetCompanyHeadQuartersEmail", companyIDParameter);
+        }
     }
 }

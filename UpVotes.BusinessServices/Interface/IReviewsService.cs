@@ -8,5 +8,8 @@ namespace UpVotes.BusinessServices.Interface
         bool AddCompanyReview(CompanyReviewsEntity companyReviewEntity);
         bool AddSoftwareReview(SoftwareReviewsEntity companyReviewEntity);
         AutocompleteResponseEntity GetSoftwareCompanyAutoCompleteData(AutocompleteRequestEntity SoftwareCompanyAutoCompleteRequest);
+        List<UserReviewsResponseEntity> GetUserReviewsListForApproval(UserReviewRequestEntity ReviewsRequestEntity);
+        UserReviewsResponseEntity GetUserReviewByReviewID(UserReviewRequestEntity ReviewsRequestEntity);
+        bool ApproveRejectUserReview(UserReviewRequestEntity ApproveRejectRequestEntity);
     }
 }
