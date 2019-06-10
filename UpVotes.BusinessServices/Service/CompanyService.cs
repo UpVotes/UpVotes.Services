@@ -360,7 +360,7 @@ namespace UpVotes.BusinessServices.Service
                             company.CompanySubFocus = GetCompanySubFocus(company.CompanyID).ToList();
                             company.CompanyBranches = GetCompanyBranches(company.CompanyID).ToList();
                             company.CompanyPortFolio = GetCompanyPortFolio(company.CompanyID, 5).ToList();
-                            company.CompanyTeamMembers = new TeamMemberHelper().GetTeamMembers(0, company.CompanyID, 0, 5);// To get top 5 company employees
+                            company.CompanyTeamMembers = new TeamMemberHelper().GetTeamMembers(0, company.CompanyName, 5);// To get top 5 company employees
                             company.CompanyReviews = GetCompanyReviews(company.CompanyName, 5).ToList();
                             company.OverviewNewsData = newsObj.GetCompanySoftwareNewsByID(1, company.CompanyID);
                             //if (company.CompanyReviews.Count() > 0)
@@ -1464,11 +1464,11 @@ namespace UpVotes.BusinessServices.Service
 
         }
 
-        public List<TeamMemebersEntity> GetTeamMembersByCompanyId(int companyId)
+        public List<TeamMemebersEntity> GetTeamMembersByCompany(string companyName)
         {
             try
             {                
-                return new TeamMemberHelper().GetTeamMembers(0, companyId, 0, 0);//get all team members for a company
+                return new TeamMemberHelper().GetTeamMembers(0, companyName, 0);//get all team members for a company
             }
             catch (Exception ex)
             {
@@ -1508,7 +1508,7 @@ namespace UpVotes.BusinessServices.Service
         {
             try
             {
-                return new TeamMemberHelper().GetTeamMembers(teamMemberId, 0, 0, 0).FirstOrDefault();//get all team members for a company
+                return new TeamMemberHelper().GetTeamMembers(teamMemberId, string.Empty, 0).FirstOrDefault();//get all team members for a company
             }
             catch (Exception e)
             {

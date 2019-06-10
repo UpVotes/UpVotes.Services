@@ -38,7 +38,7 @@ namespace UpVotes.BusinessServices.Service
                             {
                                 software.SoftwareName = System.Web.HttpUtility.HtmlEncode(software.SoftwareName);
                                 software.SoftwareReviews = GetSoftwareReviews(software.SoftwareName, 5).ToList();
-                                software.SoftwareTeamMembers = new TeamMemberHelper().GetTeamMembers(0, 0, software.SoftwareID, 5);
+                                software.SoftwareTeamMembers = new TeamMemberHelper().GetTeamMembers(0, software.SoftwareName, 5);
                                 software.OverviewNewsData = newsObj.GetCompanySoftwareNewsByID(2, software.SoftwareID);
                                 if (software.SoftwareReviews.Any())
                                 {
@@ -321,11 +321,11 @@ namespace UpVotes.BusinessServices.Service
             }
         }
 
-        public List<TeamMemebersEntity> GetTeamMembersBySoftwareId(int softwareId)
+        public List<TeamMemebersEntity> GetTeamMembersBySoftware(string softwareName)
         {
             try
             {
-                return new TeamMemberHelper().GetTeamMembers(0, 0, softwareId, 0);
+                return new TeamMemberHelper().GetTeamMembers(0, softwareName, 0);
             }
             catch (Exception e)
             {                
@@ -365,7 +365,7 @@ namespace UpVotes.BusinessServices.Service
         {
             try
             {
-                return new TeamMemberHelper().GetTeamMembers(teamMemberId, 0, 0, 0).FirstOrDefault();//get all team members for a software
+                return new TeamMemberHelper().GetTeamMembers(teamMemberId, string.Empty, 0).FirstOrDefault();//get all team members for a software
             }
             catch (Exception e)
             {

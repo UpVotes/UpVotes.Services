@@ -31,7 +31,7 @@ namespace UpVotes.BusinessServices.Interface
 
         bool UpdateSoftwareRejectionComments(SoftwareRejectComments softwareRejectComments);
 
-        List<TeamMemebersEntity> GetTeamMembersBySoftwareId(int softwareId);
+        List<TeamMemebersEntity> GetTeamMembersBySoftware(string softwareName);
 
         int SaveSoftwareTeamMembers(TeamMemebersEntity teamMembers);
 

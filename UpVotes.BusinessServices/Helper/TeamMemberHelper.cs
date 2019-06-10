@@ -10,11 +10,11 @@ namespace UpVotes.BusinessServices
     {
         private UpVotesEntities _context = null;
 
-        public List<TeamMemebersEntity> GetTeamMembers(int memberID, int companyID, int softwareID, int noOfRows)
+        public List<TeamMemebersEntity> GetTeamMembers(int memberId, string companyOrSoftwareName, int noOfRows)
         {
             using (_context = new UpVotesEntities())
             {
-                var teamMembersList = (from a in _context.Sp_GetTeamMembers(memberID, companyID, softwareID, noOfRows)
+                var teamMembersList = (from a in _context.Sp_GetTeamMembers(memberId, companyOrSoftwareName, noOfRows)
                                                             select new TeamMemebersEntity()
                                                             {
                                                                 MemberId = a.MemberID,

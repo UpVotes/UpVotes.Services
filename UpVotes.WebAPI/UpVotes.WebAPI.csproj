@@ -285,10 +285,6 @@
       <Project>{fa3f3c67-95ea-448d-acbd-5e673d3cf346}</Project>
       <Name>UpVotes.BusinessEntities</Name>
     </ProjectReference>
-    <ProjectReference Include="..\UpVotes.DataModel\UpVotes.DataModel.csproj">
-      <Project>{828beda2-6dec-4bc1-936c-3d66a3cdcc64}</Project>
-      <Name>UpVotes.DataModel</Name>
-    </ProjectReference>
     <ProjectReference Include="..\UpVotes.Resolver\UpVotes.Resolver.csproj">
       <Project>{0d4e202a-bc77-4a61-bd11-5c67ec7217b8}</Project>
       <Name>UpVotes.Resolver</Name>

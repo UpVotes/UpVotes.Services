@@ -57,7 +57,7 @@ namespace UpVotes.BusinessServices.Interface
 
         string AdminApproveRejectForClaiming(ClaimApproveRejectListingRequest ClaimListingobj);
 
-        List<TeamMemebersEntity> GetTeamMembersByCompanyId(int companyId);
+        List<TeamMemebersEntity> GetTeamMembersByCompany(string companyName);
 
         int SaveCompanyTeamMembers(TeamMemebersEntity teamMembers);
 

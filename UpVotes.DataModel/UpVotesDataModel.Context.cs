@@ -1265,27 +1265,6 @@ namespace UpVotes.DataModel
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Sp_DelTeamMember", memberIDParameter);
         }
     
-        public virtual ObjectResult<Sp_GetTeamMembers_Result> Sp_GetTeamMembers(Nullable<int> memberID, Nullable<int> companyID, Nullable<int> softwareID, Nullable<int> noOfRows)
-        {
-            var memberIDParameter = memberID.HasValue ?
-                new ObjectParameter("MemberID", memberID) :
-                new ObjectParameter("MemberID", typeof(int));
-    
-            var companyIDParameter = companyID.HasValue ?
-                new ObjectParameter("CompanyID", companyID) :
-                new ObjectParameter("CompanyID", typeof(int));
-    
-            var softwareIDParameter = softwareID.HasValue ?
-                new ObjectParameter("SoftwareID", softwareID) :
-                new ObjectParameter("SoftwareID", typeof(int));
-    
-            var noOfRowsParameter = noOfRows.HasValue ?
-                new ObjectParameter("NoOfRows", noOfRows) :
-                new ObjectParameter("NoOfRows", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetTeamMembers_Result>("Sp_GetTeamMembers", memberIDParameter, companyIDParameter, softwareIDParameter, noOfRowsParameter);
-        }
-    
         public virtual ObjectResult<Nullable<int>> Sp_InsTeamMember(Nullable<int> companyID, Nullable<int> softwareID, string memberName, string pictureName, string designation, string linkedInProfile, Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate)
         {
             var companyIDParameter = companyID.HasValue ?
@@ -1455,6 +1434,23 @@ namespace UpVotes.DataModel
                 new ObjectParameter("companyID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("Sp_GetCompanyHeadQuartersEmail", companyIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_GetTeamMembers_Result> Sp_GetTeamMembers(Nullable<int> memberID, string companyOrSoftwareName, Nullable<int> noOfRows)
+        {
+            var memberIDParameter = memberID.HasValue ?
+                new ObjectParameter("MemberID", memberID) :
+                new ObjectParameter("MemberID", typeof(int));
+    
+            var companyOrSoftwareNameParameter = companyOrSoftwareName != null ?
+                new ObjectParameter("CompanyOrSoftwareName", companyOrSoftwareName) :
+                new ObjectParameter("CompanyOrSoftwareName", typeof(string));
+    
+            var noOfRowsParameter = noOfRows.HasValue ?
+                new ObjectParameter("NoOfRows", noOfRows) :
+                new ObjectParameter("NoOfRows", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetTeamMembers_Result>("Sp_GetTeamMembers", memberIDParameter, companyOrSoftwareNameParameter, noOfRowsParameter);
         }
     }
 }

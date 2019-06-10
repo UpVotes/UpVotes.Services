@@ -90,7 +90,7 @@
           <Property Name="ModifiedDate" Type="datetime" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="CompanyPendingForApproval">
           <Key>
             <PropertyRef Name="CompanyID" />
@@ -851,8 +851,7 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
         </Function>
         <Function Name="Sp_GetTeamMembers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="MemberID" Type="int" Mode="In" />
-          <Parameter Name="CompanyID" Type="int" Mode="In" />
-          <Parameter Name="SoftwareID" Type="int" Mode="In" />
+          <Parameter Name="CompanyOrSoftwareName" Type="nvarchar" Mode="In" />
           <Parameter Name="NoOfRows" Type="int" Mode="In" />
         </Function>
         <Function Name="Sp_GetTopVotesCompany" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
@@ -1614,12 +1613,6 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           <FunctionImport Name="Sp_DelTeamMember">
           <Parameter Name="MemberID" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="Sp_GetTeamMembers" ReturnType="Collection(UpVotesModel.Sp_GetTeamMembers_Result)">
-            <Parameter Name="MemberID" Mode="In" Type="Int32" />
-            <Parameter Name="CompanyID" Mode="In" Type="Int32" />
-            <Parameter Name="SoftwareID" Mode="In" Type="Int32" />
-            <Parameter Name="NoOfRows" Mode="In" Type="Int32" />
-          </FunctionImport>
           <FunctionImport Name="Sp_InsTeamMember" ReturnType="Collection(Int32)">
             <Parameter Name="CompanyID" Mode="In" Type="Int32" />
             <Parameter Name="SoftwareID" Mode="In" Type="Int32" />
@@ -1666,7 +1659,12 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
             <Parameter Name="softwareID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="Sp_GetCompanyHeadQuartersEmail" ReturnType="Collection(String)">
-            <Parameter Name="companyID" Mode="In" Type="Int32" />
+          <Parameter Name="companyID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetTeamMembers" ReturnType="Collection(UpVotesModel.Sp_GetTeamMembers_Result)">
+            <Parameter Name="MemberID" Mode="In" Type="Int32" />
+            <Parameter Name="CompanyOrSoftwareName" Mode="In" Type="String" />
+            <Parameter Name="NoOfRows" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="Sp_GetCompanyFocus_Result">
@@ -2803,18 +2801,6 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="Sp_GetTeamMembers_Result">
-          <Property Type="Int32" Name="MemberID" Nullable="false" />
-          <Property Type="Int32" Name="CompanyID" Nullable="true" />
-          <Property Type="Int32" Name="SoftwareID" Nullable="true" />
-          <Property Type="String" Name="MemberName" Nullable="false" MaxLength="50" />
-          <Property Type="String" Name="PictureName" Nullable="true" MaxLength="185" />
-          <Property Type="String" Name="EmailID" Nullable="true" MaxLength="150" />
-          <Property Type="String" Name="Designation" Nullable="false" MaxLength="50" />
-          <Property Type="String" Name="LinkedInProfile" Nullable="true" MaxLength="250" />
-          <Property Type="DateTime" Name="StartDate" Nullable="false" Precision="23" />
-          <Property Type="DateTime" Name="EndDate" Nullable="true" Precision="23" />
-        </ComplexType>
         <ComplexType Name="Sp_GetServiceSoftwareReviewsListForApproval_Result">
           <Property Type="Int32" Name="ReviewID" Nullable="false" />
           <Property Type="String" Name="CompanyName" Nullable="true" MaxLength="100" />
@@ -2834,6 +2820,18 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           <Property Type="String" Name="Designation" Nullable="true" MaxLength="100" />
           <Property Type="String" Name="Email" Nullable="true" MaxLength="100" />
           <Property Type="String" Name="Phone" Nullable="true" MaxLength="20" />
+        </ComplexType>
+        <ComplexType Name="Sp_GetTeamMembers_Result">
+          <Property Type="Int32" Name="MemberID" Nullable="false" />
+          <Property Type="Int32" Name="CompanyID" Nullable="true" />
+          <Property Type="Int32" Name="SoftwareID" Nullable="true" />
+          <Property Type="String" Name="MemberName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="PictureName" Nullable="true" MaxLength="185" />
+          <Property Type="String" Name="EmailID" Nullable="true" MaxLength="150" />
+          <Property Type="String" Name="Designation" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="LinkedInProfile" Nullable="true" MaxLength="250" />
+          <Property Type="DateTime" Name="StartDate" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="EndDate" Nullable="true" Precision="23" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -3894,22 +3892,6 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="Sp_DelTeamMember" FunctionName="UpVotesModel.Store.Sp_DelTeamMember" />
-          <FunctionImportMapping FunctionImportName="Sp_GetTeamMembers" FunctionName="UpVotesModel.Store.Sp_GetTeamMembers">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetTeamMembers_Result">
-                <ScalarProperty Name="MemberID" ColumnName="MemberID" />
-                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
-                <ScalarProperty Name="SoftwareID" ColumnName="SoftwareID" />
-                <ScalarProperty Name="MemberName" ColumnName="MemberName" />
-                <ScalarProperty Name="PictureName" ColumnName="PictureName" />
-                <ScalarProperty Name="EmailID" ColumnName="EmailID" />
-                <ScalarProperty Name="Designation" ColumnName="Designation" />
-                <ScalarProperty Name="LinkedInProfile" ColumnName="LinkedInProfile" />
-                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
-                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Sp_InsTeamMember" FunctionName="UpVotesModel.Store.Sp_InsTeamMember" />
           <FunctionImportMapping FunctionImportName="Sp_UpdTeamMember" FunctionName="UpVotesModel.Store.Sp_UpdTeamMember" />                    
           <FunctionImportMapping FunctionImportName="Sp_InsContactUsInfo" FunctionName="UpVotesModel.Store.Sp_InsContactUsInfo" />
@@ -3943,6 +3925,22 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Sp_ApproveRejectUserReview" FunctionName="UpVotesModel.Store.Sp_ApproveRejectUserReview" />
           <FunctionImportMapping FunctionImportName="Sp_GetCompanyHeadQuartersEmail" FunctionName="UpVotesModel.Store.Sp_GetCompanyHeadQuartersEmail" />
+          <FunctionImportMapping FunctionImportName="Sp_GetTeamMembers" FunctionName="UpVotesModel.Store.Sp_GetTeamMembers">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetTeamMembers_Result">
+                <ScalarProperty Name="MemberID" ColumnName="MemberID" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="SoftwareID" ColumnName="SoftwareID" />
+                <ScalarProperty Name="MemberName" ColumnName="MemberName" />
+                <ScalarProperty Name="PictureName" ColumnName="PictureName" />
+                <ScalarProperty Name="EmailID" ColumnName="EmailID" />
+                <ScalarProperty Name="Designation" ColumnName="Designation" />
+                <ScalarProperty Name="LinkedInProfile" ColumnName="LinkedInProfile" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

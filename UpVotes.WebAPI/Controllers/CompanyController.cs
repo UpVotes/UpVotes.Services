@@ -6,10 +6,6 @@ using System.Net.Http;
 using System.Web.Http;
 using UpVotes.BusinessEntities.Entities;
 using UpVotes.BusinessServices.Interface;
-using UpVotes.BusinessServices.Service;
-using UpVotes.DataModel;
-using UpVotes.WebAPI.Filters.Authentication;
-using UpVotes.WebAPI.Filters.Authorization;
 
 namespace UpVotes.WebAPI.Controllers
 {
@@ -328,12 +324,12 @@ namespace UpVotes.WebAPI.Controllers
             }
         }
 
-        [HttpGet, Route("api/GetTeamMembersByCompanyId/{companyId}")]        
-        public HttpResponseMessage GetTeamMembersByCompanyId(int companyId)
+        [HttpGet, Route("api/GetTeamMembersByCompany/{companyName}")]        
+        public HttpResponseMessage GetTeamMembersByCompany(string companyName)
         {
             try
             {                
-                return Request.CreateResponse(HttpStatusCode.OK, _companyServices.GetTeamMembersByCompanyId(companyId));
+                return Request.CreateResponse(HttpStatusCode.OK, _companyServices.GetTeamMembersByCompany(companyName));
             }
             catch (Exception ex)
             {
