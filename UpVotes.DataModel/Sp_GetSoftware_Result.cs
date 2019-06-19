@@ -43,5 +43,8 @@ namespace UpVotes.DataModel
         public Nullable<int> TotalCount { get; set; }
         public Nullable<bool> IsClaim { get; set; }
         public Nullable<int> RowNumber { get; set; }
+        public string Sponsor { get; set; }
+        public Nullable<int> SponsorshipCategoryID { get; set; }
+        public Nullable<int> SponsorshipCategoryPriority { get; set; }
     }
 }

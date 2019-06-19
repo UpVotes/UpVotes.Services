@@ -93,7 +93,9 @@ namespace UpVotes.BusinessEntities.Entities
         public bool IsAdminUser { get; set; }
         public bool IsClaim { get; set; }
         public string CompanyDomain { get; set; }
-
+        public string Sponsor { get; set; }
+        public int? SponsorshipCategoryID { get; set; }
+        public int? SponsorshipCategoryPriority { get; set; }
         public List<CompanyBranchEntity> CompanyBranches { get; set; }
 
         public List<CompanyFocusEntity> CompanyFocus { get; set; }

@@ -171,6 +171,9 @@
     <Compile Include="Sp_GetDashboardInfoForUser_Result.cs">
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Sp_GetExpiredServiceSoftwareSponsorshipList_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Sp_GetFocusArea_Result.cs">
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>

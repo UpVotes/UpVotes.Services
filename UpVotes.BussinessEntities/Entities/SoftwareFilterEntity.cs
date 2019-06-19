@@ -15,5 +15,6 @@ namespace UpVotes.BusinessEntities.Entities
         public int PageSize { get; set; }
         public string SortBy { get; set; }
         public int Rows { get; set; }
+        public int OrderColumn { get; set; }
     }
 }

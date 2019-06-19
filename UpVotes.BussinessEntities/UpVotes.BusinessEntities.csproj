@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\CategoryLinksEntity.cs" />
+    <Compile Include="Entities\SponsorshipRequestEntity.cs" />
     <Compile Include="Entities\UserReviewsResponseEntity.cs" />
     <Compile Include="Entities\ContactUsInfoEntity.cs" />
     <Compile Include="Entities\OverviewNewsEntity.cs" />

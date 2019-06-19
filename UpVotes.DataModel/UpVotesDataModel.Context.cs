@@ -106,7 +106,7 @@ namespace UpVotes.DataModel
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetCompanyReviews_Result>("Sp_GetCompanyReviews", companyNameParameter, noOfRowsParameter);
         }
     
-        public virtual ObjectResult<Sp_GetCompany_Result> Sp_GetCompany(string companyName, Nullable<decimal> minRate, Nullable<decimal> maxRate, Nullable<int> minEmployee, Nullable<int> maxEmployee, string sortByVotes, Nullable<int> focusAreaID, Nullable<int> userID, string location, Nullable<int> pageNo, Nullable<int> pageSize, string subFocusArea)
+        public virtual ObjectResult<Sp_GetCompany_Result> Sp_GetCompany(string companyName, Nullable<decimal> minRate, Nullable<decimal> maxRate, Nullable<int> minEmployee, Nullable<int> maxEmployee, string sortByVotes, Nullable<int> focusAreaID, Nullable<int> userID, string location, Nullable<int> pageNo, Nullable<int> pageSize, string subFocusArea, Nullable<int> orderColumn)
         {
             var companyNameParameter = companyName != null ?
                 new ObjectParameter("companyName", companyName) :
@@ -156,7 +156,11 @@ namespace UpVotes.DataModel
                 new ObjectParameter("SubFocusArea", subFocusArea) :
                 new ObjectParameter("SubFocusArea", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetCompany_Result>("Sp_GetCompany", companyNameParameter, minRateParameter, maxRateParameter, minEmployeeParameter, maxEmployeeParameter, sortByVotesParameter, focusAreaIDParameter, userIDParameter, locationParameter, pageNoParameter, pageSizeParameter, subFocusAreaParameter);
+            var orderColumnParameter = orderColumn.HasValue ?
+                new ObjectParameter("OrderColumn", orderColumn) :
+                new ObjectParameter("OrderColumn", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetCompany_Result>("Sp_GetCompany", companyNameParameter, minRateParameter, maxRateParameter, minEmployeeParameter, maxEmployeeParameter, sortByVotesParameter, focusAreaIDParameter, userIDParameter, locationParameter, pageNoParameter, pageSizeParameter, subFocusAreaParameter, orderColumnParameter);
         }
     
         public virtual ObjectResult<string> Sp_GetCompanyNames(Nullable<int> type, Nullable<int> focusAreaID, string companyNamelocation)
@@ -547,7 +551,7 @@ namespace UpVotes.DataModel
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetTopVotesCompany_Result>("Sp_GetTopVotesCompany");
         }
     
-        public virtual ObjectResult<Sp_GetSoftware_Result> Sp_GetSoftware(Nullable<int> servicecategoryid, string softwarename, Nullable<int> userID, Nullable<int> pageNo, Nullable<int> pageSize, string sortByVotes)
+        public virtual ObjectResult<Sp_GetSoftware_Result> Sp_GetSoftware(Nullable<int> servicecategoryid, string softwarename, Nullable<int> userID, Nullable<int> pageNo, Nullable<int> pageSize, string sortByVotes, Nullable<int> orderColumn)
         {
             var servicecategoryidParameter = servicecategoryid.HasValue ?
                 new ObjectParameter("servicecategoryid", servicecategoryid) :
@@ -573,7 +577,11 @@ namespace UpVotes.DataModel
                 new ObjectParameter("sortByVotes", sortByVotes) :
                 new ObjectParameter("sortByVotes", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetSoftware_Result>("Sp_GetSoftware", servicecategoryidParameter, softwarenameParameter, userIDParameter, pageNoParameter, pageSizeParameter, sortByVotesParameter);
+            var orderColumnParameter = orderColumn.HasValue ?
+                new ObjectParameter("OrderColumn", orderColumn) :
+                new ObjectParameter("OrderColumn", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetSoftware_Result>("Sp_GetSoftware", servicecategoryidParameter, softwarenameParameter, userIDParameter, pageNoParameter, pageSizeParameter, sortByVotesParameter, orderColumnParameter);
         }
     
         public virtual ObjectResult<Nullable<decimal>> Sp_SoftwareVote(Nullable<int> userID, Nullable<int> softwareID)
@@ -1451,6 +1459,53 @@ namespace UpVotes.DataModel
                 new ObjectParameter("NoOfRows", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetTeamMembers_Result>("Sp_GetTeamMembers", memberIDParameter, companyOrSoftwareNameParameter, noOfRowsParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<decimal>> Sp_InsUpdServiceSoftwareSponsorship(Nullable<int> provider, Nullable<int> companyOrSoftwareID, Nullable<int> sponsorshipCategoryID, Nullable<int> createdBy, Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate)
+        {
+            var providerParameter = provider.HasValue ?
+                new ObjectParameter("Provider", provider) :
+                new ObjectParameter("Provider", typeof(int));
+    
+            var companyOrSoftwareIDParameter = companyOrSoftwareID.HasValue ?
+                new ObjectParameter("CompanyOrSoftwareID", companyOrSoftwareID) :
+                new ObjectParameter("CompanyOrSoftwareID", typeof(int));
+    
+            var sponsorshipCategoryIDParameter = sponsorshipCategoryID.HasValue ?
+                new ObjectParameter("SponsorshipCategoryID", sponsorshipCategoryID) :
+                new ObjectParameter("SponsorshipCategoryID", typeof(int));
+    
+            var createdByParameter = createdBy.HasValue ?
+                new ObjectParameter("CreatedBy", createdBy) :
+                new ObjectParameter("CreatedBy", typeof(int));
+    
+            var startDateParameter = startDate.HasValue ?
+                new ObjectParameter("StartDate", startDate) :
+                new ObjectParameter("StartDate", typeof(System.DateTime));
+    
+            var endDateParameter = endDate.HasValue ?
+                new ObjectParameter("EndDate", endDate) :
+                new ObjectParameter("EndDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("Sp_InsUpdServiceSoftwareSponsorship", providerParameter, companyOrSoftwareIDParameter, sponsorshipCategoryIDParameter, createdByParameter, startDateParameter, endDateParameter);
+        }
+    
+        public virtual ObjectResult<Sp_GetExpiredServiceSoftwareSponsorshipList_Result> Sp_GetExpiredServiceSoftwareSponsorshipList(Nullable<int> userID)
+        {
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("userID", userID) :
+                new ObjectParameter("userID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetExpiredServiceSoftwareSponsorshipList_Result>("Sp_GetExpiredServiceSoftwareSponsorshipList", userIDParameter);
+        }
+    
+        public virtual int Sp_SchedulerForExpiredServiceSoftwareSponsorshipList(Nullable<int> userID)
+        {
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("userID", userID) :
+                new ObjectParameter("userID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Sp_SchedulerForExpiredServiceSoftwareSponsorshipList", userIDParameter);
         }
     }
 }

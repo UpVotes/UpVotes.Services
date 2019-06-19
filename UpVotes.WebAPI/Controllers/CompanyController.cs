@@ -27,7 +27,7 @@ namespace UpVotes.WebAPI.Controllers
         {
             try
             {
-                CompanyDetail company = _companyServices.GetAllCompanyDetails(companyFilter.CompanyName, companyFilter.MinRate, companyFilter.MaxRate, companyFilter.MinEmployee, companyFilter.MaxEmployee, companyFilter.SortBy, companyFilter.FocusAreaID, companyFilter.Location, companyFilter.SubFocusArea, companyFilter.UserID, companyFilter.PageNo, companyFilter.PageSize);
+                CompanyDetail company = _companyServices.GetAllCompanyDetails(companyFilter.CompanyName, companyFilter.MinRate, companyFilter.MaxRate, companyFilter.MinEmployee, companyFilter.MaxEmployee, companyFilter.SortBy, companyFilter.FocusAreaID, companyFilter.Location, companyFilter.SubFocusArea, companyFilter.UserID, companyFilter.PageNo, companyFilter.PageSize, companyFilter.OrderColumn);
 
                 if (company != null)
                 {

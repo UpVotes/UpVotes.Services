@@ -18,7 +18,7 @@ namespace UpVotes.BusinessServices.Service
         private UpVotesEntities _context = null;
 
 
-        public SoftwareDetail GetAllSoftwareDetails(int? serviceCategoryId, string softwareName, string sortby, int userId = 0, int pageNo = 1, int pageSize = 10)
+        public SoftwareDetail GetAllSoftwareDetails(int? serviceCategoryId, string softwareName, string sortby, int userId = 0, int pageNo = 1, int pageSize = 10, int ordercolumn=1)
         {
             SoftwareDetail softwareDetail = new SoftwareDetail();
             OverviewNewsService newsObj = new OverviewNewsService();
@@ -29,7 +29,7 @@ namespace UpVotes.BusinessServices.Service
             {
                 using (_context = new UpVotesEntities())
                 {
-                    IEnumerable<SoftwareEntity> softwareEntities = GetSoftware(serviceCategoryId, softwareName, userId, pageNo, pageSize, sortby).ToList();
+                    IEnumerable<SoftwareEntity> softwareEntities = GetSoftware(serviceCategoryId, softwareName, userId, pageNo, pageSize, sortby, ordercolumn).ToList();
                     if (softwareEntities.Any())
                     {
                         foreach (SoftwareEntity software in softwareEntities)
@@ -631,11 +631,11 @@ namespace UpVotes.BusinessServices.Service
             return sb.ToString();
         }
 
-        private IEnumerable<SoftwareEntity> GetSoftware(int? serviceCategoryID, string softwareName, int userID, int PageNo, int PageSize, string sortby)
+        private IEnumerable<SoftwareEntity> GetSoftware(int? serviceCategoryID, string softwareName, int userID, int PageNo, int PageSize, string sortby, int ordercolumn)
         {
             using (_context = new UpVotesEntities())
             {
-                string sqlQuery = "EXEC Sp_GetSoftware " + serviceCategoryID + ",'" + softwareName + "'," + userID + "," + PageNo + "," + PageSize + ",'" + sortby + "'";
+                string sqlQuery = "EXEC Sp_GetSoftware " + serviceCategoryID + ",'" + softwareName + "'," + userID + "," + PageNo + "," + PageSize + ",'" + sortby + "',"+ ordercolumn;
                 IEnumerable<Sp_GetSoftware_Result> software = _context.Database.SqlQuery(typeof(Sp_GetSoftware_Result), sqlQuery).Cast<Sp_GetSoftware_Result>().AsEnumerable();
                 Mapper.Initialize(cfg => { cfg.CreateMap<Sp_GetSoftware_Result, SoftwareEntity>(); });
                 IEnumerable<SoftwareEntity> softwareEntity = Mapper.Map<IEnumerable<Sp_GetSoftware_Result>, IEnumerable<SoftwareEntity>>(software);

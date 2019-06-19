@@ -5,7 +5,7 @@ namespace UpVotes.BusinessServices.Interface
 {
     public interface ICompanyService
     {
-        CompanyDetail GetAllCompanyDetails(string companyName, decimal? minRate, decimal? maxRate, int? minEmployee, int? maxEmployee, string sortby, int? focusAreaID, string location, string subFocusArea = "0", int userID = 0, int PageNo = 1, int PageSize = 10);
+        CompanyDetail GetAllCompanyDetails(string companyName, decimal? minRate, decimal? maxRate, int? minEmployee, int? maxEmployee, string sortby, int? focusAreaID, string location, string subFocusArea = "0", int userID = 0, int PageNo = 1, int PageSize = 10, int orderColumn = 1);
 
         int SaveCompany(CompanyEntity companyEntity);
 

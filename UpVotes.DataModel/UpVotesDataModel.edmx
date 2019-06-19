@@ -90,7 +90,7 @@
           <Property Name="ModifiedDate" Type="datetime" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="CompanyPendingForApproval">
           <Key>
             <PropertyRef Name="CompanyID" />
@@ -719,6 +719,7 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Parameter Name="PageNo" Type="int" Mode="In" />
           <Parameter Name="PageSize" Type="int" Mode="In" />
           <Parameter Name="SubFocusArea" Type="nvarchar" Mode="In" />
+          <Parameter Name="OrderColumn" Type="int" Mode="In" />
         </Function>
         <Function Name="Sp_GetCompanyBranches" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyID" Type="int" Mode="In" />
@@ -773,6 +774,9 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
         <Function Name="Sp_GetDistinctSubFocusNames" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyID" Type="int" Mode="In" />
         </Function>
+        <Function Name="Sp_GetExpiredServiceSoftwareSponsorshipList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userID" Type="int" Mode="In" />
+        </Function>
         <Function Name="Sp_GetFocusArea" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="Sp_GetIndustrialFocus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyID" Type="int" Mode="In" />
@@ -803,6 +807,7 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Parameter Name="PageNo" Type="int" Mode="In" />
           <Parameter Name="PageSize" Type="int" Mode="In" />
           <Parameter Name="sortByVotes" Type="varchar" Mode="In" />
+          <Parameter Name="OrderColumn" Type="int" Mode="In" />
         </Function>
         <Function Name="Sp_GetSoftwareCategoryIds" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="softwareId" Type="int" Mode="In" />
@@ -976,6 +981,14 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Parameter Name="CreatedBy" Type="int" Mode="In" />
           <Parameter Name="ImageURL" Type="nvarchar" Mode="In" />
         </Function>
+        <Function Name="Sp_InsUpdServiceSoftwareSponsorship" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Provider" Type="int" Mode="In" />
+          <Parameter Name="CompanyOrSoftwareID" Type="int" Mode="In" />
+          <Parameter Name="SponsorshipCategoryID" Type="int" Mode="In" />
+          <Parameter Name="CreatedBy" Type="int" Mode="In" />
+          <Parameter Name="StartDate" Type="datetime" Mode="In" />
+          <Parameter Name="EndDate" Type="datetime" Mode="In" />
+        </Function>
         <Function Name="Sp_InsUserNews" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="IsCompanySoftware" Type="int" Mode="In" />
           <Parameter Name="CategoryID" Type="int" Mode="In" />
@@ -1009,6 +1022,9 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
         <Function Name="Sp_LoginRegisteredUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UserName" Type="nvarchar" Mode="In" />
           <Parameter Name="UserPassword" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="Sp_SchedulerForExpiredServiceSoftwareSponsorshipList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userID" Type="int" Mode="In" />
         </Function>
         <Function Name="Sp_SoftwareVote" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UserID" Type="int" Mode="In" />
@@ -1222,6 +1238,7 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
             <Parameter Name="PageNo" Mode="In" Type="Int32" />
             <Parameter Name="PageSize" Mode="In" Type="Int32" />
             <Parameter Name="SubFocusArea" Mode="In" Type="String" />
+            <Parameter Name="OrderColumn" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="Sp_GetCompanyNames" ReturnType="Collection(String)">
             <Parameter Name="type" Mode="In" Type="Int32" />
@@ -1357,6 +1374,7 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
             <Parameter Name="PageNo" Mode="In" Type="Int32" />
             <Parameter Name="PageSize" Mode="In" Type="Int32" />
             <Parameter Name="sortByVotes" Mode="In" Type="String" />
+            <Parameter Name="OrderColumn" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="Sp_SoftwareVote" ReturnType="Collection(Decimal)">
             <Parameter Name="UserID" Mode="In" Type="Int32" />
@@ -1665,6 +1683,20 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
             <Parameter Name="MemberID" Mode="In" Type="Int32" />
             <Parameter Name="CompanyOrSoftwareName" Mode="In" Type="String" />
             <Parameter Name="NoOfRows" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_InsUpdServiceSoftwareSponsorship" ReturnType="Collection(Decimal)">
+            <Parameter Name="Provider" Mode="In" Type="Int32" />
+            <Parameter Name="CompanyOrSoftwareID" Mode="In" Type="Int32" />
+            <Parameter Name="SponsorshipCategoryID" Mode="In" Type="Int32" />
+            <Parameter Name="CreatedBy" Mode="In" Type="Int32" />
+            <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+            <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetExpiredServiceSoftwareSponsorshipList" ReturnType="Collection(UpVotesModel.Sp_GetExpiredServiceSoftwareSponsorshipList_Result)">
+          <Parameter Name="userID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_SchedulerForExpiredServiceSoftwareSponsorshipList">
+          <Parameter Name="userID" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="Sp_GetCompanyFocus_Result">
@@ -1997,6 +2029,9 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Property Type="Int32" Name="RowNumber" Nullable="true" />
           <Property Type="Boolean" Name="IsClaim" Nullable="false" />
           <Property Type="String" Name="CompanyDomain" Nullable="true" />
+          <Property Type="String" Name="Sponsor" Nullable="true" />
+          <Property Type="Int32" Name="SponsorshipCategoryID" Nullable="true" />
+          <Property Type="Int32" Name="SponsorshipCategoryPriority" Nullable="true" />
         </ComplexType>
         <ComplexType Name="Sp_GetQuoteForMobileApp_Result">
           <Property Type="Int32" Name="QuotationRateCardID" Nullable="false" />
@@ -2277,6 +2312,9 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Property Type="Int32" Name="TotalCount" Nullable="true" />
           <Property Type="Boolean" Name="IsClaim" Nullable="true" />
           <Property Type="Int32" Name="RowNumber" Nullable="true" />
+          <Property Type="String" Name="Sponsor" Nullable="true" />
+          <Property Type="Int32" Name="SponsorshipCategoryID" Nullable="true" />
+          <Property Type="Int32" Name="SponsorshipCategoryPriority" Nullable="true" />
         </ComplexType>
         <ComplexType Name="Sp_SoftwareVoteUserInformation_Result">
           <Property Type="String" Name="FirstName" Nullable="false" MaxLength="50" />
@@ -2833,6 +2871,11 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
           <Property Type="DateTime" Name="StartDate" Nullable="false" Precision="23" />
           <Property Type="DateTime" Name="EndDate" Nullable="true" Precision="23" />
         </ComplexType>
+        <ComplexType Name="Sp_GetExpiredServiceSoftwareSponsorshipList_Result">
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="8" />
+          <Property Type="String" Name="Package" Nullable="false" MaxLength="12" />
+          <Property Type="String" Name="Category" Nullable="false" MaxLength="7" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3096,6 +3139,9 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
                 <ScalarProperty Name="RowNumber" ColumnName="RowNumber" />
                 <ScalarProperty Name="IsClaim" ColumnName="IsClaim" />
                 <ScalarProperty Name="CompanyDomain" ColumnName="CompanyDomain" />
+                <ScalarProperty Name="Sponsor" ColumnName="Sponsor" />
+                <ScalarProperty Name="SponsorshipCategoryID" ColumnName="SponsorshipCategoryID" />
+                <ScalarProperty Name="SponsorshipCategoryPriority" ColumnName="SponsorshipCategoryPriority" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -3419,6 +3465,9 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
                 <ScalarProperty Name="TotalCount" ColumnName="TotalCount" />
                 <ScalarProperty Name="IsClaim" ColumnName="IsClaim" />
                 <ScalarProperty Name="RowNumber" ColumnName="RowNumber" />
+                <ScalarProperty Name="Sponsor" ColumnName="Sponsor" />
+                <ScalarProperty Name="SponsorshipCategoryID" ColumnName="SponsorshipCategoryID" />
+                <ScalarProperty Name="SponsorshipCategoryPriority" ColumnName="SponsorshipCategoryPriority" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -3941,6 +3990,17 @@ warning 6002: The table/view 'UpVotesDev.dbo.CompanyPendingForApproval' does not
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_InsUpdServiceSoftwareSponsorship" FunctionName="UpVotesModel.Store.Sp_InsUpdServiceSoftwareSponsorship" />
+          <FunctionImportMapping FunctionImportName="Sp_GetExpiredServiceSoftwareSponsorshipList" FunctionName="UpVotesModel.Store.Sp_GetExpiredServiceSoftwareSponsorshipList">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetExpiredServiceSoftwareSponsorshipList_Result">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Package" ColumnName="Package" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_SchedulerForExpiredServiceSoftwareSponsorshipList" FunctionName="UpVotesModel.Store.Sp_SchedulerForExpiredServiceSoftwareSponsorshipList" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

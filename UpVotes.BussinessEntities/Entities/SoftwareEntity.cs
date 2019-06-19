@@ -74,6 +74,9 @@ namespace UpVotes.BusinessEntities.Entities
         public string WorkEmail { get; set; }
 
         public string Remarks { get; set; }
+        public string Sponsor { get; set; }
+        public int? SponsorshipCategoryID { get; set; }
+        public int? SponsorshipCategoryPriority { get; set; }
 
         public List<SoftwareReviewsEntity> SoftwareReviews { get; set; }
 

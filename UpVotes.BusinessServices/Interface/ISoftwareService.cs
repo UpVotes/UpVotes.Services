@@ -5,7 +5,7 @@ namespace UpVotes.BusinessServices.Interface
 {
     public interface ISoftwareService
     {
-        SoftwareDetail GetAllSoftwareDetails(int? serviceCategoryID, string softwareName, string sortby,int userID = 0, int PageNo = 1, int PageSize = 10);
+        SoftwareDetail GetAllSoftwareDetails(int? serviceCategoryID, string softwareName, string sortby,int userID = 0, int PageNo = 1, int PageSize = 10, int OrderColumn = 1);
 
         string VoteForSoftware(SoftwareVoteEntity softwareVote);
 

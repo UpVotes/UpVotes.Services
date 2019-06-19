@@ -24,7 +24,7 @@ namespace UpVotes.WebAPI.Controllers
         {
             try
             {
-                SoftwareDetail software = _softwareServices.GetAllSoftwareDetails(softwareFilter.SoftwareCategoryId, softwareFilter.SoftwareName, softwareFilter.SortBy, softwareFilter.UserID, softwareFilter.PageNo, softwareFilter.PageSize);
+                SoftwareDetail software = _softwareServices.GetAllSoftwareDetails(softwareFilter.SoftwareCategoryId, softwareFilter.SoftwareName, softwareFilter.SortBy, softwareFilter.UserID, softwareFilter.PageNo, softwareFilter.PageSize, softwareFilter.OrderColumn);
 
                 if (software != null)
                 {

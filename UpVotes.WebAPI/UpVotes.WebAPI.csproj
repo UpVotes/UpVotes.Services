@@ -234,6 +234,7 @@
     <Compile Include="Controllers\SoftwareController.cs" />
     <Compile Include="Controllers\CompanyController.cs" />
     <Compile Include="Controllers\FocusAreaController.cs" />
+    <Compile Include="Controllers\SponsorshipController.cs" />
     <Compile Include="Controllers\UserCompanyListController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Filters\Authentication\ApiAuthenticationFilter.cs" />
