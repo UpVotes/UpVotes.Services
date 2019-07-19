@@ -63,6 +63,7 @@ namespace UpVotes.BusinessServices.Service
                                 companyObj.IsUserApproved == true)
                             {
                                 _context.SP_CopyCompany(companyEntity.CompanyID);
+                                SendCompanyEditNotificationToAdmin(companyEntity.CompanyName);
                             }
                         }
                     }
@@ -127,6 +128,21 @@ namespace UpVotes.BusinessServices.Service
             {
                 throw ex;
             }
+        }
+
+        private void SendCompanyEditNotificationToAdmin(string companyName)
+        {
+            Email emailProperties = new Email
+            {
+                EmailFrom = System.Configuration.ConfigurationManager.AppSettings["AdminEmail"],
+                DomainDisplayName = System.Configuration.ConfigurationManager.AppSettings["DomainDisplayName"],
+                EmailTo = System.Configuration.ConfigurationManager.AppSettings["AdminEmail"],
+                EmailBCC = "upvotes7@gmail.com; puneethm@hotmail.com",
+                EmailSubject = companyName + " is updated by user.",
+                EmailBody = "FYI...",
+            };
+
+            EmailHelper.SendEmail(emailProperties);
         }
 
         public int SaveUpdateCompanyPortFolio(CompanyPortFolioEntity companyEntity)
