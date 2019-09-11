@@ -1507,5 +1507,34 @@ namespace UpVotes.DataModel
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Sp_SchedulerForExpiredServiceSoftwareSponsorshipList", userIDParameter);
         }
+    
+        public virtual int Sp_InsSponsorshipRequest(string name, string companyName, string email, string sponsorship, string userDescription, Nullable<int> addedBy)
+        {
+            var nameParameter = name != null ?
+                new ObjectParameter("Name", name) :
+                new ObjectParameter("Name", typeof(string));
+    
+            var companyNameParameter = companyName != null ?
+                new ObjectParameter("CompanyName", companyName) :
+                new ObjectParameter("CompanyName", typeof(string));
+    
+            var emailParameter = email != null ?
+                new ObjectParameter("Email", email) :
+                new ObjectParameter("Email", typeof(string));
+    
+            var sponsorshipParameter = sponsorship != null ?
+                new ObjectParameter("Sponsorship", sponsorship) :
+                new ObjectParameter("Sponsorship", typeof(string));
+    
+            var userDescriptionParameter = userDescription != null ?
+                new ObjectParameter("UserDescription", userDescription) :
+                new ObjectParameter("UserDescription", typeof(string));
+    
+            var addedByParameter = addedBy.HasValue ?
+                new ObjectParameter("AddedBy", addedBy) :
+                new ObjectParameter("AddedBy", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Sp_InsSponsorshipRequest", nameParameter, companyNameParameter, emailParameter, sponsorshipParameter, userDescriptionParameter, addedByParameter);
+        }
     }
 }

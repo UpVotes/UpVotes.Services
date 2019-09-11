@@ -963,6 +963,14 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           <Parameter Name="UserID" Type="int" Mode="In" />
           <Parameter Name="SoftwareReviewID" Type="int" Mode="In" />
         </Function>
+        <Function Name="Sp_InsSponsorshipRequest" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Name" Type="nvarchar" Mode="In" />
+          <Parameter Name="CompanyName" Type="nvarchar" Mode="In" />
+          <Parameter Name="Email" Type="nvarchar" Mode="In" />
+          <Parameter Name="Sponsorship" Type="nvarchar" Mode="In" />
+          <Parameter Name="UserDescription" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="AddedBy" Type="int" Mode="In" />
+        </Function>
         <Function Name="Sp_InsTeamMember" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyID" Type="int" Mode="In" />
           <Parameter Name="SoftwareID" Type="int" Mode="In" />
@@ -1697,6 +1705,14 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           </FunctionImport>
           <FunctionImport Name="Sp_SchedulerForExpiredServiceSoftwareSponsorshipList">
           <Parameter Name="userID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_InsSponsorshipRequest">
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="CompanyName" Mode="In" Type="String" />
+            <Parameter Name="Email" Mode="In" Type="String" />
+            <Parameter Name="Sponsorship" Mode="In" Type="String" />
+            <Parameter Name="UserDescription" Mode="In" Type="String" />
+            <Parameter Name="AddedBy" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="Sp_GetCompanyFocus_Result">
@@ -4001,6 +4017,7 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Sp_SchedulerForExpiredServiceSoftwareSponsorshipList" FunctionName="UpVotesModel.Store.Sp_SchedulerForExpiredServiceSoftwareSponsorshipList" />
+          <FunctionImportMapping FunctionImportName="Sp_InsSponsorshipRequest" FunctionName="UpVotesModel.Store.Sp_InsSponsorshipRequest" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

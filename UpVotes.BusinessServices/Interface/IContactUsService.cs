@@ -6,5 +6,7 @@ namespace UpVotes.BusinessServices.Interface
     public interface IContactUsService
     {
         int SaveContactUsInformation(ContactUsInfoEntity companyEntity);
+        int SaveSponsorerInformation(SponsorerInfoEntity sponsorerEntity);
     }
+
 }

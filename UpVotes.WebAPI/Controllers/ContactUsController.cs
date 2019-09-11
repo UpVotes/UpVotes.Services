@@ -40,6 +40,28 @@ namespace UpVotes.WebAPI.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
             }
         }
-        
+
+        [HttpPost]
+        [Route("api/SaveSponsorerInfo")]
+        public HttpResponseMessage SaveSponsorerInformation(SponsorerInfoEntity sponsorerrequest)
+        {
+            try
+            {
+                int SponsorerID = _contactUsServices.SaveSponsorerInformation(sponsorerrequest);
+                if (SponsorerID != 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, SponsorerID);
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.Conflict, SponsorerID);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
+            }
+        }
+
     }
 }
