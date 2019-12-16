@@ -1636,7 +1636,7 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
             <End Role="Users" EntitySet="Users" />
             <End Role="UserToken" EntitySet="UserTokens" />
           </AssociationSet>
-          <FunctionImport Name="Sp_DelTeamMember">
+          <FunctionImport Name="Sp_DelTeamMember" ReturnType="Collection(Int32)">
           <Parameter Name="MemberID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="Sp_InsTeamMember" ReturnType="Collection(Int32)">

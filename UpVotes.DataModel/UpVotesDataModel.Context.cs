@@ -1264,13 +1264,13 @@ namespace UpVotes.DataModel
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("Sp_DeletePortfolio", companyPortFolioIDParameter);
         }
     
-        public virtual int Sp_DelTeamMember(Nullable<int> memberID)
+        public virtual ObjectResult<Nullable<int>> Sp_DelTeamMember(Nullable<int> memberID)
         {
             var memberIDParameter = memberID.HasValue ?
                 new ObjectParameter("MemberID", memberID) :
                 new ObjectParameter("MemberID", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Sp_DelTeamMember", memberIDParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("Sp_DelTeamMember", memberIDParameter);
         }
     
         public virtual ObjectResult<Nullable<int>> Sp_InsTeamMember(Nullable<int> companyID, Nullable<int> softwareID, string memberName, string pictureName, string designation, string linkedInProfile, Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate)

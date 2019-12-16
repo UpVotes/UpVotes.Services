@@ -268,12 +268,14 @@ namespace UpVotes.WebAPI.Controllers
             }
         }
 
-        [HttpDelete, Route("api/DeleteSoftwareTeamMember/{teamMemberId}")]
-        public HttpResponseMessage DeleteSoftwareTeamMember(int teamMemberId)
+        [HttpPost]
+        [Route("api/DeleteSoftwareTeamMember")]
+        public HttpResponseMessage DeleteCompanyTeamMember(TeamMemebersEntity filter)
         {
             try
             {
-                return Request.CreateResponse(HttpStatusCode.OK, _softwareServices.DeleteSoftwareTeamMember(teamMemberId));
+                int deleted = _softwareServices.DeleteSoftwareTeamMember(filter.MemberId);
+                return Request.CreateResponse(HttpStatusCode.OK, deleted);
             }
             catch (Exception ex)
             {

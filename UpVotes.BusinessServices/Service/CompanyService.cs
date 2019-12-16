@@ -1511,7 +1511,8 @@ namespace UpVotes.BusinessServices.Service
             {
                 using (_context = new UpVotesEntities())
                 {
-                    return _context.Sp_DelTeamMember(teamMemberId);
+                    int? deleted = _context.Sp_DelTeamMember(teamMemberId).FirstOrDefault();
+                    return Convert.ToInt32(deleted);
                 }
             }
             catch (Exception ex)
