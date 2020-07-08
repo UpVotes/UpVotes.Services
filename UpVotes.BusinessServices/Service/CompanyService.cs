@@ -346,6 +346,7 @@ namespace UpVotes.BusinessServices.Service
                     metaTagAndTitle.Title = metadata.Title;
                     metaTagAndTitle.TwitterTitle = metadata.TwitterTitle;
                     metaTagAndTitle.Descriptions = metadata.Descriptions;
+                    metaTagAndTitle.OgImageURL = metadata.OgImageURL;
                 }
             }
             return metaTagAndTitle;

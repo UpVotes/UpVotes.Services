@@ -2094,6 +2094,7 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           <Property Type="String" Name="Title" Nullable="true" MaxLength="250" />
           <Property Type="String" Name="TwitterTitle" Nullable="true" MaxLength="250" />
           <Property Type="String" Name="Descriptions" Nullable="true" />
+          <Property Type="String" Name="OgImageURL" Nullable="true" />
         </ComplexType>
         <EntityType Name="CategoryBasedMetaTags">
           <Key>
@@ -3227,6 +3228,7 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
                 <ScalarProperty Name="Title" ColumnName="Title" />
                 <ScalarProperty Name="TwitterTitle" ColumnName="TwitterTitle" />
                 <ScalarProperty Name="Descriptions" ColumnName="Descriptions" />
+                <ScalarProperty Name="OgImageURL" ColumnName="OgImageURL" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
