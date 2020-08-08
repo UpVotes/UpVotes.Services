@@ -31,7 +31,7 @@ namespace UpVotes.BusinessServices.Service
                     if (isReview > 0)
                     {
                         string Toemail = _context.Sp_GetCompanyHeadQuartersEmail(companyReviewEntity.CompanyID).FirstOrDefault();
-                        Thread threadAck = new Thread(() => SendAcknowledgeMail(companyReviewEntity.CompanyName, companyReviewEntity.ReviewerDesignation, companyReviewEntity.ReviewerCompanyName, companyReviewEntity.ReviewerFullName, Toemail));
+                        Thread threadAck = new Thread(() => SendAcknowledgeMail(companyReviewEntity.CompanyName, companyReviewEntity.ReviewerDesignation, companyReviewEntity.ReviewerCompanyName, companyReviewEntity.ReviewerFullName, Toemail, companyReviewEntity.FeedBack));
                         Thread threadThx = new Thread(() => SendThankyouMail(companyReviewEntity.CompanyName, companyReviewEntity.ReviewerDesignation, companyReviewEntity.ReviewerCompanyName, companyReviewEntity.ReviewerFullName, companyReviewEntity.Email));
                         threadAck.Start();
                         threadThx.Start();
@@ -86,7 +86,7 @@ namespace UpVotes.BusinessServices.Service
                     var isReview = _context.Sp_InsSoftwareReview(softwareReviewEntity.SoftwareID, softwareReviewEntity.ServiceCategoryID, softwareReviewEntity.UserID, softwareReviewEntity.ReviewerCompanyName, softwareReviewEntity.ReviewerDesignation, softwareReviewEntity.FeedBack, softwareReviewEntity.Rating, softwareReviewEntity.Email, softwareReviewEntity.Phone, softwareReviewEntity.ReviewerFullName).FirstOrDefault();
                     if (isReview > 0)
                     {
-                        Thread threadAck = new Thread(() => SendAcknowledgeMail(softwareReviewEntity.SoftwareName, softwareReviewEntity.ReviewerDesignation, softwareReviewEntity.ReviewerCompanyName, softwareReviewEntity.ReviewerFullName, ""));
+                        Thread threadAck = new Thread(() => SendAcknowledgeMail(softwareReviewEntity.SoftwareName, softwareReviewEntity.ReviewerDesignation, softwareReviewEntity.ReviewerCompanyName, softwareReviewEntity.ReviewerFullName, "", softwareReviewEntity.FeedBack));
                         Thread threadThx = new Thread(() => SendThankyouMail(softwareReviewEntity.SoftwareName, softwareReviewEntity.ReviewerDesignation, softwareReviewEntity.ReviewerCompanyName, softwareReviewEntity.ReviewerFullName, softwareReviewEntity.Email));
                         threadAck.Start();
                         threadThx.Start();
@@ -183,7 +183,7 @@ namespace UpVotes.BusinessServices.Service
             }
         }
 
-        private void SendAcknowledgeMail(string Name, string ReviewerDesignation, string ReviewerCompanyName, string ReviewerFullName, string companyMail)
+        private void SendAcknowledgeMail(string Name, string ReviewerDesignation, string ReviewerCompanyName, string ReviewerFullName, string companyMail, string feedBack)
         {
             Email emailProperties = new Email();
             emailProperties.EmailFrom = System.Configuration.ConfigurationManager.AppSettings["AdminEmail"];
@@ -191,7 +191,7 @@ namespace UpVotes.BusinessServices.Service
             emailProperties.EmailTo = companyMail != "" ? companyMail : System.Configuration.ConfigurationManager.AppSettings["EmailTo"];
             emailProperties.EmailBCC = "support@upvotes.co; puneethm@hotmail.com";
             emailProperties.EmailSubject = "New review for " + Name + " from " + ReviewerDesignation + " at "+ ReviewerCompanyName;
-            emailProperties.EmailBody = GetAcknowledgeEmailContent(Name, ReviewerDesignation, ReviewerCompanyName, ReviewerFullName).ToString();
+            emailProperties.EmailBody = GetAcknowledgeEmailContent(Name, ReviewerDesignation, ReviewerCompanyName, ReviewerFullName, feedBack).ToString();
             EmailHelper.SendEmail(emailProperties);
         }
 
@@ -207,7 +207,7 @@ namespace UpVotes.BusinessServices.Service
             EmailHelper.SendEmail(emailProperties);
         }
 
-        private string GetAcknowledgeEmailContent(string Name, string ReviewerDesignation, string ReviewerCompanyName, string ReviewerFullName)
+        private string GetAcknowledgeEmailContent(string Name, string ReviewerDesignation, string ReviewerCompanyName, string ReviewerFullName, string review = "")
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
@@ -216,6 +216,10 @@ namespace UpVotes.BusinessServices.Service
             sb.Append("<p>Name: "+ ReviewerFullName + "</p>");
             sb.Append("<p>Company: " + ReviewerCompanyName + "</p>");
             sb.Append("<p>Designation: " + ReviewerDesignation + "</p>");
+            if (!string.IsNullOrEmpty(review))
+            {
+                sb.Append("<p>Review: " + review + "</p>");
+            }
             sb.Append("<p>Please use this <a href = '" + System.Configuration.ConfigurationManager.AppSettings["WebClientURL"] + "' target = '_blank'>" + "Upvotes.co" + "</a> to approve or disapprove the reviews.");
             EmailHelper.GetEmailSignature(sb);
             return sb.ToString();
