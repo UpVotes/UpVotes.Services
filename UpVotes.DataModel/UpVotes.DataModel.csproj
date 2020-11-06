@@ -138,6 +138,9 @@
     <Compile Include="Sp_GetCompanyBranches_Result.cs">
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Sp_GetCompanyCompetitors_Result.cs">
+      <DependentUpon>UpVotesDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Sp_GetCompanyFocus_Result.cs">
       <DependentUpon>UpVotesDataModel.tt</DependentUpon>
     </Compile>

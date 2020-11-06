@@ -1536,5 +1536,14 @@ namespace UpVotes.DataModel
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Sp_InsSponsorshipRequest", nameParameter, companyNameParameter, emailParameter, sponsorshipParameter, userDescriptionParameter, addedByParameter);
         }
+    
+        public virtual ObjectResult<Sp_GetCompanyCompetitors_Result> Sp_GetCompanyCompetitors(Nullable<int> companyID)
+        {
+            var companyIDParameter = companyID.HasValue ?
+                new ObjectParameter("CompanyID", companyID) :
+                new ObjectParameter("CompanyID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetCompanyCompetitors_Result>("Sp_GetCompanyCompetitors", companyIDParameter);
+        }
     }
 }

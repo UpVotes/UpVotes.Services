@@ -10,17 +10,10 @@
 namespace UpVotes.DataModel
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class CategoryBasedMetaTags
+    public partial class Sp_GetCompanyCompetitors_Result
     {
-        public int CategoryBasedMetaTagsID { get; set; }
-        public string FocusAreaName { get; set; }
-        public string SubFocusAreaName { get; set; }
-        public string Title { get; set; }
-        public string TwitterTitle { get; set; }
-        public string Descriptions { get; set; }
-        public Nullable<bool> IsService { get; set; }
-        public string OgImageURL { get; set; }
+        public string CompanyName { get; set; }
+        public int CompanyID { get; set; }
     }
 }

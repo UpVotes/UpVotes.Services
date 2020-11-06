@@ -16,6 +16,7 @@
           <Property Name="TwitterTitle" Type="nvarchar" MaxLength="250" />
           <Property Name="Descriptions" Type="nvarchar(max)" />
           <Property Name="IsService" Type="bit" />
+          <Property Name="OgImageURL" Type="nvarchar" MaxLength="200" />
         </EntityType>
         <EntityType Name="Company">
           <Key>
@@ -34,7 +35,7 @@
           <Property Name="LinkedInProfileURL" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="TwitterProfileURL" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="FacebookProfileURL" Type="nvarchar" MaxLength="250" Nullable="false" />
-          <Property Name="GooglePlusProfileURL" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="GooglePlusProfileURL" Type="nvarchar" MaxLength="500" />
           <Property Name="Summary" Type="nvarchar(max)" />
           <Property Name="KeyClients" Type="nvarchar(max)" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
@@ -722,6 +723,9 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           <Parameter Name="OrderColumn" Type="int" Mode="In" />
         </Function>
         <Function Name="Sp_GetCompanyBranches" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CompanyID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_GetCompanyCompetitors" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CompanyID" Type="int" Mode="In" />
         </Function>
         <Function Name="Sp_GetCompanyFocus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -1714,6 +1718,9 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
             <Parameter Name="UserDescription" Mode="In" Type="String" />
             <Parameter Name="AddedBy" Mode="In" Type="Int32" />
           </FunctionImport>
+          <FunctionImport Name="Sp_GetCompanyCompetitors" ReturnType="Collection(UpVotesModel.Sp_GetCompanyCompetitors_Result)">
+            <Parameter Name="CompanyID" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="Sp_GetCompanyFocus_Result">
           <Property Type="Int32" Name="CompanyFocusID" Nullable="false" />
@@ -2107,6 +2114,7 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           <Property Name="TwitterTitle" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="Descriptions" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsService" Type="Boolean" />
+          <Property Name="OgImageURL" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="CompanySubFocus">
           <Key>
@@ -2607,7 +2615,7 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           <Property Name="LinkedInProfileURL" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="TwitterProfileURL" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="FacebookProfileURL" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
-          <Property Name="GooglePlusProfileURL" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="GooglePlusProfileURL" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Summary" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="KeyClients" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
@@ -2892,6 +2900,10 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           <Property Type="String" Name="Name" Nullable="false" MaxLength="8" />
           <Property Type="String" Name="Package" Nullable="false" MaxLength="12" />
           <Property Type="String" Name="Category" Nullable="false" MaxLength="7" />
+        </ComplexType>
+        <ComplexType Name="Sp_GetCompanyCompetitors_Result">
+          <Property Type="String" Name="CompanyName" Nullable="true" MaxLength="4000" />
+          <Property Type="Int32" Name="CompanyID" Nullable="false" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -3235,6 +3247,7 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           <EntitySetMapping Name="CategoryBasedMetaTags">
             <EntityTypeMapping TypeName="UpVotesModel.CategoryBasedMetaTags">
               <MappingFragment StoreEntitySet="CategoryBasedMetaTags">
+                <ScalarProperty Name="OgImageURL" ColumnName="OgImageURL" />
                 <ScalarProperty Name="IsService" ColumnName="IsService" />
                 <ScalarProperty Name="Descriptions" ColumnName="Descriptions" />
                 <ScalarProperty Name="TwitterTitle" ColumnName="TwitterTitle" />
@@ -4020,6 +4033,14 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Sp_SchedulerForExpiredServiceSoftwareSponsorshipList" FunctionName="UpVotesModel.Store.Sp_SchedulerForExpiredServiceSoftwareSponsorshipList" />
           <FunctionImportMapping FunctionImportName="Sp_InsSponsorshipRequest" FunctionName="UpVotesModel.Store.Sp_InsSponsorshipRequest" />
+          <FunctionImportMapping FunctionImportName="Sp_GetCompanyCompetitors" FunctionName="UpVotesModel.Store.Sp_GetCompanyCompetitors">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="UpVotesModel.Sp_GetCompanyCompetitors_Result">
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

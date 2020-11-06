@@ -107,6 +107,7 @@ namespace UpVotes.BusinessEntities.Entities
         public List<TeamMemebersEntity> CompanyTeamMembers { get; set; }
         public List<CompanyReviewsEntity> CompanyReviews { get; set; }
         public List<OverviewNewsResponseEntity> OverviewNewsData { get; set; }
+        public List<CompanyCompititors> CompanyCompititors { get; set; }
     }
 
     public class CompanyRejectComments
@@ -118,5 +119,12 @@ namespace UpVotes.BusinessEntities.Entities
         public string RejectComments { get; set; }
 
         public string RejectedBy { get; set; }
+    }
+
+    public class CompanyCompititors
+    {
+        public int CompanyID { get; set; }
+
+        public string CompanyName { get; set; }
     }
 }

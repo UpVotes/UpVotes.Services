@@ -380,6 +380,7 @@ namespace UpVotes.BusinessServices.Service
                             company.CompanyTeamMembers = new TeamMemberHelper().GetTeamMembers(0, company.CompanyName, 5);// To get top 5 company employees
                             company.CompanyReviews = GetCompanyReviews(company.CompanyName, 5).ToList();
                             company.OverviewNewsData = newsObj.GetCompanySoftwareNewsByID(1, company.CompanyID);
+                            company.CompanyCompititors = GetCompanyCompititors(company.CompanyID).ToList();
                             //if (company.CompanyReviews.Count() > 0)
                             //{
                             //    foreach (CompanyReviewsEntity companyReviewsEntity in company.CompanyReviews)
@@ -536,6 +537,17 @@ namespace UpVotes.BusinessServices.Service
                 Mapper.Initialize(cfg => { cfg.CreateMap<Sp_GetCompanyReviews_Result, CompanyReviewsEntity>(); });
                 IEnumerable<CompanyReviewsEntity> companyReviewEntity = Mapper.Map<IEnumerable<Sp_GetCompanyReviews_Result>, IEnumerable<CompanyReviewsEntity>>(companyReviews);
                 return companyReviewEntity;
+            }
+        }
+
+        private IEnumerable<CompanyCompititors> GetCompanyCompititors(int companyID)
+        {
+            using (_context = new UpVotesEntities())
+            {
+                IEnumerable<Sp_GetCompanyCompetitors_Result> companyCompititors = _context.Database.SqlQuery(typeof(Sp_GetCompanyCompetitors_Result), "EXEC Sp_GetCompanyCompetitors " + companyID).Cast<Sp_GetCompanyCompetitors_Result>().AsEnumerable();
+                Mapper.Initialize(cfg => { cfg.CreateMap<Sp_GetCompanyCompetitors_Result, CompanyCompititors>(); });
+                IEnumerable<CompanyCompititors> companyCompititorsEntity = Mapper.Map<IEnumerable<Sp_GetCompanyCompetitors_Result>, IEnumerable<CompanyCompititors>>(companyCompititors);
+                return companyCompititorsEntity;
             }
         }
 
