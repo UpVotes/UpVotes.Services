@@ -20,5 +20,6 @@ namespace UpVotes.DataModel
         public double FocusAreaPercentage { get; set; }
         public string SubFocusAreaName { get; set; }
         public double SubFocusAreaPercentage { get; set; }
+        public string URLFocusAreaname { get; set; }
     }
 }

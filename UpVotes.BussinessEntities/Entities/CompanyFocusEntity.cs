@@ -30,6 +30,8 @@ namespace UpVotes.BusinessEntities.Entities
 
         public DateTime? ModifiedDate { get; set; }
 
+        public string URLFocusAreaname { get; set; }
+
         public System.Collections.Generic.List<CompanySubFocusEntity> CompanySubFocus { get; set; }
     }
 }

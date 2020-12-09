@@ -2278,6 +2278,7 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           <Property Type="Double" Name="FocusAreaPercentage" Nullable="false" />
           <Property Type="String" Name="SubFocusAreaName" Nullable="false" MaxLength="50" />
           <Property Type="Double" Name="SubFocusAreaPercentage" Nullable="false" />
+          <Property Type="String" Name="URLFocusAreaname" Nullable="false" MaxLength="100" />
         </ComplexType>
         <ComplexType Name="Sp_InsertUpdateUser_Result">
           <Property Type="String" Name="ProfilePictureURL" Nullable="true" />
@@ -3417,6 +3418,7 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
                 <ScalarProperty Name="FocusAreaPercentage" ColumnName="FocusAreaPercentage" />
                 <ScalarProperty Name="SubFocusAreaName" ColumnName="SubFocusAreaName" />
                 <ScalarProperty Name="SubFocusAreaPercentage" ColumnName="SubFocusAreaPercentage" />
+                <ScalarProperty Name="URLFocusAreaname" ColumnName="URLFocusAreaname" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
