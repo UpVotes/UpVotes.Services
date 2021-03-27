@@ -96,6 +96,7 @@ namespace UpVotes.BusinessEntities.Entities
         public string Sponsor { get; set; }
         public int? SponsorshipCategoryID { get; set; }
         public int? SponsorshipCategoryPriority { get; set; }
+        public string PostalCode { get; set; }
         public List<CompanyBranchEntity> CompanyBranches { get; set; }
 
         public List<CompanyFocusEntity> CompanyFocus { get; set; }

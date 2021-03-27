@@ -49,5 +49,6 @@ namespace UpVotes.DataModel
         public string Sponsor { get; set; }
         public Nullable<int> SponsorshipCategoryID { get; set; }
         public Nullable<int> SponsorshipCategoryPriority { get; set; }
+        public string PostalCode { get; set; }
     }
 }

@@ -2055,6 +2055,7 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
           <Property Type="String" Name="Sponsor" Nullable="true" />
           <Property Type="Int32" Name="SponsorshipCategoryID" Nullable="true" />
           <Property Type="Int32" Name="SponsorshipCategoryPriority" Nullable="true" />
+          <Property Type="String" Name="PostalCode" Nullable="true" />
         </ComplexType>
         <ComplexType Name="Sp_GetQuoteForMobileApp_Result">
           <Property Type="Int32" Name="QuotationRateCardID" Nullable="false" />
@@ -3172,6 +3173,7 @@ warning 6002: The table/view 'UpVotes.dbo.CompanyPendingForApproval' does not ha
                 <ScalarProperty Name="Sponsor" ColumnName="Sponsor" />
                 <ScalarProperty Name="SponsorshipCategoryID" ColumnName="SponsorshipCategoryID" />
                 <ScalarProperty Name="SponsorshipCategoryPriority" ColumnName="SponsorshipCategoryPriority" />
+                <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
